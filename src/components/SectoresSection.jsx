@@ -108,19 +108,19 @@ const SectoresSection = () => {
             if (busqueda && busqueda.trim()) {
                 const texto = busqueda.toLowerCase();
                 const coincide =
-                    sector.nombre.toLowerCase().includes(texto) ||
-                    sector.codigo.toLowerCase().includes(texto) ||
-                    (sector.descripcion && sector.descripcion.toLowerCase().includes(texto));
+                    (sector.sector?.nombre || sector.nombre)?.toLowerCase().includes(texto) ||
+                    (sector.sector?.codigo || sector.codigo)?.toLowerCase().includes(texto) ||
+                    (sector.sector?.descripcion && sector.sector?.descripcion.toLowerCase().includes(texto));
 
                 if (!coincide) return false;
             }
 
             if (tipo && tipo !== 'TODOS') {
-                if (sector.tipoSector !== tipo) return false;
+                if (sector.sector?.tipoSector !== tipo) return false;
             }
 
             if (activo !== undefined && activo !== null) {
-                if (sector.activo !== activo) return false;
+                if (sector.sector?.activo !== activo) return false;
             }
 
             return true;
@@ -153,13 +153,12 @@ const SectoresSection = () => {
      */
     const handleToggleActivo = async (sector) => {
         try {
-            if (sector.activo) {
-                await desactivarSector(sector.id);
+            if (sector.sector?.activo) {
+                await desactivarSector(sector.sector.id);
             } else {
-                await activarSector(sector.id);
+                await activarSector(sector.sector.id);
             }
         } catch (error) {
-            // El error ya se maneja en el hook
         }
     };
 
@@ -207,56 +206,56 @@ const SectoresSection = () => {
                     </thead>
                     <tbody className="bg-white divide-y divide-slate-200">
                         {sectoresFiltrados.map((sector) => (
-                            <tr key={sector.id} className="hover:bg-slate-50 transition-colors">
+                            <tr key={sector.sector?.id} className="hover:bg-slate-50 transition-colors">
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="flex items-center">
                                         <div
                                             className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-semibold"
-                                            style={{ backgroundColor: sector.color || '#6B7280' }}
+                                            style={{ backgroundColor: sector.sector?.color || '#6B7280' }}
                                         >
-                                            {sector?.codigo?.substring(0, 2)}
+                                            {sector.sector?.codigo}
                                         </div>
                                         <div className="ml-4">
                                             <div className="text-sm font-medium text-slate-900">
-                                                {sector.codigo}
+                                                {sector.sector?.codigo}
                                             </div>
                                             <div className="text-sm text-slate-500">
-                                                {sector.nombre}
+                                                {sector.sector?.nombre}
                                             </div>
                                         </div>
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="flex items-center">
-                                        {sector.tipoSector === 'ESPECIAL' ? (
+                                        {sector.sector?.tipoSector === 'ESPECIAL' ? (
                                             <Schedule className="h-4 w-4 text-slate-600 mr-2" />
                                         ) : (
                                             <Public className="h-4 w-4 text-slate-600 mr-2" />
                                         )}
                                         <span className="text-sm text-slate-900">
-                                            {sector.tipoSectorLabel}
+                                            {sector.sector?.tipoSector === 'ESPECIAL' ? 'Especial' : sector.sector?.tipoSector === 'NORMAL' ? 'Normal' : 'Público'}
                                         </span>
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <span
-                                        className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${sector.estadoBg} ${sector.estadoColor}`}
+                                        className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${sector.sector?.activo ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
                                     >
-                                        {sector.estadoLabel}
+                                        {sector.sector?.activo ? 'Activo' : 'Inactivo'}
                                     </span>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="flex items-center">
                                         <Person className="h-4 w-4 text-slate-400 mr-2" />
                                         <span className="text-sm text-slate-900">
-                                            {sector?.responsable?.nombreCompleto}
+                                            {sector.sector?.responsable?.nombreCompleto || 'Sin asignar'}
                                         </span>
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="text-sm text-slate-900">
-                                        <div>Cap: {sector.capacidadMaxima}</div>
-                                        <div className="text-slate-500">{sector.tiempoEstimadoFormatted}</div>
+                                        <div>Cap: {sector.sector?.capacidadMaxima}</div>
+                                        <div className="text-slate-500">{sector.sector?.tiempoEstimadoAtencion} min.</div>
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -272,17 +271,14 @@ const SectoresSection = () => {
                                         <button
                                             onClick={() => handleToggleActivo(sector)}
                                             disabled={isOperating && operacionEnCurso}
-                                            className={`p-1 rounded transition-colors disabled:opacity-50 ${sector.activo
-                                                ? 'text-red-600 hover:text-red-900'
-                                                : 'text-green-600 hover:text-green-900'
-                                                }`}
-                                            title={sector.activo ? 'Desactivar' : 'Activar'}
+                                            className={`p-1 rounded transition-colors disabled:opacity-50 ${sector.sector?.activo ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900'}`}
+                                            title={sector.sector?.activo ? 'Desactivar' : 'Activar'}
                                         >
-                                            {sector.activo ? (
-                                                <VisibilityOff className="h-4 w-4" />
-                                            ) : (
-                                                <Visibility className="h-4 w-4" />
-                                            )}
+                                            {sector.sector?.activo ? (
+    <VisibilityOff className="h-4 w-4" />
+) : (
+    <Visibility className="h-4 w-4" />
+)}
                                         </button>
                                     </div>
                                 </td>
