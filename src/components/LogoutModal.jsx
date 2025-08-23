@@ -58,11 +58,11 @@ const LogoutModal = ({
 
                         {/* Icon and Title */}
                         <div className="text-center mb-6">
-                            <div className="w-16 h-16 mx-auto mb-4 bg-orange-100 rounded-full flex items-center justify-center">
-                                <Warning className="h-8 w-8 text-orange-600" />
+                            <div className="w-16 h-16 mx-auto mb-4 bg-red-100 rounded-full flex items-center justify-center">
+                                <Warning className="h-8 w-8 text-red-600" />
                             </div>
                             <h3 className="text-xl font-semibold text-slate-900 mb-2">
-                                ¿Cerrar sesión?
+                                Cerrar sesión
                             </h3>
                             <p className="text-slate-600">
                                 ¿Estás seguro que deseas salir del sistema?

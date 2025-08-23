@@ -193,7 +193,7 @@ const Dashboard = () => {
             {/* Header */}
             <header className="bg-white shadow-sm border-b border-slate-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center h-16">
+                    <div className="flex justify-between items-center h-20">
 
                         {/* Logo and Title */}
                         <div className="flex items-center">
@@ -243,7 +243,7 @@ const Dashboard = () => {
 
                 {/* Welcome Section */}
                 <div className="mb-8">
-                    <div className="bg-gradient-to-r from-[#224666] to-[#5F78AD] rounded-2xl shadow-xl text-white p-8">
+                    <div className="bg-gradient-to-r from-[#224666] to-[#5F78AD] rounded-xl shadow-xl text-white p-8">
                         <div className="flex items-center justify-between">
                             <div>
                                 <h2 className="text-3xl font-bold mb-2">
@@ -260,7 +260,7 @@ const Dashboard = () => {
                             </div>
                             <div className="hidden md:block">
                                 <div className="w-24 h-24 bg-white/10 rounded-full flex items-center justify-center">
-                                    <DashboardIcon style={{ fontSize: '3rem' }} className="text-white" />
+                                    <DashboardIcon sx={{ fontSize: '50px' }} className="text-white" />
                                 </div>
                             </div>
                         </div>
@@ -275,7 +275,7 @@ const Dashboard = () => {
                                 { title: 'Turnos Pendientes', value: '--', color: 'text-blue-600', bg: 'bg-blue-50' },
                                 { title: 'Turnos Atendidos Hoy', value: '--', color: 'text-green-600', bg: 'bg-green-50' },
                                 { title: 'Empleados Activos', value: '--', color: 'text-purple-600', bg: 'bg-purple-50' },
-                                { title: 'Tiempo Promedio', value: '--', color: 'text-orange-600', bg: 'bg-orange-50' }
+                                { title: 'Tiempo Promedio', value: '--', color: 'text-orange-400', bg: 'bg-orange-50' }
                             ].map((stat, index) => (
                                 <div key={index} className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
                                     <div className={`w-12 h-12 ${stat.bg} rounded-lg flex items-center justify-center mb-4`}>
@@ -310,9 +310,6 @@ const Dashboard = () => {
                                 <p className="text-sm text-slate-600 mb-4">
                                     {action.description}
                                 </p>
-                                <div className="mt-4 text-xs text-slate-500">
-                                    {action.roles.map(role => getRoleDisplayName(role)).join(', ')}
-                                </div>
                             </div>
                         ))}
                     </div>
@@ -328,7 +325,19 @@ const Dashboard = () => {
                                 <p><strong>Email:</strong> {user?.email}</p>
                                 <p><strong>Rol:</strong> {getRoleDisplayName(user?.rol)}</p>
                                 {user?.ultimoAcceso && (
-                                    <p><strong>Último acceso:</strong> {new Date(user.ultimoAcceso).toLocaleString()}</p>
+                                    <p>
+                                        <strong>Último acceso:</strong>{" "}
+                                        {new Date(user.ultimoAcceso).toLocaleString("es-AR", {
+                                            day: "2-digit",
+                                            month: "2-digit",
+                                            year: "numeric",
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                            second: "2-digit",
+                                            hour12: false,
+                                        })}{" "}
+                                        hs
+                                    </p>
                                 )}
                             </div>
                         </div>
