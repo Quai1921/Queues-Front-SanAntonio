@@ -43,13 +43,13 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
     useEffect(() => {
         if (isOpen && sector) {
             setFormData({
-                nombre: sector.nombre || '',
-                descripcion: sector.descripcion || '',
-                tipoSector: sector.tipoSector || 'NORMAL',
-                requiereCitaPrevia: sector.requiereCitaPrevia || false,
-                capacidadMaxima: sector.capacidadMaxima || 1,
-                tiempoEstimadoAtencion: sector.tiempoEstimadoAtencion || 15,
-                color: sector.color || '#4F46E5'
+                nombre: sector.sector?.nombre || '',
+                descripcion: sector.sector?.descripcion || '',
+                tipoSector: sector.sector?.tipoSector || 'NORMAL',
+                requiereCitaPrevia: sector.sector?.requiereCitaPrevia || false,
+                capacidadMaxima: sector.sector?.capacidadMaxima || 1,
+                tiempoEstimadoAtencion: sector.sector?.tiempoEstimadoAtencion || 15,
+                color: sector.sector?.color || '#4F46E5'
             });
             setErrors({});
         }
@@ -107,7 +107,7 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
         }
 
         try {
-            await onSubmit(sector.codigo, formData);
+            await onSubmit(sector.sector?.codigo, formData);
             handleClose();
         } catch (error) {
             console.error('Error al actualizar sector:', error);

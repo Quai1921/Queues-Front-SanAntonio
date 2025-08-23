@@ -101,6 +101,14 @@ const SectoresSection = () => {
         }
     };
 
+    const handleAsignarResponsable = (sector) => {
+        // Por ahora solo un console.log, después implementaremos el modal
+        console.log('Asignar responsable a:', sector.sector?.codigo);
+        // Aquí abrirías un modal para seleccionar el empleado responsable
+        // setModalAsignarResponsableAbierto(true);
+        // setSectorParaAsignar(sector);
+    };
+
 
     // Aplicar filtros a los sectores
     const sectoresFiltrados = React.useMemo(() => {
@@ -265,7 +273,7 @@ const SectoresSection = () => {
                                         <button
                                             onClick={() => abrirModalEditar(sector)}
                                             className="p-1 text-slate-600 transition-colors"
-                                            title="Editar"
+                                            title="Editar sector"
                                         >
                                             <div className='w-20 bg-blue-100 hover:bg-blue-200 py-1 text-xs font-semibold rounded-full transition-all duration-300'>
                                                 Editar
@@ -273,10 +281,18 @@ const SectoresSection = () => {
                                         </button>
 
                                         <button
+                                            onClick={() => handleAsignarResponsable(sector)}
+                                            className="px-3 py-1.5 text-xs bg-slate-200 text-slate-700 rounded-full hover:bg-slate-300 transition-colors duration-300 flex items-center"
+                                            title="Asignar responsable"
+                                        >
+                                            Responsable
+                                        </button>
+
+                                        <button
                                             onClick={() => handleToggleActivo(sector)}
                                             disabled={isOperating && operacionEnCurso}
                                             className={`p-1 rounded transition-all duration-300 disabled:opacity-50 ${sector.sector?.activo ? 'text-red-600' : 'text-green-600 hover:text-green-900'}`}
-                                            title={sector.sector?.activo ? 'Desactivar' : 'Activar'}
+                                            title={sector.sector?.activo ? 'Desactivar sector' : 'Activar sector'}
                                         >
                                             {sector.sector?.activo ? (
                                                 <div className='w-20 bg-red-100 hover:bg-red-200 py-1 text-xs font-semibold rounded-full transition-all duration-300'>
