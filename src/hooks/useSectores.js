@@ -100,15 +100,18 @@ export const useSectores = (options = {}) => {
     /**
      * Crear nuevo sector
      */
-    const crearSector = useCallback(async (datosSector) => {
+    const crearSector = useCallback(async (sectorData) => {
         try {
             setOperacionEnCurso('crear');
             setError(null);
 
-            const nuevoSector = await sectoresService.crear(datosSector);
-            const sectorFormateado = sectoresService.formatearParaUI(nuevoSector);
+            const nuevoSector = await sectoresService.crear(sectorData);
 
-            // Agregar a la lista local
+            // Obtener la información completa del sector recién creado
+            const sectorCompleto = await sectoresService.obtenerCompleto(nuevoSector.id);
+            const sectorFormateado = sectoresService.formatearParaUI(sectorCompleto);
+
+            // Agregar a la lista de sectores
             setSectores(prev => [...prev, sectorFormateado]);
 
             if (onSuccess) {
@@ -345,7 +348,7 @@ export const useSectores = (options = {}) => {
         total: sectores.length,
         activos: sectores.filter(s => s.sector?.activo || s.activo).length,
         inactivos: sectores.filter(s => !(s.sector?.activo || s.activo)).length,
-        publicos: sectores.filter(s => (s.sector?.tipoSector || s.tipoSector) === 'PUBLICO').length,
+        normales: sectores.filter(s => (s.sector?.tipoSector || s.tipoSector) === 'NORMAL').length,
         especiales: sectores.filter(s => (s.sector?.tipoSector || s.tipoSector) === 'ESPECIAL').length,
         conResponsable: sectores.filter(s => s.sector?.responsable || s.responsable || s.empleadoResponsable).length,
         sinResponsable: sectores.filter(s => !(s.sector?.responsable || s.responsable || s.empleadoResponsable)).length

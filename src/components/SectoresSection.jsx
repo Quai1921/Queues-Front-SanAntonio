@@ -62,17 +62,21 @@ const SectoresSection = () => {
     const [modalEditarAbierto, setModalEditarAbierto] = useState(false);
     const [loadingCrear, setLoadingCrear] = useState(false);
     const [loadingEditar, setLoadingEditar] = useState(false);
+    const [notificacion, setNotificacion] = useState(null);
+
+    const mostrarNotificacion = (mensaje, tipo = 'success') => {
+    setNotificacion({ mensaje, tipo });
+    setTimeout(() => setNotificacion(null), 3000);
+};
 
     const handleCrearSector = async (sectorData) => {
         try {
             setLoadingCrear(true);
             await crearSector(sectorData);
             setModalCrearAbierto(false);
-            // Aquí podrías mostrar una notificación de éxito
-            console.log('✅ Sector creado exitosamente');
+            mostrarNotificacion('Sector creado correctamente', 'success');
         } catch (error) {
-            console.error('❌ Error creando sector:', error);
-            // El error ya se maneja en el hook useSectores
+            mostrarNotificacion('Error al crear el sector: ' + error.message, 'error');
         } finally {
             setLoadingCrear(false);
         }
@@ -89,11 +93,9 @@ const SectoresSection = () => {
             await actualizarSector(codigo, sectorData);
             setModalEditarAbierto(false);
             setSectorSeleccionado(null);
-            // Aquí podrías mostrar una notificación de éxito
-            console.log('✅ Sector actualizado exitosamente');
+            mostrarNotificacion('✅ Sector actualizado correctamente', 'success');
         } catch (error) {
-            console.error('❌ Error actualizando sector:', error);
-            // El error ya se maneja en el hook useSectores
+            mostrarNotificacion('❌ Error al actualizar el sector: ' + error.message, 'error');
         } finally {
             setLoadingEditar(false);
         }
@@ -359,6 +361,24 @@ const SectoresSection = () => {
                 </div>
             </div>
 
+            {/* Notificación */}
+            {notificacion && (
+                <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg border transition-all duration-300 ${notificacion.tipo === 'success'
+                        ? 'bg-green-50 border-green-200 text-green-800'
+                        : 'bg-red-50 border-red-200 text-red-800'
+                    }`}>
+                    <div className="flex items-center">
+                        <span className="font-medium">{notificacion.mensaje}</span>
+                        <button
+                            onClick={() => setNotificacion(null)}
+                            className="ml-3 text-sm opacity-70 hover:opacity-100"
+                        >
+                            ✕
+                        </button>
+                    </div>
+                </div>
+            )}
+
             {/* Header con acciones */}
             <div className="flex items-center justify-between">
                 <div>
@@ -430,7 +450,7 @@ const SectoresSection = () => {
                                     className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                                 >
                                     <option value="TODOS">Todos los tipos</option>
-                                    <option value="PUBLICO">Público</option>
+                                    <option value="NORMAL">Normal</option>
                                     <option value="ESPECIAL">Especial</option>
                                 </select>
                             </div>
