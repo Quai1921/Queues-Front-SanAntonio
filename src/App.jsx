@@ -2,10 +2,10 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
-import Login from './components/Login.jsx';
+import LoginPage from './pages/LoginPage.jsx';
 import Unauthorized from './components/Unauthorized.jsx';
 import Dashboard from './components/Dashboard.jsx';
-// import AdminPanel from './components/AdminPanel.jsx';
+import AdminPanel from './components/AdminPanel.jsx';
 // import ResponsablePanel from './components/ResponsablePanel.jsx';
 // import OperadorPanel from './components/OperadorPanel.jsx';
 
@@ -17,7 +17,7 @@ function App() {
         <div>
           <Routes>
             {/* Ruta pública de login */}
-            <Route path="/login" element={<Login />} />
+            <Route path="/login" element={<LoginPage  />} />
 
             {/* Ruta de acceso no autorizado */}
             <Route path="/unauthorized" element={<Unauthorized />} />
@@ -26,21 +26,21 @@ function App() {
             <Route
               path="/dashboard"
               element={
-                // <ProtectedRoute>
+                <ProtectedRoute>
                   <Dashboard />
-                // </ProtectedRoute>
+                </ProtectedRoute>
               }
             />
 
             {/* Panel de administración - solo para ADMIN */}
-            {/* <Route
+            <Route
               path="/admin/*"
               element={
                 <ProtectedRoute requiredRole="ADMIN">
                   <AdminPanel />
                 </ProtectedRoute>
               }
-            /> */}
+            />
 
             {/* Panel de responsable - para ADMIN y RESPONSABLE_SECTOR */}
             {/* <Route
