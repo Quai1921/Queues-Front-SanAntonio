@@ -20,6 +20,7 @@ import {
     Group,
     Assessment
 } from '@mui/icons-material';
+import { useStatistics } from '../hooks/useStatistics';
 
 /**
  * Dashboard principal del sistema - se adapta según el rol del usuario
@@ -32,6 +33,19 @@ const Dashboard = () => {
     // Estados para el modal de logout
     const [showLogoutModal, setShowLogoutModal] = useState(false);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+    const {
+        statistics,
+        loading: statsLoading,
+        error: statsError,
+        refreshStatistics,
+        formatters,
+        derived
+    } = useStatistics({
+        autoLoad: true,
+        refreshInterval: 30000, // 30 segundos
+        onError: (error) => console.error('Error en estadísticas:', error)
+    });
 
     useEffect(() => {
         setGreeting(getTimeBasedGreeting());
@@ -272,16 +286,40 @@ const Dashboard = () => {
                     <div className="mb-8">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                             {[
-                                { title: 'Turnos Pendientes', value: '--', color: 'text-blue-600', bg: 'bg-blue-50' },
-                                { title: 'Turnos Atendidos Hoy', value: '--', color: 'text-green-600', bg: 'bg-green-50' },
-                                { title: 'Empleados Activos', value: '--', color: 'text-purple-600', bg: 'bg-purple-50' },
-                                { title: 'Tiempo Promedio', value: '--', color: 'text-orange-400', bg: 'bg-orange-50' }
+                                {
+                                    title: 'Turnos Pendientes',
+                                    value: statsLoading ? '...' : formatters.formatNumber(statistics.turnos.turnosPendientes),
+                                    color: 'text-blue-600',
+                                    bg: 'bg-blue-50',
+                                    loading: statsLoading
+                                },
+                                {
+                                    title: 'Turnos Atendidos Hoy',
+                                    value: statsLoading ? '...' : formatters.formatNumber(statistics.turnos.turnosAtendidosHoy),
+                                    color: 'text-green-600',
+                                    bg: 'bg-green-50',
+                                    loading: statsLoading
+                                },
+                                {
+                                    title: 'Empleados Activos',
+                                    value: statsLoading ? '...' : `${statistics.empleados.activos}/${statistics.empleados.total}`,
+                                    color: 'text-purple-600',
+                                    bg: 'bg-purple-50',
+                                    loading: statsLoading
+                                },
+                                {
+                                    title: 'Tiempo Promedio',
+                                    value: statsLoading ? '...' : formatters.formatTime(statistics.turnos.tiempoPromedio),
+                                    color: 'text-orange-600',
+                                    bg: 'bg-orange-50',
+                                    loading: statsLoading
+                                }
                             ].map((stat, index) => (
                                 <div key={index} className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
                                     <div className={`w-12 h-12 ${stat.bg} rounded-lg flex items-center justify-center mb-4`}>
                                         <Analytics className={`h-6 w-6 ${stat.color}`} />
                                     </div>
-                                    <h3 className="text-2xl font-bold text-slate-900 mb-1">{stat.value}</h3>
+                                    <h3 className={`text-2xl font-bold text-slate-900 mb-1 ${stat.loading ? 'animate-pulse' : ''}`}>{stat.value}</h3>
                                     <p className="text-sm text-slate-600">{stat.title}</p>
                                 </div>
                             ))}
@@ -292,6 +330,34 @@ const Dashboard = () => {
                 {/* Quick Actions */}
                 <div className="mb-8">
                     <h3 className="text-xl font-semibold text-slate-900 mb-6">Acciones Rápidas</h3>
+
+                    {/* Header con botón de refresh para estadísticas */}
+                    {hasAnyRole(['ADMIN', 'RESPONSABLE_SECTOR']) && (
+                        <div className="mb-8 flex justify-between items-center">
+                            <div>
+                                <h3 className="text-xl font-semibold text-slate-900">Estadísticas de Hoy</h3>
+                                {derived.hasData && (
+                                    <p className="text-sm text-slate-500">
+                                        Última actualización: {statistics.fechaActualizacion ?
+                                            new Date(statistics.fechaActualizacion).toLocaleTimeString('es-AR') : 'Nunca'}
+                                    </p>
+                                )}
+                            </div>
+                            <button
+                                onClick={refreshStatistics}
+                                disabled={statsLoading}
+                                className="px-3 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                            >
+                                <svg className={`w-4 h-4 mr-2 ${statsLoading ? 'animate-spin' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                </svg>
+                                {statsLoading ? 'Actualizando...' : 'Actualizar'}
+                            </button>
+                        </div>
+                    )}
+
+
+
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {quickActions.map((action, index) => (
                             <div
