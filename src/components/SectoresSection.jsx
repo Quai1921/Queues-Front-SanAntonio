@@ -65,9 +65,9 @@ const SectoresSection = () => {
     const [notificacion, setNotificacion] = useState(null);
 
     const mostrarNotificacion = (mensaje, tipo = 'success') => {
-    setNotificacion({ mensaje, tipo });
-    setTimeout(() => setNotificacion(null), 3000);
-};
+        setNotificacion({ mensaje, tipo });
+        setTimeout(() => setNotificacion(null), 5000);
+    };
 
     const handleCrearSector = async (sectorData) => {
         try {
@@ -277,10 +277,10 @@ const SectoresSection = () => {
                                             title={sector.sector?.activo ? 'Desactivar' : 'Activar'}
                                         >
                                             {sector.sector?.activo ? (
-    <VisibilityOff className="h-4 w-4" />
-) : (
-    <Visibility className="h-4 w-4" />
-)}
+                                                <VisibilityOff className="h-4 w-4" />
+                                            ) : (
+                                                <Visibility className="h-4 w-4" />
+                                            )}
                                         </button>
                                     </div>
                                 </td>
@@ -363,7 +363,7 @@ const SectoresSection = () => {
 
             {/* Notificación */}
             {notificacion && (
-                <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg border transition-all duration-300 ${notificacion.tipo === 'success'
+                <div className={`fixed top-4 right-4 z-[60] p-4 rounded-lg shadow-lg border transition-all duration-300 ${notificacion.tipo === 'success'
                         ? 'bg-green-50 border-green-200 text-green-800'
                         : 'bg-red-50 border-red-200 text-red-800'
                     }`}>
