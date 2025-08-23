@@ -1,75 +1,75 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext.jsx';
-import ProtectedRoute from './components/ProtectedRoute.jsx';
+// import { AuthProvider } from './context/AuthContext.jsx';
+// import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Login from './components/Login.jsx';
-import Unauthorized from './components/Unauthorized.jsx';
-import Dashboard from './components/Dashboard.jsx';
-import AdminPanel from './components/AdminPanel.jsx';
-import ResponsablePanel from './components/ResponsablePanel.jsx';
-import OperadorPanel from './components/OperadorPanel.jsx';
+// import Unauthorized from './components/Unauthorized.jsx';
+// import Dashboard from './components/Dashboard.jsx';
+// import AdminPanel from './components/AdminPanel.jsx';
+// import ResponsablePanel from './components/ResponsablePanel.jsx';
+// import OperadorPanel from './components/OperadorPanel.jsx';
 
 function App() {
 
   return (
-    <AuthProvider>
+    // <AuthProvider>
       <Router>
-        <div className="App">
+        <div>
           <Routes>
             {/* Ruta pública de login */}
             <Route path="/login" element={<Login />} />
 
-            {/* Ruta de acceso no autorizado */}
-            <Route path="/unauthorized" element={<Unauthorized />} />
+            Ruta de acceso no autorizado
+            {/* <Route path="/unauthorized" element={<Unauthorized />} /> */}
 
             {/* Dashboard principal - protegido para todos los usuarios autenticados */}
-            <Route
+            {/* <Route
               path="/dashboard"
               element={
                 <ProtectedRoute>
                   <Dashboard />
                 </ProtectedRoute>
               }
-            />
+            /> */}
 
             {/* Panel de administración - solo para ADMIN */}
-            <Route
+            {/* <Route
               path="/admin/*"
               element={
                 <ProtectedRoute requiredRole="ADMIN">
                   <AdminPanel />
                 </ProtectedRoute>
               }
-            />
+            /> */}
 
             {/* Panel de responsable - para ADMIN y RESPONSABLE_SECTOR */}
-            <Route
+            {/* <Route
               path="/responsable/*"
               element={
                 <ProtectedRoute allowedRoles={['ADMIN', 'RESPONSABLE_SECTOR']}>
                   <ResponsablePanel />
                 </ProtectedRoute>
               }
-            />
+            /> */}
 
             {/* Panel de operador - para todos los roles autenticados */}
-            <Route
+            {/* <Route
               path="/operador/*"
               element={
                 <ProtectedRoute allowedRoles={['ADMIN', 'RESPONSABLE_SECTOR', 'OPERADOR']}>
                   <OperadorPanel />
                 </ProtectedRoute>
               }
-            />
+            /> */}
 
             {/* Ruta raíz - redirigir al dashboard */}
-            <Route
+            {/* <Route
               path="/"
               element={<Navigate to="/dashboard" replace />}
-            />
+            /> */}
 
             {/* Ruta catch-all para páginas no encontradas */}
-            <Route
+            {/* <Route
               path="*"
               element={
                 <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -85,11 +85,11 @@ function App() {
                   </div>
                 </div>
               }
-            />
+            /> */}
           </Routes>
         </div>
       </Router>
-    </AuthProvider>
+    // </AuthProvider>
   );
 }
 
