@@ -241,7 +241,7 @@ const SectoresSection = () => {
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <span
-                                        className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${sector.sector?.activo ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
+                                        className={`w-16 inline-flex justify-center px-2 py-1 text-xs font-semibold rounded-full ${sector.sector?.activo ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
                                     >
                                         {sector.sector?.activo ? 'Activo' : 'Inactivo'}
                                     </span>
@@ -264,22 +264,28 @@ const SectoresSection = () => {
                                     <div className="flex items-center justify-end space-x-2">
                                         <button
                                             onClick={() => abrirModalEditar(sector)}
-                                            className="p-1 text-slate-400 hover:text-blue-600 transition-colors"
+                                            className="p-1 text-slate-600 transition-colors"
                                             title="Editar"
                                         >
-                                            <Edit className="h-4 w-4" />
+                                            <div className='w-20 bg-blue-100 hover:bg-blue-200 py-1 text-xs font-semibold rounded-full transition-all duration-300'>
+                                                Editar
+                                            </div>
                                         </button>
 
                                         <button
                                             onClick={() => handleToggleActivo(sector)}
                                             disabled={isOperating && operacionEnCurso}
-                                            className={`p-1 rounded transition-colors disabled:opacity-50 ${sector.sector?.activo ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900'}`}
+                                            className={`p-1 rounded transition-all duration-300 disabled:opacity-50 ${sector.sector?.activo ? 'text-red-600' : 'text-green-600 hover:text-green-900'}`}
                                             title={sector.sector?.activo ? 'Desactivar' : 'Activar'}
                                         >
                                             {sector.sector?.activo ? (
-                                                <VisibilityOff className="h-4 w-4" />
+                                                <div className='w-20 bg-red-100 hover:bg-red-200 py-1 text-xs font-semibold rounded-full transition-all duration-300'>
+                                                    Desactivar
+                                                </div>
                                             ) : (
-                                                <Visibility className="h-4 w-4" />
+                                                <div className='w-20 bg-green-100 hover:bg-green-200 py-1 text-xs font-semibold rounded-full transition-all duration-300'>
+                                                    Activar
+                                                </div>
                                             )}
                                         </button>
                                     </div>
@@ -396,7 +402,7 @@ const SectoresSection = () => {
                     </button>
                     <button
                         onClick={() => setModalCrearAbierto(true)}
-                        className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                        className="flex items-center px-4 py-2 bg-[#224666] text-white rounded-lg hover:bg-[#2c3e50] transition-colors"
                     >
                         <Add className="mr-2 h-4 w-4" />
                         Agregar Sector

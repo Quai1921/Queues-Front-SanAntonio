@@ -130,8 +130,8 @@ const CrearSectorModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                 {/* Header */}
                 <div className="flex items-center justify-between p-6 border-b border-slate-200">
                     <div className="flex items-center">
-                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
-                            <Business className="h-6 w-6 text-blue-600" />
+                        <div className="w-10 h-10 bg-slate-200 rounded-lg flex items-center justify-center mr-3">
+                            <Business className="h-6 w-6 text-slate-600" />
                         </div>
                         <h2 className="text-xl font-semibold text-slate-900">Crear Nuevo Sector</h2>
                     </div>
@@ -200,7 +200,7 @@ const CrearSectorModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                                 name="descripcion"
                                 value={formData.descripcion}
                                 onChange={handleInputChange}
-                                placeholder="Descripción del sector y servicios que ofrece..."
+                                placeholder="OPCINAL: Descripción del sector y servicios que ofrece"
                                 rows={3}
                                 className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none ${errors.descripcion ? 'border-red-300' : 'border-slate-300'
                                     }`}
@@ -232,10 +232,10 @@ const CrearSectorModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                                         className="sr-only"
                                     />
                                     <div className="flex items-center">
-                                        <Public className="h-5 w-5 text-blue-600 mr-3" />
+                                        <Public className="h-5 w-5 text-slate-600 mr-3" />
                                         <div>
                                             <p className="font-medium text-slate-900">Normal</p>
-                                            <p className="text-sm text-slate-600">Acceso general sin cita</p>
+                                            <p className="text-sm text-slate-600">Acceso general sin turno previo</p>
                                         </div>
                                     </div>
                                 </label>
@@ -254,7 +254,7 @@ const CrearSectorModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                                         className="sr-only"
                                     />
                                     <div className="flex items-center">
-                                        <Lock className="h-5 w-5 text-orange-600 mr-3" />
+                                        <Lock className="h-5 w-5 text-slate-600 mr-3" />
                                         <div>
                                             <p className="font-medium text-slate-900">Especial</p>
                                             <p className="text-sm text-slate-600">Requiere cita previa</p>
@@ -274,7 +274,7 @@ const CrearSectorModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                                         checked={formData.requiereCitaPrevia}
                                         onChange={handleInputChange}
                                         disabled={loading}
-                                        className="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500 focus:ring-2"
+                                        className="w-4 h-4 text-slate-600 border-slate-300 rounded"
                                     />
                                     <span className="ml-2 text-sm font-medium text-slate-700">
                                         Requiere cita previa
@@ -297,7 +297,7 @@ const CrearSectorModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                                     onChange={handleInputChange}
                                     min="1"
                                     max="99"
-                                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.capacidadMaxima ? 'border-red-300' : 'border-slate-300'
+                                    className={`w-full px-3 py-2 border rounded-lg transition-colors ${errors.capacidadMaxima ? 'border-red-300' : 'border-slate-300'
                                         }`}
                                     disabled={loading}
                                 />
@@ -318,7 +318,7 @@ const CrearSectorModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                                     onChange={handleInputChange}
                                     min="1"
                                     max="180"
-                                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.tiempoEstimadoAtencion ? 'border-red-300' : 'border-slate-300'
+                                    className={`w-full px-3 py-2 border rounded-lg transition-colors ${errors.tiempoEstimadoAtencion ? 'border-red-300' : 'border-slate-300'
                                         }`}
                                     disabled={loading}
                                 />
@@ -332,7 +332,7 @@ const CrearSectorModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                         <div>
                             <label className="block text-sm font-medium text-slate-700 mb-2">
                                 <ColorLens className="h-4 w-4 inline mr-1" />
-                                Color del Sector
+                                Color identificativo del Sector
                             </label>
                             <div className="flex items-center space-x-3">
                                 <div className="flex space-x-2">
@@ -369,14 +369,14 @@ const CrearSectorModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                             type="button"
                             onClick={handleClose}
                             disabled={loading}
-                            className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors disabled:opacity-50"
+                            className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors duration-300 disabled:opacity-50"
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 transition-colors disabled:opacity-50 flex items-center"
+                            className="px-4 py-2 text-sm font-medium text-white bg-[#224666] border border-transparent rounded-lg hover:bg-[#2c3e50] transition-colors duration-300 disabled:opacity-50 flex items-center"
                         >
                             {loading ? (
                                 <>
