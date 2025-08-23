@@ -16,6 +16,8 @@ import {
     Visibility,
     VisibilityOff
 } from '@mui/icons-material';
+import CrearSectorModal from './CrearSectorModal';
+import EditarSectorModal from './EditarSectorModal';
 
 /**
  * Componente principal para la gestión de sectores en AdminPanel
@@ -31,6 +33,8 @@ const SectoresSection = () => {
         cargarSectores,
         activarSector,
         desactivarSector,
+        crearSector,
+        actualizarSector,
         filtrarSectores,
         limpiarError
     } = useSectores({
@@ -44,6 +48,7 @@ const SectoresSection = () => {
         }
     });
 
+
     // Estados locales para filtros y modales
     const [filtros, setFiltros] = useState({
         busqueda: '',
@@ -55,6 +60,45 @@ const SectoresSection = () => {
     const [sectorSeleccionado, setSectorSeleccionado] = useState(null);
     const [modalCrearAbierto, setModalCrearAbierto] = useState(false);
     const [modalEditarAbierto, setModalEditarAbierto] = useState(false);
+    const [loadingCrear, setLoadingCrear] = useState(false);
+    const [loadingEditar, setLoadingEditar] = useState(false);
+
+    const handleCrearSector = async (sectorData) => {
+        try {
+            setLoadingCrear(true);
+            await crearSector(sectorData);
+            setModalCrearAbierto(false);
+            // Aquí podrías mostrar una notificación de éxito
+            console.log('✅ Sector creado exitosamente');
+        } catch (error) {
+            console.error('❌ Error creando sector:', error);
+            // El error ya se maneja en el hook useSectores
+        } finally {
+            setLoadingCrear(false);
+        }
+    };
+
+    const abrirModalEditar = (sector) => {
+        setSectorSeleccionado(sector);
+        setModalEditarAbierto(true);
+    };
+
+    const handleEditarSector = async (codigo, sectorData) => {
+        try {
+            setLoadingEditar(true);
+            await actualizarSector(codigo, sectorData);
+            setModalEditarAbierto(false);
+            setSectorSeleccionado(null);
+            // Aquí podrías mostrar una notificación de éxito
+            console.log('✅ Sector actualizado exitosamente');
+        } catch (error) {
+            console.error('❌ Error actualizando sector:', error);
+            // El error ya se maneja en el hook useSectores
+        } finally {
+            setLoadingEditar(false);
+        }
+    };
+
 
     // Aplicar filtros a los sectores
     const sectoresFiltrados = React.useMemo(() => {
@@ -127,6 +171,11 @@ const SectoresSection = () => {
         setModalEditarAbierto(true);
     };
 
+
+
+
+
+
     /**
      * Render de la tabla de sectores
      */
@@ -165,7 +214,7 @@ const SectoresSection = () => {
                                             className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-semibold"
                                             style={{ backgroundColor: sector.color || '#6B7280' }}
                                         >
-                                            {sector.codigo.substring(0, 2)}
+                                            {sector?.codigo?.substring(0, 2)}
                                         </div>
                                         <div className="ml-4">
                                             <div className="text-sm font-medium text-slate-900">
@@ -213,8 +262,8 @@ const SectoresSection = () => {
                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                     <div className="flex items-center justify-end space-x-2">
                                         <button
-                                            onClick={() => handleEditar(sector)}
-                                            className="text-blue-600 hover:text-blue-900 p-1 rounded transition-colors"
+                                            onClick={() => abrirModalEditar(sector)}
+                                            className="p-1 text-slate-400 hover:text-blue-600 transition-colors"
                                             title="Editar"
                                         >
                                             <Edit className="h-4 w-4" />
@@ -224,8 +273,8 @@ const SectoresSection = () => {
                                             onClick={() => handleToggleActivo(sector)}
                                             disabled={isOperating && operacionEnCurso}
                                             className={`p-1 rounded transition-colors disabled:opacity-50 ${sector.activo
-                                                    ? 'text-red-600 hover:text-red-900'
-                                                    : 'text-green-600 hover:text-green-900'
+                                                ? 'text-red-600 hover:text-red-900'
+                                                : 'text-green-600 hover:text-green-900'
                                                 }`}
                                             title={sector.activo ? 'Desactivar' : 'Activar'}
                                         >
@@ -331,10 +380,10 @@ const SectoresSection = () => {
                     </button>
                     <button
                         onClick={() => setModalCrearAbierto(true)}
-                        className="flex items-center px-4 py-2 bg-[#224666] text-white rounded-lg hover:bg-[#1a3a52] transition-colors"
+                        className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                     >
                         <Add className="mr-2 h-4 w-4" />
-                        Nuevo Sector
+                        Agregar Sector
                     </button>
                 </div>
             </div>
@@ -462,35 +511,22 @@ const SectoresSection = () => {
                 </div>
             )}
 
-            {/* TODO: Modales */}
-            {/* Modal Crear Sector */}
-            {/* {modalCrearAbierto && (
-                <ModalCrearSector
-                    isOpen={modalCrearAbierto}
-                    onClose={() => setModalCrearAbierto(false)}
-                    onSuccess={() => {
-                        setModalCrearAbierto(false);
-                        cargarSectores();
-                    }}
-                />
-            )} */}
 
-            {/* Modal Editar Sector */}
-            {/* {modalEditarAbierto && sectorSeleccionado && (
-                <ModalEditarSector
-                    isOpen={modalEditarAbierto}
-                    sector={sectorSeleccionado}
-                    onClose={() => {
-                        setModalEditarAbierto(false);
-                        setSectorSeleccionado(null);
-                    }}
-                    onSuccess={() => {
-                        setModalEditarAbierto(false);
-                        setSectorSeleccionado(null);
-                        cargarSectores();
-                    }}
-                />
-            )} */}
+            {/* Modales */}
+            <CrearSectorModal
+                isOpen={modalCrearAbierto}
+                onClose={() => setModalCrearAbierto(false)}
+                onSubmit={handleCrearSector}
+                loading={loadingCrear}
+            />
+
+            <EditarSectorModal
+                isOpen={modalEditarAbierto}
+                onClose={() => setModalEditarAbierto(false)}
+                onSubmit={handleEditarSector}
+                sector={sectorSeleccionado}
+                loading={loadingEditar}
+            />
         </div>
     );
 };

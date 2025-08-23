@@ -334,9 +334,11 @@ class SectoresService {
             estadoBg: sector.activo ? 'bg-green-50' : 'bg-red-50',
             requiereCitaLabel: sector.requiereCitaPrevia ? 'Sí' : 'No',
             tiempoEstimadoFormatted: `${sector.tiempoEstimadoAtencion || 0} min`,
-            responsableNombre: sector.empleadoResponsable ?
-                `${sector.empleadoResponsable.nombre} ${sector.empleadoResponsable.apellido}` :
-                'Sin asignar'
+            responsableNombre: sector.responsable ?
+                `${sector.responsable.nombre || ''} ${sector.responsable.apellido || ''}`.trim() :
+                (sector.empleadoResponsable ?
+                    `${sector.empleadoResponsable.nombre || ''} ${sector.empleadoResponsable.apellido || ''}`.trim() :
+                    'Sin asignar')
         };
     }
 

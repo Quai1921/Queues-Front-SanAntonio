@@ -33,7 +33,20 @@ export const useSectores = (options = {}) => {
             setLoading(true);
             setError(null);
 
-            const data = await sectoresService.obtenerTodos();
+            // const data = await sectoresService.obtenerTodos();
+            const sectoresBasicos = await sectoresService.obtenerTodos();
+
+            const data = await Promise.all(
+                sectoresBasicos.map(async (sector) => {
+                    try {
+                        return await sectoresService.obtenerCompleto(sector.id);
+                    } catch (error) {
+                        // Si falla, devolver el sector básico
+                        console.warn(`No se pudo obtener información completa del sector ${sector.codigo}`);
+                        return sector;
+                    }
+                })
+            );
 
             // Formatear sectores para la UI
             const sectoresFormateados = data.map(sector =>
@@ -330,12 +343,12 @@ export const useSectores = (options = {}) => {
     // Estadísticas derivadas
     const estadisticas = {
         total: sectores.length,
-        activos: sectores.filter(s => s.activo).length,
-        inactivos: sectores.filter(s => !s.activo).length,
-        publicos: sectores.filter(s => s.tipoSector === 'PUBLICO').length,
-        especiales: sectores.filter(s => s.tipoSector === 'ESPECIAL').length,
-        conResponsable: sectores.filter(s => s.empleadoResponsable).length,
-        sinResponsable: sectores.filter(s => !s.empleadoResponsable).length
+        activos: sectores.filter(s => s.sector?.activo || s.activo).length,
+        inactivos: sectores.filter(s => !(s.sector?.activo || s.activo)).length,
+        publicos: sectores.filter(s => (s.sector?.tipoSector || s.tipoSector) === 'PUBLICO').length,
+        especiales: sectores.filter(s => (s.sector?.tipoSector || s.tipoSector) === 'ESPECIAL').length,
+        conResponsable: sectores.filter(s => s.sector?.responsable || s.responsable || s.empleadoResponsable).length,
+        sinResponsable: sectores.filter(s => !(s.sector?.responsable || s.responsable || s.empleadoResponsable)).length
     };
 
     // Opciones para formularios
