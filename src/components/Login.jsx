@@ -172,7 +172,7 @@ const Login = ({ onLogin, loading = false, error = null }) => {
 
                     {/* Footer */}
                     <div className="text-center mt-2 text-sm text-gray-500 pb-8">
-                        <p>© {year} Sistema de Gestión de Turnos</p>
+                        <p>© {year} Portal de Atención Municipal</p>
                         <p>Municipalidad de San Antonio de Arredondo</p>
                     </div>
                 </div>

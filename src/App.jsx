@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-// import { AuthProvider } from './context/AuthContext.jsx';
-// import ProtectedRoute from './components/ProtectedRoute.jsx';
+import { AuthProvider } from './context/AuthContext.jsx';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Login from './components/Login.jsx';
-// import Unauthorized from './components/Unauthorized.jsx';
-// import Dashboard from './components/Dashboard.jsx';
+import Unauthorized from './components/Unauthorized.jsx';
+import Dashboard from './components/Dashboard.jsx';
 // import AdminPanel from './components/AdminPanel.jsx';
 // import ResponsablePanel from './components/ResponsablePanel.jsx';
 // import OperadorPanel from './components/OperadorPanel.jsx';
@@ -12,25 +12,25 @@ import Login from './components/Login.jsx';
 function App() {
 
   return (
-    // <AuthProvider>
+    <AuthProvider>
       <Router>
         <div>
           <Routes>
             {/* Ruta pública de login */}
             <Route path="/login" element={<Login />} />
 
-            Ruta de acceso no autorizado
-            {/* <Route path="/unauthorized" element={<Unauthorized />} /> */}
+            {/* Ruta de acceso no autorizado */}
+            <Route path="/unauthorized" element={<Unauthorized />} />
 
             {/* Dashboard principal - protegido para todos los usuarios autenticados */}
-            {/* <Route
+            <Route
               path="/dashboard"
               element={
-                <ProtectedRoute>
+                // <ProtectedRoute>
                   <Dashboard />
-                </ProtectedRoute>
+                // </ProtectedRoute>
               }
-            /> */}
+            />
 
             {/* Panel de administración - solo para ADMIN */}
             {/* <Route
@@ -63,13 +63,13 @@ function App() {
             /> */}
 
             {/* Ruta raíz - redirigir al dashboard */}
-            {/* <Route
+            <Route
               path="/"
               element={<Navigate to="/dashboard" replace />}
-            /> */}
+            />
 
             {/* Ruta catch-all para páginas no encontradas */}
-            {/* <Route
+            <Route
               path="*"
               element={
                 <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -78,18 +78,18 @@ function App() {
                     <p className="text-gray-600 mb-8">Página no encontrada</p>
                     <button
                       onClick={() => window.location.href = '/dashboard'}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                      className="px-4 py-2 bg-[#224666] text-white rounded-lg hover:bg-[#1a3a52] transition-colors"
                     >
                       Volver al inicio
                     </button>
                   </div>
                 </div>
               }
-            /> */}
+            />
           </Routes>
         </div>
       </Router>
-    // </AuthProvider>
+    </AuthProvider>
   );
 }
 
