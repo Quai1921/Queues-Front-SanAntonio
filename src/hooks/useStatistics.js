@@ -41,6 +41,8 @@ export const useStatistics = (options = {}) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [lastRefresh, setLastRefresh] = useState(null);
+    const [refreshing, setRefreshing] = useState(false);
+    
 
     /**
      * Cargar estadísticas del dashboard
@@ -50,14 +52,10 @@ export const useStatistics = (options = {}) => {
             setLoading(true);
             setError(null);
 
-            console.log('🔄 Cargando estadísticas del dashboard...');
-
             const stats = await statisticsService.getDashboardStats();
 
             setStatistics(stats);
             setLastRefresh(new Date());
-
-            console.log('✅ Estadísticas cargadas:', stats);
 
         } catch (err) {
             console.error('❌ Error cargando estadísticas:', err);
@@ -74,9 +72,37 @@ export const useStatistics = (options = {}) => {
      * Refrescar estadísticas manualmente
      */
     const refreshStatistics = useCallback(async () => {
-        console.log('🔄 Refrescando estadísticas manualmente...');
-        await loadStatistics();
-    }, [loadStatistics]);
+        try {
+            setRefreshing(true);
+            setError(null);
+
+            // Duración mínima de 2 segundos
+            const startTime = Date.now();
+            const minRefreshTime = 2000; // 2 segundos
+
+            // Cargar estadísticas en paralelo con el tiempo mínimo
+            const statsPromise = statisticsService.getDashboardStats();
+            const minTimePromise = new Promise(resolve =>
+                setTimeout(resolve, minRefreshTime)
+            );
+
+            // Esperar ambas: las estadísticas Y el tiempo mínimo
+            const [stats] = await Promise.all([statsPromise, minTimePromise]);
+
+            setStatistics(stats);
+            setLastRefresh(new Date());
+
+        } catch (err) {
+            console.error('❌ Error refrescando estadísticas:', err);
+            setError(err.message || 'Error refrescando estadísticas');
+
+            if (onError) {
+                onError(err);
+            }
+        } finally {
+            setRefreshing(false);
+        }
+    }, [onError]);
 
     /**
      * Limpiar errores
@@ -98,10 +124,7 @@ export const useStatistics = (options = {}) => {
             return;
         }
 
-        console.log(`⏰ Configurando actualización automática cada ${refreshInterval / 1000}s`);
-
         const interval = setInterval(() => {
-            console.log('🔄 Actualización automática de estadísticas...');
             // Usar una referencia estable para evitar dependencias
             statisticsService.getDashboardStats()
                 .then(stats => {
@@ -116,7 +139,6 @@ export const useStatistics = (options = {}) => {
         }, refreshInterval);
 
         return () => {
-            console.log('🛑 Limpiando intervalo de actualización automática');
             clearInterval(interval);
         };
     }, [refreshInterval]);
@@ -209,6 +231,7 @@ export const useStatistics = (options = {}) => {
         loading,
         error,
         lastRefresh,
+        refreshing,
 
         // Acciones
         loadStatistics,
@@ -220,7 +243,7 @@ export const useStatistics = (options = {}) => {
         derived,
 
         // Información del estado
-        isLoading: loading,
+        isLoading: loading || refreshing,
         hasError: !!error,
         isEmpty: !derived.hasData
     };
