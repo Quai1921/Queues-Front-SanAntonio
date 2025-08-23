@@ -114,6 +114,8 @@ class SectoresService {
             // Validar datos requeridos
             this.validarDatosSector(sectorData);
 
+            console.log(sectorData);
+
             const response = await apiClient.post('/sectores', sectorData);
 
             if (response.data.success) {
@@ -270,8 +272,8 @@ class SectoresService {
             throw new Error('El nombre del sector es requerido');
         }
 
-        if (sectorData.tipoSector && !['PUBLICO', 'ESPECIAL'].includes(sectorData.tipoSector)) {
-            throw new Error('El tipo de sector debe ser PUBLICO o ESPECIAL');
+        if (sectorData.tipoSector && !['NORMAL', 'ESPECIAL'].includes(sectorData.tipoSector)) {
+            throw new Error('El tipo de sector debe ser NORMAL o ESPECIAL');
         }
 
         if (sectorData.capacidadMaxima && sectorData.capacidadMaxima < 1) {
@@ -298,7 +300,7 @@ class SectoresService {
     getOpcionesFormulario() {
         return {
             tiposSector: [
-                { value: 'PUBLICO', label: 'Público', description: 'Acceso directo sin cita previa' },
+                { value: 'NORMAL', label: 'Normal', description: 'Acceso directo sin cita previa' },
                 { value: 'ESPECIAL', label: 'Especial', description: 'Requiere cita previa' }
             ],
             coloresDisponibles: [
@@ -328,7 +330,7 @@ class SectoresService {
 
         return {
             ...sector,
-            tipoSectorLabel: sector.tipoSector === 'ESPECIAL' ? 'Especial' : 'Público',
+            tipoSectorLabel: sector.tipoSector === 'ESPECIAL' ? 'Especial' : 'Normal',
             estadoLabel: sector.activo ? 'Activo' : 'Inactivo',
             estadoColor: sector.activo ? 'text-green-600' : 'text-red-600',
             estadoBg: sector.activo ? 'bg-green-50' : 'bg-red-50',

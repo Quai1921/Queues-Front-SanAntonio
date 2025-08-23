@@ -18,7 +18,7 @@ const CrearSectorModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
         codigo: '',
         nombre: '',
         descripcion: '',
-        tipoSector: 'PUBLICO',
+        tipoSector: 'NORMAL',
         requiereCitaPrevia: false,
         capacidadMaxima: 1,
         tiempoEstimadoAtencion: 15,
@@ -111,7 +111,7 @@ const CrearSectorModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
             codigo: '',
             nombre: '',
             descripcion: '',
-            tipoSector: 'PUBLICO',
+            tipoSector: 'NORMAL',
             requiereCitaPrevia: false,
             capacidadMaxima: 1,
             tiempoEstimadoAtencion: 15,
@@ -218,15 +218,15 @@ const CrearSectorModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                                 Tipo de Sector *
                             </label>
                             <div className="grid grid-cols-2 gap-3">
-                                <label className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-colors ${formData.tipoSector === 'PUBLICO'
+                                <label className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-colors ${formData.tipoSector === 'NORMAL'
                                         ? 'border-blue-500 bg-blue-50'
                                         : 'border-slate-200 hover:border-slate-300'
                                     }`}>
                                     <input
                                         type="radio"
                                         name="tipoSector"
-                                        value="PUBLICO"
-                                        checked={formData.tipoSector === 'PUBLICO'}
+                                        value="NORMAL"
+                                        checked={formData.tipoSector === 'NORMAL'}
                                         onChange={handleInputChange}
                                         disabled={loading}
                                         className="sr-only"
@@ -234,7 +234,7 @@ const CrearSectorModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                                     <div className="flex items-center">
                                         <Public className="h-5 w-5 text-blue-600 mr-3" />
                                         <div>
-                                            <p className="font-medium text-slate-900">Público</p>
+                                            <p className="font-medium text-slate-900">Normal</p>
                                             <p className="text-sm text-slate-600">Acceso general sin cita</p>
                                         </div>
                                     </div>
