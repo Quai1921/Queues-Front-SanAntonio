@@ -20,6 +20,7 @@ import {
     Message,
     Assessment
 } from '@mui/icons-material';
+import SectoresSection from './SectoresSection';
 
 /**
  * Panel de administración principal - Solo para usuarios ADMIN
@@ -56,7 +57,7 @@ const AdminPanel = () => {
             title: 'Sectores',
             icon: <Business />,
             path: '/admin/sectores',
-            description: 'Administrar sectores municipales'
+            description: 'Administrar sectores de atención municipal'
         },
         {
             id: 'configuracion',
@@ -364,38 +365,38 @@ const EmpleadosSection = () => {
 };
 
 // Componente de gestión de sectores
-const SectoresSection = () => {
-    return (
-        <div className="space-y-6">
+// const SectoresSection = () => {
+//     return (
+//         <div className="space-y-6">
 
-            {/* Header con acciones */}
-            <div className="flex items-center justify-between">
-                <div>
-                    <h3 className="text-lg font-semibold text-slate-900">Sectores Municipales</h3>
-                    <p className="text-slate-600 text-sm">Administra sectores y responsables</p>
-                </div>
-                <button className="flex items-center px-4 py-2 bg-[#224666] text-white rounded-lg hover:bg-[#1a3a52] transition-colors">
-                    <Add className="mr-2 h-4 w-4" />
-                    Nuevo Sector
-                </button>
-            </div>
+//             {/* Header con acciones */}
+//             <div className="flex items-center justify-between">
+//                 <div>
+//                     <h3 className="text-lg font-semibold text-slate-900">Sectores Municipales</h3>
+//                     <p className="text-slate-600 text-sm">Administra sectores y responsables</p>
+//                 </div>
+//                 <button className="flex items-center px-4 py-2 bg-[#224666] text-white rounded-lg hover:bg-[#1a3a52] transition-colors">
+//                     <Add className="mr-2 h-4 w-4" />
+//                     Nuevo Sector
+//                 </button>
+//             </div>
 
-            {/* Contenido placeholder */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                <div className="text-center py-12">
-                    <Business className="mx-auto h-12 w-12 text-slate-400" />
-                    <h3 className="mt-4 text-lg font-medium text-slate-900">Gestión de Sectores</h3>
-                    <p className="mt-2 text-slate-600">
-                        Aquí se mostrará la gestión completa de sectores municipales
-                    </p>
-                    <p className="mt-1 text-sm text-slate-500">
-                        Implementación pendiente - Requiere integración con API /api/sectores
-                    </p>
-                </div>
-            </div>
-        </div>
-    );
-};
+//             {/* Contenido placeholder */}
+//             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+//                 <div className="text-center py-12">
+//                     <Business className="mx-auto h-12 w-12 text-slate-400" />
+//                     <h3 className="mt-4 text-lg font-medium text-slate-900">Gestión de Sectores</h3>
+//                     <p className="mt-2 text-slate-600">
+//                         Aquí se mostrará la gestión completa de sectores municipales
+//                     </p>
+//                     <p className="mt-1 text-sm text-slate-500">
+//                         Implementación pendiente - Requiere integración con API /api/sectores
+//                     </p>
+//                 </div>
+//             </div>
+//         </div>
+//     );
+// };
 
 // Componente de configuración del sistema
 const ConfiguracionSection = () => {
