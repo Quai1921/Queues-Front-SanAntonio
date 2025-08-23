@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import LogoutModal from './LogoutModal';
 import {
     Dashboard as DashboardIcon,
     AdminPanelSettings,
@@ -24,9 +25,13 @@ import {
  * Dashboard principal del sistema - se adapta según el rol del usuario
  */
 const Dashboard = () => {
-    const { user, sector, logout, hasRole, hasAnyRole } = useAuth();
+    const { user, sector, logout, hasRole, hasAnyRole, isLoading } = useAuth();
     const navigate = useNavigate();
     const [greeting, setGreeting] = useState('');
+
+    // Estados para el modal de logout
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
 
     useEffect(() => {
         setGreeting(getTimeBasedGreeting());
@@ -39,9 +44,38 @@ const Dashboard = () => {
         return 'Buenas noches';
     };
 
-    const handleLogout = async () => {
-        await logout();
-        navigate('/login');
+    // Función para mostrar el modal de confirmación
+    const handleLogoutClick = () => {
+        setShowLogoutModal(true);
+    };
+
+    // Función para cancelar el logout
+    const handleLogoutCancel = () => {
+        setShowLogoutModal(false);
+        setIsLoggingOut(false);
+    };
+
+    // Función para confirmar el logout
+    const handleLogoutConfirm = async () => {
+        try {
+            setIsLoggingOut(true);
+
+            // Pequeña demora para mostrar el loading
+            await new Promise(resolve => setTimeout(resolve, 800));
+
+            await logout();
+
+            // Cerrar modal antes de navegar
+            setShowLogoutModal(false);
+            setIsLoggingOut(false);
+
+            // Navegar al login
+            navigate('/login', { replace: true });
+        } catch (error) {
+            console.error('Error durante logout:', error);
+            setIsLoggingOut(false);
+            // El modal se mantiene abierto para que el usuario pueda reintentar
+        }
     };
 
     const getRoleDisplayName = (role) => {
@@ -81,69 +115,69 @@ const Dashboard = () => {
                     roles: ['ADMIN']
                 },
                 {
-                    title: 'Gestión de Sectores',
-                    description: 'Crear y administrar sectores',
-                    icon: <Business className="text-3xl" />,
-                    color: 'from-indigo-500 to-indigo-600',
-                    onClick: () => navigate('/admin/sectores'),
+                    title: 'Panel de Administración',
+                    description: 'Acceso completo al sistema',
+                    icon: <AdminPanelSettings className="text-3xl" />,
+                    color: 'from-red-500 to-red-600',
+                    onClick: () => navigate('/admin'),
                     roles: ['ADMIN']
                 }
             );
         }
 
-        // Acciones para ADMIN y RESPONSABLE_SECTOR
+        // Acciones para RESPONSABLE_SECTOR
         if (hasAnyRole(['ADMIN', 'RESPONSABLE_SECTOR'])) {
             actions.push(
                 {
-                    title: 'Estadísticas',
-                    description: 'Ver reportes y métricas del sistema',
-                    icon: <Analytics className="text-3xl" />,
-                    color: 'from-green-500 to-green-600',
-                    onClick: () => navigate('/estadisticas'),
+                    title: 'Gestión de Turnos',
+                    description: 'Administrar turnos del sector',
+                    icon: <Queue className="text-3xl" />,
+                    color: 'from-blue-500 to-blue-600',
+                    onClick: () => navigate('/responsable/turnos'),
                     roles: ['ADMIN', 'RESPONSABLE_SECTOR']
                 },
                 {
-                    title: 'Horarios',
+                    title: 'Reportes y Estadísticas',
+                    description: 'Ver métricas y reportes',
+                    icon: <Assessment className="text-3xl" />,
+                    color: 'from-green-500 to-green-600',
+                    onClick: () => navigate('/responsable/reportes'),
+                    roles: ['ADMIN', 'RESPONSABLE_SECTOR']
+                },
+                {
+                    title: 'Horarios y Personal',
                     description: 'Gestionar horarios de atención',
                     icon: <Schedule className="text-3xl" />,
-                    color: 'from-orange-500 to-orange-600',
-                    onClick: () => navigate('/horarios'),
-                    roles: ['ADMIN', 'RESPONSABLE_SECTOR']
-                },
-                {
-                    title: 'Mensajes',
-                    description: 'Administrar mensajes institucionales',
-                    icon: <Message className="text-3xl" />,
-                    color: 'from-teal-500 to-teal-600',
-                    onClick: () => navigate('/mensajes'),
+                    color: 'from-yellow-500 to-yellow-600',
+                    onClick: () => navigate('/responsable/horarios'),
                     roles: ['ADMIN', 'RESPONSABLE_SECTOR']
                 }
             );
         }
 
-        // Acciones para todos los roles
+        // Acciones para todos los usuarios autenticados
         actions.push(
             {
-                title: 'Atención de Turnos',
-                description: 'Llamar y atender turnos de ciudadanos',
+                title: 'Mi Perfil',
+                description: 'Ver y editar información personal',
+                icon: <Person className="text-3xl" />,
+                color: 'from-indigo-500 to-indigo-600',
+                onClick: () => navigate('/perfil'),
+                roles: ['ADMIN', 'RESPONSABLE_SECTOR', 'OPERADOR']
+            },
+            {
+                title: 'Atender Turnos',
+                description: 'Llamar y gestionar turnos',
                 icon: <Assignment className="text-3xl" />,
-                color: 'from-[#224666] to-[#5F78AD]',
+                color: 'from-teal-500 to-teal-600',
                 onClick: () => navigate('/operador/turnos'),
                 roles: ['ADMIN', 'RESPONSABLE_SECTOR', 'OPERADOR']
             },
             {
-                title: 'Cola de Espera',
-                description: 'Ver estado actual de la cola',
-                icon: <Queue className="text-3xl" />,
-                color: 'from-blue-500 to-blue-600',
-                onClick: () => navigate('/operador/cola'),
-                roles: ['ADMIN', 'RESPONSABLE_SECTOR', 'OPERADOR']
-            },
-            {
                 title: 'Historial',
-                description: 'Consultar turnos anteriores',
+                description: 'Ver turnos atendidos',
                 icon: <History className="text-3xl" />,
-                color: 'from-slate-500 to-slate-600',
+                color: 'from-pink-500 to-pink-600',
                 onClick: () => navigate('/historial'),
                 roles: ['ADMIN', 'RESPONSABLE_SECTOR', 'OPERADOR']
             }
@@ -152,38 +186,49 @@ const Dashboard = () => {
         return actions;
     };
 
+    const quickActions = getQuickActions();
+
     return (
         <div className="min-h-screen bg-slate-50">
-
             {/* Header */}
             <header className="bg-white shadow-sm border-b border-slate-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between items-center h-24">
+                    <div className="flex justify-between items-center h-16">
 
-                        {/* Logo y título */}
+                        {/* Logo and Title */}
                         <div className="flex items-center">
-                            <div className="w-12 h-12 bg-[#224666] rounded-full flex items-center justify-center mr-3">
-                                <img
-                                    src="/SanAntonioArredondoWhite.avif"
-                                    alt="San Antonio de Arredondo"
-                                    className="w-6 h-6 object-contain"
-                                />
-                            </div>
+                            <img
+                                src="/SanAntonioArredondoBlue.avif"
+                                alt="San Antonio de Arredondo"
+                                className="w-8 h-10 mr-3"
+                            />
                             <div>
-                                <h1 className="text-sm md:text-xl font-bold text-[#224666]">Portal de Atención Municipal</h1>
-                                <p className="text-xs md:text-sm text-slate-600">Municipalidad de San Antonio de Arredondo</p>
+                                <h1 className="text-xl font-semibold text-slate-900">
+                                    Portal de Atención
+                                </h1>
+                                <p className="text-xs text-slate-600">
+                                    Municipalidad de San Antonio de Arredondo
+                                </p>
                             </div>
                         </div>
 
-                        {/* User info y logout */}
+                        {/* User Menu */}
                         <div className="flex items-center space-x-4">
-                            <div className="text-right">
-                                <p className="text-sm font-medium text-slate-900">{user?.nombreCompleto}</p>
-                                <p className="text-xs text-slate-600">{getRoleDisplayName(user?.rol)}</p>
+                            {/* User Info */}
+                            <div className="hidden md:block text-right">
+                                <p className="text-sm font-medium text-slate-900">
+                                    {user?.nombreCompleto || user?.nombre}
+                                </p>
+                                <p className="text-xs text-slate-600">
+                                    {getRoleDisplayName(user?.rol)}
+                                </p>
                             </div>
+
+                            {/* Logout Button */}
                             <button
-                                onClick={handleLogout}
-                                className="flex items-center px-3 py-2 text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+                                onClick={handleLogoutClick}
+                                disabled={isLoading || isLoggingOut}
+                                className="flex items-center px-3 py-2 text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <ExitToApp className="mr-2 h-4 w-4" />
                                 Salir
@@ -226,74 +271,43 @@ const Dashboard = () => {
                 {hasAnyRole(['ADMIN', 'RESPONSABLE_SECTOR']) && (
                     <div className="mb-8">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                                <div className="flex items-center">
-                                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                                        <Queue className="text-blue-600" fontSize="large" />
+                            {[
+                                { title: 'Turnos Pendientes', value: '--', color: 'text-blue-600', bg: 'bg-blue-50' },
+                                { title: 'Turnos Atendidos Hoy', value: '--', color: 'text-green-600', bg: 'bg-green-50' },
+                                { title: 'Empleados Activos', value: '--', color: 'text-purple-600', bg: 'bg-purple-50' },
+                                { title: 'Tiempo Promedio', value: '--', color: 'text-orange-600', bg: 'bg-orange-50' }
+                            ].map((stat, index) => (
+                                <div key={index} className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                                    <div className={`w-12 h-12 ${stat.bg} rounded-lg flex items-center justify-center mb-4`}>
+                                        <Analytics className={`h-6 w-6 ${stat.color}`} />
                                     </div>
-                                    <div className="ml-4">
-                                        <p className="text-2xl font-bold text-slate-900">--</p>
-                                        <p className="text-slate-600 text-sm">Turnos Pendientes</p>
-                                    </div>
+                                    <h3 className="text-2xl font-bold text-slate-900 mb-1">{stat.value}</h3>
+                                    <p className="text-sm text-slate-600">{stat.title}</p>
                                 </div>
-                            </div>
-
-                            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                                <div className="flex items-center">
-                                    <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                                        <Assignment className="text-green-600" fontSize="large" />
-                                    </div>
-                                    <div className="ml-4">
-                                        <p className="text-2xl font-bold text-slate-900">--</p>
-                                        <p className="text-slate-600 text-sm">Turnos Atendidos Hoy</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                                <div className="flex items-center">
-                                    <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                                        <Group className="text-purple-600" fontSize="large" />
-                                    </div>
-                                    <div className="ml-4">
-                                        <p className="text-2xl font-bold text-slate-900">--</p>
-                                        <p className="text-slate-600 text-sm">Operadores Activos</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                                <div className="flex items-center">
-                                    <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                                        <Assessment className="text-orange-600" fontSize="large" />
-                                    </div>
-                                    <div className="ml-4">
-                                        <p className="text-2xl font-bold text-slate-900">--</p>
-                                        <p className="text-slate-600 text-sm">Tiempo Promedio</p>
-                                    </div>
-                                </div>
-                            </div>
+                            ))}
                         </div>
                     </div>
                 )}
 
                 {/* Quick Actions */}
                 <div className="mb-8">
-                    <h3 className="text-2xl font-bold text-slate-900 mb-6">Acciones Rápidas</h3>
+                    <h3 className="text-xl font-semibold text-slate-900 mb-6">Acciones Rápidas</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {getQuickActions().map((action, index) => (
+                        {quickActions.map((action, index) => (
                             <div
                                 key={index}
                                 onClick={action.onClick}
-                                className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 hover:shadow-lg transition-all duration-200 cursor-pointer group"
+                                className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 cursor-pointer hover:shadow-md transition-all duration-200 hover:-translate-y-1 group"
                             >
-                                <div className={`w-16 h-16 bg-gradient-to-r ${action.color} rounded-xl flex items-center justify-center text-white mb-4 group-hover:scale-110 transition-transform`}>
-                                    {action.icon}
+                                <div className={`w-14 h-14 bg-gradient-to-r ${action.color} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-200`}>
+                                    <div className="text-white">
+                                        {action.icon}
+                                    </div>
                                 </div>
-                                <h4 className="text-lg font-semibold text-slate-900 mb-2 group-hover:text-[#224666] transition-colors">
+                                <h4 className="text-lg font-semibold text-slate-900 mb-2">
                                     {action.title}
                                 </h4>
-                                <p className="text-slate-600 text-sm">
+                                <p className="text-sm text-slate-600 mb-4">
                                     {action.description}
                                 </p>
                                 <div className="mt-4 text-xs text-slate-500">
@@ -306,10 +320,9 @@ const Dashboard = () => {
 
                 {/* Additional Info */}
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
-                    <h3 className="text-xl font-semibold text-slate-900 mb-4">Información del Sistema</h3>
+                    <h3 className="text-xl font-semibold text-slate-900 mb-2">Información del Sistema</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <h4 className="font-medium text-slate-700 mb-2">Tu Cuenta</h4>
                             <div className="space-y-1 text-sm text-slate-600">
                                 <p><strong>Usuario:</strong> {user?.username}</p>
                                 <p><strong>Email:</strong> {user?.email}</p>
@@ -336,6 +349,15 @@ const Dashboard = () => {
                     </div>
                 </div>
             </main>
+
+            {/* Modal de confirmación de logout */}
+            <LogoutModal
+                isOpen={showLogoutModal}
+                isLoading={isLoggingOut}
+                onConfirm={handleLogoutConfirm}
+                onCancel={handleLogoutCancel}
+                userName={user?.nombreCompleto || user?.nombre || 'Usuario'}
+            />
         </div>
     );
 };
