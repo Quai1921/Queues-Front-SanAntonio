@@ -21,7 +21,8 @@ import {
     Message,
     Assessment
 } from '@mui/icons-material';
-import SectoresSection from './SectoresSection';
+import SectoresSection from '../pages/SectoresSection';
+import EmpleadosSection from '../pages/EmpleadosSection';
 
 /**
  * Panel de administración principal - Solo para usuarios ADMIN
@@ -313,58 +314,58 @@ const AdminDashboard = () => {
 };
 
 // Componente de gestión de empleados
-const EmpleadosSection = () => {
-    return (
-        <div className="space-y-6">
+// const EmpleadosSection = () => {
+//     return (
+//         <div className="space-y-6">
 
-            {/* Header con acciones */}
-            <div className="flex items-center justify-between">
-                <div>
-                    <h3 className="text-lg font-semibold text-slate-900">Lista de Empleados</h3>
-                    <p className="text-slate-600 text-sm">Gestiona usuarios y sus permisos</p>
-                </div>
-                <button className="flex items-center px-4 py-2 bg-[#224666] text-white rounded-lg hover:bg-[#1a3a52] transition-colors">
-                    <Add className="mr-2 h-4 w-4" />
-                    Nuevo Empleado
-                </button>
-            </div>
+//             {/* Header con acciones */}
+//             <div className="flex items-center justify-between">
+//                 <div>
+//                     <h3 className="text-lg font-semibold text-slate-900">Lista de Empleados</h3>
+//                     <p className="text-slate-600 text-sm">Gestiona usuarios y sus permisos</p>
+//                 </div>
+//                 <button className="flex items-center px-4 py-2 bg-[#224666] text-white rounded-lg hover:bg-[#1a3a52] transition-colors">
+//                     <Add className="mr-2 h-4 w-4" />
+//                     Nuevo Empleado
+//                 </button>
+//             </div>
 
-            {/* Filtros y búsqueda */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
-                <div className="flex flex-col sm:flex-row gap-4">
-                    <div className="flex-1">
-                        <div className="relative">
-                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
-                            <input
-                                type="text"
-                                placeholder="Buscar empleados..."
-                                className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg"
-                            />
-                        </div>
-                    </div>
-                    <button className="flex items-center px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50">
-                        <FilterList className="mr-2 h-4 w-4" />
-                        Filtros
-                    </button>
-                </div>
-            </div>
+//             {/* Filtros y búsqueda */}
+//             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+//                 <div className="flex flex-col sm:flex-row gap-4">
+//                     <div className="flex-1">
+//                         <div className="relative">
+//                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
+//                             <input
+//                                 type="text"
+//                                 placeholder="Buscar empleados..."
+//                                 className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg"
+//                             />
+//                         </div>
+//                     </div>
+//                     <button className="flex items-center px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50">
+//                         <FilterList className="mr-2 h-4 w-4" />
+//                         Filtros
+//                     </button>
+//                 </div>
+//             </div>
 
-            {/* Tabla placeholder */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                <div className="text-center py-12">
-                    <Group className="mx-auto h-12 w-12 text-slate-400" />
-                    <h3 className="mt-4 text-lg font-medium text-slate-900">Lista de Empleados</h3>
-                    <p className="mt-2 text-slate-600">
-                        Aquí se mostrará la tabla con todos los empleados del sistema
-                    </p>
-                    <p className="mt-1 text-sm text-slate-500">
-                        Implementación pendiente - Requiere integración con API /api/admin/empleados
-                    </p>
-                </div>
-            </div>
-        </div>
-    );
-};
+//             {/* Tabla placeholder */}
+//             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+//                 <div className="text-center py-12">
+//                     <Group className="mx-auto h-12 w-12 text-slate-400" />
+//                     <h3 className="mt-4 text-lg font-medium text-slate-900">Lista de Empleados</h3>
+//                     <p className="mt-2 text-slate-600">
+//                         Aquí se mostrará la tabla con todos los empleados del sistema
+//                     </p>
+//                     <p className="mt-1 text-sm text-slate-500">
+//                         Implementación pendiente - Requiere integración con API /api/admin/empleados
+//                     </p>
+//                 </div>
+//             </div>
+//         </div>
+//     );
+// };
 
 // Componente de gestión de sectores
 // const SectoresSection = () => {

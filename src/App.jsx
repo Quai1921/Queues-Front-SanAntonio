@@ -4,7 +4,7 @@ import { AuthProvider } from './context/AuthContext.jsx';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import Unauthorized from './components/Unauthorized.jsx';
-import Dashboard from './components/Dashboard.jsx';
+import Dashboard from './pages/Dashboard.jsx';
 import AdminPanel from './components/AdminPanel.jsx';
 // import ResponsablePanel from './components/ResponsablePanel.jsx';
 // import OperadorPanel from './components/OperadorPanel.jsx';

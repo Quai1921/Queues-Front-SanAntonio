@@ -5,16 +5,20 @@ import {
     Add,
     Search,
     FilterList,
+    EditDocument as EditDocumentIcon,
+    DomainAdd as DomainAddIcon,
     Refresh,
     CheckCircle,
     Person,
+    Cancel as CancelIcon,
+    CheckCircle as CheckCircleIcon,
     Alarm as AlarmIcon,
     CalendarMonth as CalendarMonthIcon
 } from '@mui/icons-material';
-import CrearSectorModal from './CrearSectorModal';
-import EditarSectorModal from './EditarSectorModal';
-import AsignarResponsableModal from './AsignarResponsableModal';
-import HorariosSectorModal from './HorariosSectorModal';
+import CrearSectorModal from '../components/CrearSectorModal';
+import EditarSectorModal from '../components/EditarSectorModal';
+import AsignarResponsableModal from '../components/AsignarResponsableModal';
+import HorariosSectorModal from '../components/HorariosSectorModal';
 
 /**
  * Componente principal para la gestión de sectores en AdminPanel
@@ -226,7 +230,7 @@ const SectoresSection = () => {
                             <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                                 Configuración
                             </th>
-                            <th className="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider w-[300px]">
+                            <th className="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider w-[100px]">
                                 Acciones
                             </th>
                         </tr>
@@ -313,35 +317,33 @@ const SectoresSection = () => {
                                     <div className="flex items-center justify-end space-x-2">
                                         <button
                                             onClick={() => abrirModalEditar(sector)}
-                                            className="p-1 text-slate-600 transition-colors"
+                                            className="p-1 transition-all duration-300 text-gray-400 hover:text-cyan-800"
                                             title="Editar sector"
                                         >
-                                            <div className='w-20 bg-blue-100 hover:bg-blue-200 py-1 text-xs font-semibold rounded-full transition-all duration-300'>
-                                                Editar
-                                            </div>
+                                            <EditDocumentIcon sx={{ fontSize: '25px' }}/>
                                         </button>
 
                                         <button
                                             onClick={() => handleAsignarResponsable(sector)}
-                                            className="px-3 py-1.5 text-xs bg-slate-200 text-slate-700 rounded-full hover:bg-slate-300 transition-colors duration-300 flex items-center"
+                                            className="p-1 transition-all duration-300 text-gray-400 hover:text-neutral-800"
                                             title="Asignar responsable"
                                         >
-                                            Responsable
+                                            <DomainAddIcon sx={{ fontSize: '25px' }}/>
                                         </button>
 
                                         <button
                                             onClick={() => handleToggleActivo(sector)}
                                             disabled={isOperating && operacionEnCurso}
-                                            className={`p-1 rounded transition-all duration-300 disabled:opacity-50 ${sector.sector?.activo ? 'text-red-600' : 'text-green-600 hover:text-green-900'}`}
+                                            // className={`p-1 rounded transition-all duration-300 disabled:opacity-50 ${sector.sector?.activo ? 'text-red-600' : 'text-green-600 hover:text-green-900'}`}
                                             title={sector.sector?.activo ? 'Desactivar sector' : 'Activar sector'}
                                         >
                                             {sector.sector?.activo ? (
-                                                <div className='w-20 bg-red-100 hover:bg-red-200 py-1 text-xs font-semibold rounded-full transition-all duration-300'>
-                                                    Desactivar
+                                                <div className='p-1 transition-all duration-300 text-gray-400 hover:text-red-600'>
+                                                    <CancelIcon sx={{ fontSize: '25px' }} />
                                                 </div>
                                             ) : (
-                                                <div className='w-20 bg-green-100 hover:bg-green-200 py-1 text-xs font-semibold rounded-full transition-all duration-300'>
-                                                    Activar
+                                                <div className='p-1 transition-all duration-300 text-gray-400 hover:text-green-500'>
+                                                    <CheckCircleIcon sx={{ fontSize: '25px' }} />
                                                 </div>
                                             )}
                                         </button>

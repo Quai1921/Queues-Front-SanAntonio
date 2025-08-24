@@ -18,6 +18,8 @@ const AsignarResponsableModal = ({ isOpen, onClose, onSubmit, sector, loading = 
     const [busqueda, setBusqueda] = useState('');
     const [error, setError] = useState(null);
 
+    console.log(empleados);
+
     // Cargar empleados cuando se abre el modal
     useEffect(() => {
         if (isOpen) {
@@ -228,11 +230,11 @@ const AsignarResponsableModal = ({ isOpen, onClose, onSubmit, sector, loading = 
                                                         <span className="px-2 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
                                                             {empleado.rolLabel}
                                                         </span>
-                                                        {empleado.sectorAsignado && (
+                                                        {/* {empleado.sectorAsignado && (
                                                             <span className="px-2 py-1 rounded-full text-xs bg-orange-100 text-orange-800">
-                                                                Asignado: {empleado.sectorAsignado}
+                                                                Asignado: {empleado.sectorCodigo}
                                                             </span>
-                                                        )}
+                                                        )} */}
                                                     </div>
                                                 </div>
                                                 <p className="text-sm text-slate-600">
