@@ -10,6 +10,7 @@ import {
     Add,
     Edit,
     Delete,
+    Menu as MenuIcon,
     Search,
     FilterList,
     ArrowBack,
@@ -30,6 +31,7 @@ const AdminPanel = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [activeSection, setActiveSection] = useState('dashboard');
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     // Verificar que es admin (doble verificación)
     if (!hasRole('ADMIN')) {
@@ -82,10 +84,9 @@ const AdminPanel = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 flex">
-
+        <div className="min-h-screen bg-slate-50 flex overflow-x-hidden">
             {/* Sidebar */}
-            <div className="w-72 bg-white shadow-lg border-r border-slate-200 flex flex-col">
+            <div className="w-72 hidden lg:flex bg-white shadow-lg border-r border-slate-200 flex-col">
 
                 {/* Header del sidebar */}
                 <div className="p-6 border-b border-slate-200">
@@ -102,6 +103,7 @@ const AdminPanel = () => {
                     </div>
                     <h1 className="text-xl font-bold text-[#224666]">Panel de Administración</h1>
                     <p className="text-sm text-slate-600 mt-1">Gestión completa del sistema</p>
+
                 </div>
 
                 {/* Navegación */}
@@ -149,7 +151,7 @@ const AdminPanel = () => {
             </div>
 
             {/* Contenido principal */}
-            <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col min-w-0">
 
                 {/* Header del contenido */}
                 <header className="bg-white shadow-sm border-b border-slate-200 px-6 py-4">

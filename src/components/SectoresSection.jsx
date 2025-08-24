@@ -3,18 +3,13 @@ import { useSectores } from '../hooks/useSectores';
 import {
     Business,
     Add,
-    Edit,
-    Delete,
     Search,
     FilterList,
     Refresh,
     CheckCircle,
-    Cancel,
     Person,
-    Public,
-    Schedule,
-    Visibility,
-    VisibilityOff
+    Alarm as AlarmIcon,
+    CalendarMonth as CalendarMonthIcon
 } from '@mui/icons-material';
 import CrearSectorModal from './CrearSectorModal';
 import EditarSectorModal from './EditarSectorModal';
@@ -216,38 +211,29 @@ const SectoresSection = () => {
                 <table className="w-full">
                     <thead className="bg-slate-50 border-b border-slate-200">
                         <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                            <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider w-[350px]">
                                 Sector
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                            <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider w-[150px]">
                                 Tipo
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                            <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider w-[100px]">
                                 Estado
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                            <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider w-[350px]">
                                 Responsable
                             </th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                                 Configuración
                             </th>
-                            <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
+                            <th className="px-6 py-3 text-center text-xs font-medium text-slate-500 uppercase tracking-wider w-[300px]">
                                 Acciones
                             </th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-slate-200">
                         {sectoresFiltrados.map((sector) => (
-                            <tr
-                                key={sector.sector?.id}
-                                className={`hover:bg-slate-50 transition-colors ${sector.sector?.tipoSector === 'ESPECIAL' ? 'cursor-pointer' : ''
-                                    }`}
-                                onClick={() => {
-                                    if (sector.sector?.tipoSector === 'ESPECIAL') {
-                                        handleVerHorarios(sector);
-                                    }
-                                }}
-                            >
+                            <tr key={sector.sector?.id} className="hover:bg-slate-50 transition-colors">
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="flex items-center">
                                         <div
@@ -266,37 +252,41 @@ const SectoresSection = () => {
                                         </div>
                                     </div>
                                 </td>
-                                {/* <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="flex items-center">
-                                        {sector.sector?.tipoSector === 'ESPECIAL' ? (
-                                            <Schedule className="h-4 w-4 text-slate-600 mr-2" />
-                                        ) : (
-                                            <Public className="h-4 w-4 text-slate-600 mr-2" />
-                                        )}
-                                        <span className="text-sm text-slate-900">
-                                            {sector.sector?.tipoSector === 'ESPECIAL' ? 'Especial' : sector.sector?.tipoSector === 'NORMAL' ? 'Normal' : 'Público'}
-                                        </span>
-                                    </div>
-                                </td> */}
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="flex items-center">
                                         {sector.sector?.tipoSector === 'ESPECIAL' ? (
                                             <div className="flex items-center group">
-                                                <Schedule className="h-4 w-4 text-slate-600 mr-2" />
-                                                <span className="text-sm text-slate-900 group-hover:text-amber-600 transition-colors">
-                                                    Especial
-                                                </span>
-                                                <span className="ml-2 text-xs text-amber-600 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    (Ver horarios)
-                                                </span>
+                                                <div className={`text-sm text-slate-900 group-hover:text-amber-600 transition-colors ${sector.sector?.tipoSector === 'ESPECIAL' ? 'cursor-pointer' : ''}`}
+                                                    onClick={() => {
+                                                        if (sector.sector?.tipoSector === 'ESPECIAL') {
+                                                            handleVerHorarios(sector);
+                                                        }
+                                                    }}>
+                                                    <CalendarMonthIcon className="h-4 w-4 text-slate-600 mr-2 group-hover:text-amber-600 transition-colors" />
+                                                    <span className="text-sm text-slate-900 group-hover:text-amber-600 transition-colors">
+                                                        Especial
+                                                    </span>
+                                                    <span className="ml-2 text-xs text-amber-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        (Ver horarios)
+                                                    </span>
+                                                </div>
                                             </div>
                                         ) : (
                                             <div className="flex items-center">
-                                                <Public className="h-4 w-4 text-slate-600 mr-2" />
+                                                <AlarmIcon className="h-4 w-4 text-slate-600 mr-2" />
                                                 <span className="text-sm text-slate-900">Normal</span>
                                             </div>
                                         )}
                                     </div>
+
+                                    {/* key={sector.sector?.id}
+                                className={`hover:bg-slate-50 transition-colors ${sector.sector?.tipoSector === 'ESPECIAL' ? 'cursor-pointer' : ''
+                                    }`}
+                                onClick={() => {
+                                    if (sector.sector?.tipoSector === 'ESPECIAL') {
+                                        handleVerHorarios(sector);
+                                    }
+                                }} */}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <span
@@ -384,7 +374,7 @@ const SectoresSection = () => {
     return (
         <div className="space-y-6">
             {/* Header con estadísticas */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
                 <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
                     <div className="flex items-center">
                         <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -412,7 +402,7 @@ const SectoresSection = () => {
                 <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
                     <div className="flex items-center">
                         <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                            <Schedule className="h-6 w-6 text-orange-600" />
+                            <CalendarMonthIcon className="h-6 w-6 text-orange-600" />
                         </div>
                         <div className="ml-3">
                             <p className="text-sm font-medium text-slate-600">Especiales</p>
@@ -489,7 +479,7 @@ const SectoresSection = () => {
                                 placeholder="Buscar por código, nombre o descripción..."
                                 value={filtros.busqueda}
                                 onChange={(e) => handleFiltroChange('busqueda', e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg"
                             />
                         </div>
                     </div>
@@ -520,7 +510,7 @@ const SectoresSection = () => {
                                 <select
                                     value={filtros.tipo}
                                     onChange={(e) => handleFiltroChange('tipo', e.target.value)}
-                                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    className="w-full px-3 py-2 border border-slate-300 rounded-lg"
                                 >
                                     <option value="TODOS">Todos los tipos</option>
                                     <option value="NORMAL">Normal</option>
@@ -539,7 +529,7 @@ const SectoresSection = () => {
                                         const valor = e.target.value === 'TODOS' ? null : e.target.value === 'ACTIVO';
                                         handleFiltroChange('activo', valor);
                                     }}
-                                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                    className="w-full px-3 py-2 border border-slate-300 rounded-lg"
                                 >
                                     <option value="TODOS">Todos los estados</option>
                                     <option value="ACTIVO">Activos</option>

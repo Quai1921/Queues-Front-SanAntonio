@@ -91,7 +91,7 @@ const Login = ({ onLogin, loading = false, error = null }) => {
                                         value={formData.username}
                                         onChange={handleChange}
                                         disabled={loading}
-                                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                         placeholder="Ingrese su usuario"
                                     />
                                 </div>
@@ -115,7 +115,7 @@ const Login = ({ onLogin, loading = false, error = null }) => {
                                         value={formData.password}
                                         onChange={handleChange}
                                         disabled={loading}
-                                        className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                        className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                         placeholder="Ingrese su contraseña"
                                     />
                                     <button
@@ -142,7 +142,7 @@ const Login = ({ onLogin, loading = false, error = null }) => {
                                     checked={formData.rememberMe}
                                     onChange={handleChange}
                                     disabled={loading}
-                                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="h-4 w-4 text-blue-600 border-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed"
                                 />
                                 <label htmlFor="rememberMe" className="ml-3 text-sm text-gray-600">
                                     Recordarme en este dispositivo
@@ -153,7 +153,7 @@ const Login = ({ onLogin, loading = false, error = null }) => {
                             <button
                                 type="submit"
                                 disabled={loading || !formData.username.trim() || !formData.password}
-                                className="w-full flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-lg text-white bg-[#5F78AD] hover:bg-[#4B6B9A] focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                                className="w-full flex items-center justify-center px-4 py-3 border border-transparent text-sm font-medium rounded-lg text-white bg-[#5F78AD] hover:bg-[#4B6B9A] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                             >
                                 {loading ? (
                                     <>

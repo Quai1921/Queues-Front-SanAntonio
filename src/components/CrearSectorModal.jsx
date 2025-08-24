@@ -160,7 +160,7 @@ const CrearSectorModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                                     value={formData.codigo}
                                     onChange={handleInputChange}
                                     placeholder="Ej: REN, INT, CON"
-                                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.codigo ? 'border-red-300' : 'border-slate-300'
+                                    className={`w-full px-3 py-2 border rounded-lg transition-colors ${errors.codigo ? 'border-red-300' : 'border-slate-300'
                                         }`}
                                     disabled={loading}
                                     maxLength={10}
@@ -180,7 +180,7 @@ const CrearSectorModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                                     value={formData.nombre}
                                     onChange={handleInputChange}
                                     placeholder="Ej: Rentas Municipales"
-                                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.nombre ? 'border-red-300' : 'border-slate-300'
+                                    className={`w-full px-3 py-2 border rounded-lg transition-colors ${errors.nombre ? 'border-red-300' : 'border-slate-300'
                                         }`}
                                     disabled={loading}
                                     maxLength={100}
@@ -202,7 +202,7 @@ const CrearSectorModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                                 onChange={handleInputChange}
                                 placeholder="OPCIONAL: Descripción del sector y servicios que ofrece"
                                 rows={3}
-                                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none ${errors.descripcion ? 'border-red-300' : 'border-slate-300'
+                                className={`w-full px-3 py-2 border rounded-lg transition-colors resize-none ${errors.descripcion ? 'border-red-300' : 'border-slate-300'
                                     }`}
                                 disabled={loading}
                                 maxLength={500}
