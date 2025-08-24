@@ -136,6 +136,14 @@ const Dashboard = () => {
                     color: 'from-red-500 to-red-600',
                     onClick: () => navigate('/admin'),
                     roles: ['ADMIN']
+                },
+                {
+                    title: 'Gestión de Sectores',
+                    description: 'Administrar sectores y áreas',
+                    icon: <AdminPanelSettings className="text-3xl" />,
+                    color: 'from-red-500 to-red-600',
+                    onClick: () => navigate('/admin/sectores'),
+                    roles: ['ADMIN']
                 }
             );
         }

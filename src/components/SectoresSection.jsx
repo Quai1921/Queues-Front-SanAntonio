@@ -18,6 +18,7 @@ import {
 } from '@mui/icons-material';
 import CrearSectorModal from './CrearSectorModal';
 import EditarSectorModal from './EditarSectorModal';
+import AsignarResponsableModal from './AsignarResponsableModal';
 
 /**
  * Componente principal para la gestión de sectores en AdminPanel
@@ -35,15 +36,16 @@ const SectoresSection = () => {
         desactivarSector,
         crearSector,
         actualizarSector,
+        asignarResponsable,
         filtrarSectores,
         limpiarError
     } = useSectores({
         onSuccess: (sector, operacion) => {
-            console.log(`✅ ${operacion} completado:`, sector);
+            // console.log(`${operacion} completado:`, sector);
             // Aquí podrías mostrar notificaciones de éxito
         },
         onError: (error, operacion) => {
-            console.error(`❌ Error en ${operacion}:`, error);
+            console.error(`Error en ${operacion}:`, error);
             // Aquí podrías mostrar notificaciones de error
         }
     });
@@ -63,6 +65,9 @@ const SectoresSection = () => {
     const [loadingCrear, setLoadingCrear] = useState(false);
     const [loadingEditar, setLoadingEditar] = useState(false);
     const [notificacion, setNotificacion] = useState(null);
+    const [modalAsignarResponsableAbierto, setModalAsignarResponsableAbierto] = useState(false);
+    const [sectorParaAsignar, setSectorParaAsignar] = useState(null);
+    const [loadingAsignar, setLoadingAsignar] = useState(false);
 
     const mostrarNotificacion = (mensaje, tipo = 'success') => {
         setNotificacion({ mensaje, tipo });
@@ -93,20 +98,34 @@ const SectoresSection = () => {
             await actualizarSector(codigo, sectorData);
             setModalEditarAbierto(false);
             setSectorSeleccionado(null);
-            mostrarNotificacion('✅ Sector actualizado correctamente', 'success');
+            mostrarNotificacion('Sector actualizado correctamente', 'success');
         } catch (error) {
-            mostrarNotificacion('❌ Error al actualizar el sector: ' + error.message, 'error');
+            mostrarNotificacion('Error al actualizar el sector: ' + error.message, 'error');
         } finally {
             setLoadingEditar(false);
         }
     };
 
     const handleAsignarResponsable = (sector) => {
-        // Por ahora solo un console.log, después implementaremos el modal
-        console.log('Asignar responsable a:', sector.sector?.codigo);
-        // Aquí abrirías un modal para seleccionar el empleado responsable
-        // setModalAsignarResponsableAbierto(true);
-        // setSectorParaAsignar(sector);
+        setSectorParaAsignar(sector);
+        setModalAsignarResponsableAbierto(true);
+    };
+
+    // Agregar nueva función para procesar la asignación
+    const handleProcesarAsignacion = async (sectorId, empleadoId) => {
+        try {
+            setLoadingAsignar(true);
+            await asignarResponsable(sectorId, empleadoId);
+            setModalAsignarResponsableAbierto(false);
+            setSectorParaAsignar(null);
+            mostrarNotificacion('Responsable asignado correctamente', 'success');
+        } catch (error) {
+            console.error('Error asignando responsable:', error);
+            mostrarNotificacion('Error al asignar responsable: ' + error.message, 'error');
+            throw error; // Re-lanzar para que el modal pueda manejarlo
+        } finally {
+            setLoadingAsignar(false);
+        }
     };
 
 
@@ -163,14 +182,20 @@ const SectoresSection = () => {
      */
     const handleToggleActivo = async (sector) => {
         try {
+            const accion = sector.sector?.activo ? 'desactivar' : 'activar';
+
             if (sector.sector?.activo) {
                 await desactivarSector(sector.sector.id);
+                mostrarNotificacion('Sector desactivado correctamente', 'success');
             } else {
                 await activarSector(sector.sector.id);
+                mostrarNotificacion('Sector activado correctamente', 'success');
             }
         } catch (error) {
+            const accion = sector.sector?.activo ? 'desactivar' : 'activar';
+            mostrarNotificacion(`Error al ${accion} el sector: ${error.message}`, 'error');
         }
-    };
+};
 
     /**
      * Abrir modal de edición
@@ -564,6 +589,17 @@ const SectoresSection = () => {
                 onSubmit={handleEditarSector}
                 sector={sectorSeleccionado}
                 loading={loadingEditar}
+            />
+
+            <AsignarResponsableModal
+                isOpen={modalAsignarResponsableAbierto}
+                onClose={() => {
+                    setModalAsignarResponsableAbierto(false);
+                    setSectorParaAsignar(null);
+                }}
+                onSubmit={handleProcesarAsignacion}
+                sector={sectorParaAsignar}
+                loading={loadingAsignar}
             />
         </div>
     );

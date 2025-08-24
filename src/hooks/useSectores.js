@@ -145,9 +145,21 @@ export const useSectores = (options = {}) => {
             const sectorFormateado = sectoresService.formatearParaUI(sectorActualizado);
 
             // Actualizar en la lista local
-            setSectores(prev => prev.map(sector =>
-                sector.codigo === codigo ? sectorFormateado : sector
-            ));
+            setSectores(prev => prev.map(sector => {
+                const sectorCodigo = sector.sector?.codigo || sector.codigo;
+                if (sectorCodigo === codigo) {
+                    // Si es estructura anidada, actualizar manteniendo la estructura
+                    if (sector.sector) {
+                        return {
+                            ...sector,
+                            sector: sectorActualizado
+                        };
+                    }
+                    // Si es estructura plana, usar el sector actualizado
+                    return sectorFormateado;
+                }
+                return sector;
+            }));
 
             // Actualizar sector actual si es el mismo
             if (sectorActual?.codigo === codigo) {
@@ -182,18 +194,26 @@ export const useSectores = (options = {}) => {
             setError(null);
 
             const sectorActualizado = await sectoresService.activar(id);
-            const sectorFormateado = sectoresService.formatearParaUI(sectorActualizado);
 
-            // Actualizar en la lista local
-            setSectores(prev => prev.map(sector =>
-                sector.id === id ? sectorFormateado : sector
-            ));
+            // Mantener la estructura anidada existente
+            setSectores(prev => prev.map(sector => {
+                if ((sector.sector?.id || sector.id) === id) {
+                    return {
+                        ...sector,
+                        sector: {
+                            ...sector.sector,
+                            activo: sectorActualizado.activo
+                        }
+                    };
+                }
+                return sector;
+            }));
 
             if (onSuccess) {
-                onSuccess(sectorFormateado, 'activar');
+                onSuccess(sectorActualizado, 'activar');
             }
 
-            return sectorFormateado;
+            return sectorActualizado;
 
         } catch (err) {
             console.error('❌ Error activando sector:', err);
@@ -217,18 +237,26 @@ export const useSectores = (options = {}) => {
             setError(null);
 
             const sectorActualizado = await sectoresService.desactivar(id);
-            const sectorFormateado = sectoresService.formatearParaUI(sectorActualizado);
 
-            // Actualizar en la lista local
-            setSectores(prev => prev.map(sector =>
-                sector.id === id ? sectorFormateado : sector
-            ));
+            // Mantener la estructura anidada existente
+            setSectores(prev => prev.map(sector => {
+                if ((sector.sector?.id || sector.id) === id) {
+                    return {
+                        ...sector,
+                        sector: {
+                            ...sector.sector,
+                            activo: sectorActualizado.activo
+                        }
+                    };
+                }
+                return sector;
+            }));
 
             if (onSuccess) {
-                onSuccess(sectorFormateado, 'desactivar');
+                onSuccess(sectorActualizado, 'desactivar');
             }
 
-            return sectorFormateado;
+            return sectorActualizado;
 
         } catch (err) {
             console.error('❌ Error desactivando sector:', err);
@@ -252,18 +280,26 @@ export const useSectores = (options = {}) => {
             setError(null);
 
             const sectorActualizado = await sectoresService.asignarResponsable(sectorId, empleadoId);
-            const sectorFormateado = sectoresService.formatearParaUI(sectorActualizado);
 
-            // Actualizar en la lista local
-            setSectores(prev => prev.map(sector =>
-                sector.id === sectorId ? sectorFormateado : sector
-            ));
+            // Mantener la estructura anidada existente
+            setSectores(prev => prev.map(sector => {
+                if ((sector.sector?.id || sector.id) === sectorId) {
+                    return {
+                        ...sector,
+                        sector: {
+                            ...sector.sector,
+                            responsable: sectorActualizado.responsable
+                        }
+                    };
+                }
+                return sector;
+            }));
 
             if (onSuccess) {
-                onSuccess(sectorFormateado, 'asignar-responsable');
+                onSuccess(sectorActualizado, 'asignar-responsable');
             }
 
-            return sectorFormateado;
+            return sectorActualizado;
 
         } catch (err) {
             console.error('❌ Error asignando responsable:', err);
