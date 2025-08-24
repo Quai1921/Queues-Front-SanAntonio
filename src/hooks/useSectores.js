@@ -42,7 +42,6 @@ export const useSectores = (options = {}) => {
                         return await sectoresService.obtenerCompleto(sector.id);
                     } catch (error) {
                         // Si falla, devolver el sector básico
-                        console.warn(`No se pudo obtener información completa del sector ${sector.codigo}`);
                         return sector;
                     }
                 })
@@ -56,7 +55,6 @@ export const useSectores = (options = {}) => {
             setSectores(sectoresFormateados);
 
         } catch (err) {
-            console.error('❌ Error cargando sectores:', err);
             setError(err.message || 'Error cargando sectores');
 
             if (onError) {
@@ -85,7 +83,6 @@ export const useSectores = (options = {}) => {
             return sectorFormateado;
 
         } catch (err) {
-            console.error('❌ Error cargando sector:', err);
             setError(err.message || 'Error cargando sector');
 
             if (onError) {
@@ -121,7 +118,6 @@ export const useSectores = (options = {}) => {
             return sectorFormateado;
 
         } catch (err) {
-            console.error('❌ Error creando sector:', err);
             setError(err.message || 'Error creando sector');
 
             if (onError) {
@@ -173,7 +169,6 @@ export const useSectores = (options = {}) => {
             return sectorFormateado;
 
         } catch (err) {
-            console.error('❌ Error actualizando sector:', err);
             setError(err.message || 'Error actualizando sector');
 
             if (onError) {
@@ -216,7 +211,6 @@ export const useSectores = (options = {}) => {
             return sectorActualizado;
 
         } catch (err) {
-            console.error('❌ Error activando sector:', err);
             setError(err.message || 'Error activando sector');
 
             if (onError) {
@@ -259,7 +253,6 @@ export const useSectores = (options = {}) => {
             return sectorActualizado;
 
         } catch (err) {
-            console.error('❌ Error desactivando sector:', err);
             setError(err.message || 'Error desactivando sector');
 
             if (onError) {
@@ -302,7 +295,6 @@ export const useSectores = (options = {}) => {
             return sectorActualizado;
 
         } catch (err) {
-            console.error('❌ Error asignando responsable:', err);
             setError(err.message || 'Error asignando responsable');
 
             if (onError) {
@@ -321,7 +313,6 @@ export const useSectores = (options = {}) => {
         try {
             return await sectoresService.existeCodigo(codigo);
         } catch (err) {
-            console.error('Error verificando código:', err);
             return false;
         }
     }, []);

@@ -114,7 +114,7 @@ class SectoresService {
             // Validar datos requeridos
             this.validarDatosSector(sectorData);
 
-            console.log(sectorData);
+            // console.log(sectorData);
 
             const response = await apiClient.post('/sectores', sectorData);
 
@@ -371,11 +371,11 @@ class SectoresService {
             error.message = 'Error de conexión al gestionar sectores';
         }
 
-        console.error('Sectores Service Error:', {
-            message: error.message,
-            status: error.response?.status,
-            url: error.config?.url
-        });
+        // console.error('Sectores Service Error:', {
+        //     message: error.message,
+        //     status: error.response?.status,
+        //     url: error.config?.url
+        // });
     }
 }
 

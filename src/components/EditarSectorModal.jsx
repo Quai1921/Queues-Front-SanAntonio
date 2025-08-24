@@ -134,45 +134,39 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                         <div>
                             <h2 className="text-xl font-semibold text-slate-900">Editar Sector</h2>
                             <p className="text-sm text-slate-600">
-                                Código: <span className="font-mono font-medium">{sector.sector?.codigo}</span>
+                                Código: <span className="text-lg font-mono font-semibold text-slate-900">{sector.sector?.codigo}</span>
                             </p>
                         </div>
                     </div>
-                    <button
-                        onClick={handleClose}
-                        disabled={loading}
-                        className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors disabled:opacity-50"
-                    >
-                        <Close className="h-5 w-5" />
-                    </button>
+
+                    <div className="flex items-center justify-between gap-8">
+                        <div className="text-right">
+                            <p className="text-sm font-medium text-slate-700 pr-2">Estado</p>
+                            <span className={`w-16 inline-flex justify-center items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${sector.sector?.activo
+                                ? 'bg-green-100 text-green-800'
+                                : 'bg-red-100 text-red-800'
+                                }`}>
+                                {sector.sector?.activo ? 'Activo' : 'Inactivo'}
+                            </span>
+                        </div>
+
+                        <button
+                            onClick={handleClose}
+                            disabled={loading}
+                            className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors disabled:opacity-50"
+                        >
+                            <Close className="h-5 w-5" />
+                        </button>
+                    </div>
+                    
                 </div>
 
                 {/* Form */}
                 <form onSubmit={handleSubmit} className="p-6">
-                    <div className="space-y-6">
-
-                        {/* Información del sector (solo lectura) */}
-                        <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm font-medium text-slate-700">Código del Sector</p>
-                                    <p className="text-lg font-mono font-semibold text-slate-900">{sector.sector?.codigo}</p>
-                                </div>
-                                <div className="text-right">
-                                    <p className="text-sm font-medium text-slate-700 pr-2">Estado</p>
-                                    <span className={`w-16 inline-flex justify-center items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${sector.sector?.activo
-                                            ? 'bg-green-100 text-green-800'
-                                            : 'bg-red-100 text-red-800'
-                                        }`}>
-                                        {sector.sector?.activo ? 'Activo' : 'Inactivo'}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
+                    <div className="space-y-3">
                         {/* Nombre */}
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                            <label className="block text-sm font-medium text-slate-700 mb-1">
                                 Nombre *
                             </label>
                             <input
@@ -181,7 +175,7 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                                 value={formData.nombre}
                                 onChange={handleInputChange}
                                 placeholder="Ej: Rentas Municipales"
-                                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${errors.nombre ? 'border-red-300' : 'border-slate-300'
+                                className={`w-full px-3 py-2 border rounded-lg transition-colors ${errors.nombre ? 'border-red-300' : 'border-slate-300'
                                     }`}
                                 disabled={loading}
                                 maxLength={100}
@@ -193,7 +187,7 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
 
                         {/* Descripción */}
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                            <label className="block text-sm font-medium text-slate-700 mb-1">
                                 Descripción
                             </label>
                             <textarea
@@ -202,7 +196,7 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                                 onChange={handleInputChange}
                                 placeholder="Descripción del sector y servicios que ofrece..."
                                 rows={3}
-                                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none ${errors.descripcion ? 'border-red-300' : 'border-slate-300'
+                                className={`w-full px-3 py-2 border rounded-lg transition-colors resize-none ${errors.descripcion ? 'border-red-300' : 'border-slate-300'
                                     }`}
                                 disabled={loading}
                                 maxLength={500}
@@ -221,7 +215,31 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                                 Tipo de Sector *
                             </label>
                             <div className="grid grid-cols-2 gap-3">
+                                {/* OPCIÓN NORMAL - ESTA FALTABA */}
                                 <label className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-colors ${formData.tipoSector === 'NORMAL'
+                                        ? 'border-blue-500 bg-blue-50'
+                                        : 'border-slate-200 hover:border-slate-300'
+                                    }`}>
+                                    <input
+                                        type="radio"
+                                        name="tipoSector"
+                                        value="NORMAL"
+                                        checked={formData.tipoSector === 'NORMAL'}
+                                        onChange={handleInputChange}
+                                        disabled={loading}
+                                        className="sr-only"
+                                    />
+                                    <div className="flex items-center">
+                                        <Public className="h-5 w-5 text-slate-600 mr-3" />
+                                        <div>
+                                            <p className="font-medium text-slate-900">Normal</p>
+                                            <p className="text-sm text-slate-600">Acceso general sin turno previo</p>
+                                        </div>
+                                    </div>
+                                </label>
+
+                                {/* OPCIÓN ESPECIAL - ESTA YA ESTABA */}
+                                <label className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-colors ${formData.tipoSector === 'ESPECIAL'
                                         ? 'border-blue-500 bg-blue-50'
                                         : 'border-slate-200 hover:border-slate-300'
                                     }`}>

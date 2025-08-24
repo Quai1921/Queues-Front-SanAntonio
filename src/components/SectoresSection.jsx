@@ -19,6 +19,7 @@ import {
 import CrearSectorModal from './CrearSectorModal';
 import EditarSectorModal from './EditarSectorModal';
 import AsignarResponsableModal from './AsignarResponsableModal';
+import HorariosSectorModal from './HorariosSectorModal';
 
 /**
  * Componente principal para la gestión de sectores en AdminPanel
@@ -45,7 +46,7 @@ const SectoresSection = () => {
             // Aquí podrías mostrar notificaciones de éxito
         },
         onError: (error, operacion) => {
-            console.error(`Error en ${operacion}:`, error);
+            // console.error(`Error en ${operacion}:`, error);
             // Aquí podrías mostrar notificaciones de error
         }
     });
@@ -68,11 +69,18 @@ const SectoresSection = () => {
     const [modalAsignarResponsableAbierto, setModalAsignarResponsableAbierto] = useState(false);
     const [sectorParaAsignar, setSectorParaAsignar] = useState(null);
     const [loadingAsignar, setLoadingAsignar] = useState(false);
+    const [modalHorariosAbierto, setModalHorariosAbierto] = useState(false);
+    const [sectorParaHorarios, setSectorParaHorarios] = useState(null);
 
     const mostrarNotificacion = (mensaje, tipo = 'success') => {
         setNotificacion({ mensaje, tipo });
         setTimeout(() => setNotificacion(null), 5000);
     };
+
+    const handleVerHorarios = (sector) => {
+    setSectorParaHorarios(sector);
+    setModalHorariosAbierto(true);
+};
 
     const handleCrearSector = async (sectorData) => {
         try {
@@ -120,7 +128,7 @@ const SectoresSection = () => {
             setSectorParaAsignar(null);
             mostrarNotificacion('Responsable asignado correctamente', 'success');
         } catch (error) {
-            console.error('Error asignando responsable:', error);
+            // console.error('Error asignando responsable:', error);
             mostrarNotificacion('Error al asignar responsable: ' + error.message, 'error');
             throw error; // Re-lanzar para que el modal pueda manejarlo
         } finally {
@@ -197,17 +205,6 @@ const SectoresSection = () => {
         }
 };
 
-    /**
-     * Abrir modal de edición
-     */
-    const handleEditar = (sector) => {
-        setSectorSeleccionado(sector);
-        setModalEditarAbierto(true);
-    };
-
-
-
-
 
 
     /**
@@ -241,7 +238,16 @@ const SectoresSection = () => {
                     </thead>
                     <tbody className="bg-white divide-y divide-slate-200">
                         {sectoresFiltrados.map((sector) => (
-                            <tr key={sector.sector?.id} className="hover:bg-slate-50 transition-colors">
+                            <tr
+                                key={sector.sector?.id}
+                                className={`hover:bg-slate-50 transition-colors ${sector.sector?.tipoSector === 'ESPECIAL' ? 'cursor-pointer' : ''
+                                    }`}
+                                onClick={() => {
+                                    if (sector.sector?.tipoSector === 'ESPECIAL') {
+                                        handleVerHorarios(sector);
+                                    }
+                                }}
+                            >
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="flex items-center">
                                         <div
@@ -260,7 +266,7 @@ const SectoresSection = () => {
                                         </div>
                                     </div>
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap">
+                                {/* <td className="px-6 py-4 whitespace-nowrap">
                                     <div className="flex items-center">
                                         {sector.sector?.tipoSector === 'ESPECIAL' ? (
                                             <Schedule className="h-4 w-4 text-slate-600 mr-2" />
@@ -270,6 +276,26 @@ const SectoresSection = () => {
                                         <span className="text-sm text-slate-900">
                                             {sector.sector?.tipoSector === 'ESPECIAL' ? 'Especial' : sector.sector?.tipoSector === 'NORMAL' ? 'Normal' : 'Público'}
                                         </span>
+                                    </div>
+                                </td> */}
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="flex items-center">
+                                        {sector.sector?.tipoSector === 'ESPECIAL' ? (
+                                            <div className="flex items-center group">
+                                                <Schedule className="h-4 w-4 text-slate-600 mr-2" />
+                                                <span className="text-sm text-slate-900 group-hover:text-amber-600 transition-colors">
+                                                    Especial
+                                                </span>
+                                                <span className="ml-2 text-xs text-amber-600 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                    (Ver horarios)
+                                                </span>
+                                            </div>
+                                        ) : (
+                                            <div className="flex items-center">
+                                                <Public className="h-4 w-4 text-slate-600 mr-2" />
+                                                <span className="text-sm text-slate-900">Normal</span>
+                                            </div>
+                                        )}
                                     </div>
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
@@ -410,7 +436,7 @@ const SectoresSection = () => {
 
             {/* Notificación */}
             {notificacion && (
-                <div className={`fixed top-4 right-4 z-[60] p-4 rounded-lg shadow-lg border transition-all duration-300 ${notificacion.tipo === 'success'
+                <div className={`fixed top-4 left-1/2 -translate-x-1/2  z-[60] px-4 py-6 rounded-lg shadow-lg border transition-all duration-300 ${notificacion.tipo === 'success'
                         ? 'bg-green-50 border-green-200 text-green-800'
                         : 'bg-red-50 border-red-200 text-red-800'
                     }`}>
@@ -535,25 +561,6 @@ const SectoresSection = () => {
                 )}
             </div>
 
-            {/* Error Alert */}
-            {error && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                    <div className="flex items-center">
-                        <Cancel className="h-5 w-5 text-red-400 mr-2" />
-                        <div>
-                            <h3 className="text-sm font-medium text-red-800">Error</h3>
-                            <p className="text-sm text-red-700 mt-1">{error}</p>
-                        </div>
-                        <button
-                            onClick={limpiarError}
-                            className="ml-auto text-red-400 hover:text-red-600"
-                        >
-                            <Cancel className="h-4 w-4" />
-                        </button>
-                    </div>
-                </div>
-            )}
-
             {/* Loading */}
             {loading && (
                 <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-12">
@@ -600,6 +607,15 @@ const SectoresSection = () => {
                 onSubmit={handleProcesarAsignacion}
                 sector={sectorParaAsignar}
                 loading={loadingAsignar}
+            />
+
+            <HorariosSectorModal
+                isOpen={modalHorariosAbierto}
+                onClose={() => {
+                    setModalHorariosAbierto(false);
+                    setSectorParaHorarios(null);
+                }}
+                sector={sectorParaHorarios}
             />
         </div>
     );

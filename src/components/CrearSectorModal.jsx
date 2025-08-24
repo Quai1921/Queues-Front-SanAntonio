@@ -200,7 +200,7 @@ const CrearSectorModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                                 name="descripcion"
                                 value={formData.descripcion}
                                 onChange={handleInputChange}
-                                placeholder="OPCINAL: Descripción del sector y servicios que ofrece"
+                                placeholder="OPCIONAL: Descripción del sector y servicios que ofrece"
                                 rows={3}
                                 className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none ${errors.descripcion ? 'border-red-300' : 'border-slate-300'
                                     }`}

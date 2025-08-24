@@ -57,7 +57,7 @@ const AdminPanel = () => {
             title: 'Sectores',
             icon: <Business />,
             path: '/admin/sectores',
-            description: 'Administrar sectores de atención municipal'
+            description: 'Gestionar sectores de atención'
         },
         {
             id: 'configuracion',
