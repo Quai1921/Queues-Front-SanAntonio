@@ -16,7 +16,7 @@ import sectoresService from '../services/sectoresService';
 /**
  * Modal para crear un nuevo empleado
  */
-const CrearEmpleadoModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
+const CrearEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = false }) => {
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -36,9 +36,12 @@ const CrearEmpleadoModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
     const [sectores, setSectores] = useState([]);
     const [loadingSectores, setLoadingSectores] = useState(false);
 
+
+    console.log(sectores)
+
     // Cargar sectores cuando se abre el modal
     useEffect(() => {
-        if (isOpen) {
+        if (isOpen && empleado) {
             cargarSectores();
             // Reset form
             setFormData({
@@ -51,17 +54,22 @@ const CrearEmpleadoModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                 dni: '',
                 telefono: '',
                 rol: 'OPERADOR',
-                sectorId: ''
+                sectorId: empleado.sector?.id?.toString() || ''
             });
             setErrors({});
         }
-    }, [isOpen]);
+    }, [isOpen, empleado]);
 
     const cargarSectores = async () => {
         setLoadingSectores(true);
         try {
-            const data = await sectoresService.obtenerTodos();
-            setSectores(data.filter(s => s.sector?.activo) || []);
+            // Cambiar de obtenerTodos() a obtenerPublicos() para consistencia
+            const data = await sectoresService.obtenerPublicos();
+            console.log('Sectores obtenidos:', data);
+
+            // Los sectores ya vienen filtrados por activos desde el backend
+            setSectores(data || []);
+
         } catch (error) {
             console.error('Error cargando sectores:', error);
             setSectores([]);
@@ -95,42 +103,38 @@ const CrearEmpleadoModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
 
         // Username
         if (!formData.username.trim()) {
-            newErrors.username = 'El username es requerido';
+            newErrors.username = 'El username es obligatorio';
         } else if (formData.username.length < 3) {
             newErrors.username = 'El username debe tener al menos 3 caracteres';
-        } else if (!/^[A-Z0-9_]+$/.test(formData.username)) {
-            newErrors.username = 'El username solo puede contener letras mayúsculas, números y guiones bajos';
+        } else if (!/^[a-zA-Z0-9._-]+$/.test(formData.username)) {
+            newErrors.username = 'Solo se permiten letras, números, puntos, guiones';
         }
 
         // Password
         if (!formData.password.trim()) {
-            newErrors.password = 'La contraseña es requerida';
+            newErrors.password = 'La contraseña es obligatoria';
         } else if (formData.password.length < 6) {
             newErrors.password = 'La contraseña debe tener al menos 6 caracteres';
         }
 
         // Confirmar password
         if (!formData.confirmarPassword.trim()) {
-            newErrors.confirmarPassword = 'Debes confirmar la contraseña';
+            newErrors.confirmarPassword = 'Debe confirmar la contraseña';
         } else if (formData.password !== formData.confirmarPassword) {
             newErrors.confirmarPassword = 'Las contraseñas no coinciden';
         }
 
         // Nombre
         if (!formData.nombre.trim()) {
-            newErrors.nombre = 'El nombre es requerido';
-        } else if (formData.nombre.length > 50) {
-            newErrors.nombre = 'El nombre no puede tener más de 50 caracteres';
+            newErrors.nombre = 'El nombre es obligatorio';
         }
 
         // Apellido
         if (!formData.apellido.trim()) {
-            newErrors.apellido = 'El apellido es requerido';
-        } else if (formData.apellido.length > 50) {
-            newErrors.apellido = 'El apellido no puede tener más de 50 caracteres';
+            newErrors.apellido = 'El apellido es obligatorio';
         }
 
-        // Email
+        // Email (opcional pero debe ser válido)
         if (formData.email.trim()) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(formData.email)) {
@@ -138,16 +142,16 @@ const CrearEmpleadoModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
             }
         }
 
-        // DNI
+        // DNI (opcional pero debe ser válido)
         if (formData.dni.trim()) {
             if (!/^\d{7,8}$/.test(formData.dni)) {
                 newErrors.dni = 'El DNI debe tener entre 7 y 8 dígitos';
             }
         }
 
-        // Sector (solo requerido para RESPONSABLE_SECTOR)
+        // Sector (obligatorio para RESPONSABLE_SECTOR, opcional para OPERADOR)
         if (formData.rol === 'RESPONSABLE_SECTOR' && !formData.sectorId) {
-            newErrors.sectorId = 'Debes seleccionar un sector para el responsable';
+            newErrors.sectorId = 'Los responsables de sector deben tener un sector asignado';
         }
 
         setErrors(newErrors);
@@ -459,35 +463,45 @@ const CrearEmpleadoModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                                 </div>
                             </div>
 
-                            {/* Sector (solo para RESPONSABLE_SECTOR) */}
-                            {/* {formData.rol === 'RESPONSABLE_SECTOR' && (
+                            {/* Sector (para RESPONSABLE_SECTOR y OPERADOR) */}
+                            {(formData.rol === 'RESPONSABLE_SECTOR' || formData.rol === 'OPERADOR') && (
                                 <div>
                                     <label className="block text-sm font-medium text-slate-700 mb-1">
-                                        Sector a Cargo *
+                                        Sector *
                                     </label>
                                     <select
                                         name="sectorId"
                                         value={formData.sectorId}
                                         onChange={handleInputChange}
-                                        className={`w-full px-3 py-2 border rounded-lg transition-colors ${errors.sectorId ? 'border-red-300' : 'border-slate-300'
-                                            }`}
-                                        disabled={loading || loadingSectores}
+                                        className={`w-full px-3 py-2 border rounded-lg transition-colors ${errors.sectorId
+                                                ? 'border-red-500 focus:border-red-500'
+                                                : 'border-slate-300 focus:border-[#224666]'
+                                            } focus:ring-2 focus:ring-[#224666]/20`}
                                     >
-                                        <option value="">Seleccionar sector...</option>
-                                        {sectores.map((sector) => (
-                                            <option key={sector.sector.id} value={sector.sector.id}>
-                                                {sector.sector.codigo} - {sector.sector.nombre}
+                                        <option value="">
+                                            {loadingSectores ? 'Cargando sectores...' : 'Seleccionar sector'}
+                                        </option>
+                                        {sectores.map(sector => (
+                                            <option key={sector.id} value={sector.id}>
+                                                {sector.codigo} - {sector.nombre}
                                             </option>
                                         ))}
                                     </select>
+
                                     {errors.sectorId && (
                                         <p className="text-red-600 text-sm mt-1">{errors.sectorId}</p>
                                     )}
-                                    {loadingSectores && (
-                                        <p className="text-slate-500 text-sm mt-1">Cargando sectores...</p>
-                                    )}
+
+                                    {/* Información sobre el sector */}
+                                    <div className="mt-2 text-xs text-slate-600">
+                                        {formData.rol === 'RESPONSABLE_SECTOR' ? (
+                                            <p>Los responsables de sector deben tener un sector asignado</p>
+                                        ) : (
+                                            <p>Los operadores deben tener un sector asignado</p>
+                                        )}
+                                    </div>
                                 </div>
-                            )} */}
+                            )}
                         </div>
                     </div>
 

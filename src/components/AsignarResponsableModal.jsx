@@ -18,7 +18,7 @@ const AsignarResponsableModal = ({ isOpen, onClose, onSubmit, sector, loading = 
     const [busqueda, setBusqueda] = useState('');
     const [error, setError] = useState(null);
 
-    console.log(empleados);
+    // console.log(empleados);
 
     // Cargar empleados cuando se abre el modal
     useEffect(() => {
