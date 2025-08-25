@@ -337,24 +337,59 @@ class EmpleadosService {
      * @returns {Object} - Empleado formateado
      */
     formatearParaUI(empleado) {
-        console.log(empleado)
-
         if (!empleado) return null;
-        
+
+        // Determinar sectores para mostrar
+        let sectoresDisplay = '';
+        let sectoresVisibles = [];
+        let sectoresOcultos = [];
+        let sectoresTooltip = '';
+
+        if (empleado.sectoresResponsable && empleado.sectoresResponsable.length > 0) {
+            const nombres = empleado.sectoresResponsable.map(s => s.nombre);
+
+            // Dividir en visibles y ocultos
+            sectoresVisibles = nombres.slice(0, 1);
+            sectoresOcultos = nombres.slice(1);
+
+            sectoresDisplay = nombres.join(', '); // Fallback
+            sectoresTooltip = empleado.sectoresResponsable
+                .map(s => `${s.codigo} - ${s.nombre}`)
+                .join('\n');
+        } else if (empleado.sectorNombre) {
+            sectoresVisibles = [empleado.sectorNombre];
+            sectoresOcultos = [];
+            sectoresDisplay = empleado.sectorNombre;
+            sectoresTooltip = `${empleado.sectorCodigo} - ${empleado.sectorNombre}`;
+        } else {
+            sectoresVisibles = ['Sin asignar'];
+            sectoresOcultos = [];
+            sectoresDisplay = 'Sin asignar';
+            sectoresTooltip = 'Sin sector asignado';
+        }
+
         return {
             ...empleado,
             nombreCompleto: empleado.nombreCompleto,
-            rolLabel: this?.getRolLabel(empleado.rol),
+            rolLabel: this.getRolLabel(empleado.rol),
             estadoLabel: empleado.activo ? 'Activo' : 'Inactivo',
             estadoColor: empleado.activo ? 'text-green-600' : 'text-red-600',
             estadoBg: empleado.activo ? 'bg-green-50' : 'bg-red-50',
-            // sectorAsignado: empleado.sectorResponsable ? empleado.sectorResponsable.codigo : null,
-            sectorAsignado: empleado.sectorResponsable ?
-                `${empleado.sectorResponsable.codigo} - ${empleado.sectorResponsable.nombre}` :
-                'Sin asignar',
-            // sectorNombre: empleado.sectorResponsable ? empleado.sectorResponsable.nombre : null
+
+            // Campos para sectores expandibles
+            sectoresDisplay,
+            sectoresVisibles,
+            sectoresOcultos,
+            sectoresTooltip,
+            cantidadSectores: empleado.sectoresResponsable?.length || (empleado.sectorCodigo ? 1 : 0),
+
+            // Mantener compatibilidad
+            sectorAsignado: empleado.sectorCodigo,
+            sectorNombre: empleado.sectorNombre
         };
     }
+
+    
 
     /**
      * Obtener label del rol

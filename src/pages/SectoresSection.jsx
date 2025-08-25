@@ -210,7 +210,7 @@ const SectoresSection = () => {
      * Render de la tabla de sectores
      */
     const renderTablaSectores = () => (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden mt-4">
             <div className="overflow-x-auto">
                 <table className="w-full">
                     <thead className="bg-slate-50 border-b border-slate-200">
@@ -374,7 +374,7 @@ const SectoresSection = () => {
     );
 
     return (
-        <div className="space-y-6">
+        <div>
             {/* Header con estadísticas */}
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
                 <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
@@ -445,7 +445,7 @@ const SectoresSection = () => {
             )}
 
             {/* Header con acciones */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mt-4">
                 <div>
                     <h3 className="text-lg font-semibold text-slate-900">Sectores de Atención</h3>
                     <p className="text-slate-600 text-sm">Administra sectores y responsables</p>
@@ -470,7 +470,7 @@ const SectoresSection = () => {
             </div>
 
             {/* Filtros y búsqueda */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mt-4">
                 <div className="flex flex-col sm:flex-row gap-4">
                     {/* Búsqueda */}
                     <div className="flex-1">
@@ -568,7 +568,7 @@ const SectoresSection = () => {
 
             {/* Resumen de resultados */}
             {sectoresFiltrados.length > 0 && (
-                <div className="text-sm text-slate-600 text-center">
+                <div className="text-sm text-slate-600 text-center mt-4">
                     Mostrando {sectoresFiltrados.length} de {sectores.length} sectores
                 </div>
             )}

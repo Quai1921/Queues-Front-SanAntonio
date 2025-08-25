@@ -5,7 +5,9 @@ import {
     Search,
     FilterList,
     Refresh,
-    Edit,
+    EditDocument as EditDocumentIcon,
+    Key as KeyIcon,
+    DomainAdd as DomainAddIcon,
     Group,
     Person,
     Business,
@@ -38,7 +40,7 @@ const EmpleadosSection = () => {
 
     // console.log(estadisticas)
     // console.log(empleadosFiltrados);
-    console.log(empleados)
+    // console.log(empleados)
 
     // Estados de filtros
     const [filtros, setFiltros] = useState({
@@ -53,7 +55,7 @@ const EmpleadosSection = () => {
     const [modalPasswordAbierto, setModalPasswordAbierto] = useState(false);
     const [modalAsignarSectorAbierto, setModalAsignarSectorAbierto] = useState(false);
     const [empleadoSeleccionado, setEmpleadoSeleccionado] = useState(null);
-    
+
     // Estados de carga
     const [loadingCrear, setLoadingCrear] = useState(false);
     const [loadingEditar, setLoadingEditar] = useState(false);
@@ -255,8 +257,41 @@ const EmpleadosSection = () => {
         }
     };
 
+    const SectoresCell = ({ empleado }) => {
+        const [expandido, setExpandido] = useState(false);
+
+        const sectoresAMostrar = expandido
+            ? [...empleado.sectoresVisibles, ...empleado.sectoresOcultos]
+            : empleado.sectoresVisibles;
+
+        return (
+            <div className="flex flex-col">
+                {sectoresAMostrar.map((sector, index) => (
+                    <span
+                        key={index}
+                        className="text-sm text-slate-900 px-2"
+                    >
+                        {sector}
+                    </span>
+                ))}
+
+                {empleado.sectoresOcultos.length > 0 && (
+                    <button
+                        onClick={() => setExpandido(!expandido)}
+                        className="text-xs bg-slate-200 hover:bg-slate-100 text-center mt-1 py-1 rounded-full max-w-[100px]"
+                    >
+                        {expandido
+                            ? '↑ Mostrar menos'
+                            : `↓ Ver ${empleado.sectoresOcultos.length} más`
+                        }
+                    </button>
+                )}
+            </div>
+        );
+    };
+
     return (
-        <div className="space-y-6">
+        <div>
             {/* Header con estadísticas */}
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
                 <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
@@ -321,7 +356,7 @@ const EmpleadosSection = () => {
             </div>
 
             {/* Header con acciones */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mt-4">
                 <div>
                     <h3 className="text-lg font-semibold text-slate-900">Empleados del Sistema</h3>
                     <p className="text-slate-600 text-sm">Administra usuarios y sus permisos</p>
@@ -346,7 +381,7 @@ const EmpleadosSection = () => {
             </div>
 
             {/* Filtros y búsqueda */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mt-4">
                 <div className="flex flex-col sm:flex-row gap-4">
                     {/* Búsqueda */}
                     <div className="flex-1">
@@ -388,7 +423,7 @@ const EmpleadosSection = () => {
             </div>
 
             {/* Tabla de empleados */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden mt-4">
                 {loading ? (
                     <div className="flex items-center justify-center py-12">
                         <div className="flex items-center space-x-2 text-slate-500">
@@ -411,132 +446,128 @@ const EmpleadosSection = () => {
                             </thead>
                             <tbody className="divide-y divide-slate-200">
                                 {empleadosFiltrados
-                                .toSorted((a, b) => a.rol.localeCompare(b.rol))
-                                .map((empleado) => (
-                                    <tr key={empleado.id} className="hover:bg-slate-50">
-                                        {/* Empleado */}
-                                        <td className="py-4 px-4">
-                                            <div className="flex items-center">
-                                                <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center">
-                                                    <Person className="h-4 w-4 text-slate-600" />
+                                    .toSorted((a, b) => a.rol.localeCompare(b.rol))
+                                    .map((empleado) => (
+                                        <tr key={empleado.id} className="hover:bg-slate-50">
+                                            {/* Empleado */}
+                                            <td className="py-4 px-4">
+                                                <div className="flex items-center">
+                                                    <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center">
+                                                        <Person className="h-4 w-4 text-slate-600" />
+                                                    </div>
+                                                    <div className="ml-3">
+                                                        <p className="font-medium text-slate-900">
+                                                            {empleado.nombreCompleto}
+                                                        </p>
+                                                        <p className="text-sm text-slate-500">
+                                                            {empleado.username}
+                                                            {empleado.dni && (
+                                                                <span className="ml-2">• DNI: {empleado.dni}</span>
+                                                            )}
+                                                        </p>
+                                                    </div>
                                                 </div>
-                                                <div className="ml-3">
-                                                    <p className="font-medium text-slate-900">
-                                                        {empleado.nombreCompleto}
-                                                    </p>
-                                                    <p className="text-sm text-slate-500">
-                                                        {empleado.username}
-                                                        {empleado.dni && (
-                                                            <span className="ml-2">• DNI: {empleado.dni}</span>
-                                                        )}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </td>
+                                            </td>
 
-                                        {/* Contacto */}
-                                        <td className="py-4 px-4">
-                                            <div className="text-sm">
-                                                {empleado.email && (
-                                                    <p className="text-slate-900">{empleado.email}</p>
-                                                )}
-                                            </div>
-                                        </td>
-
-                                        {/* Rol */}
-                                        <td className="py-4 px-4">
-                                            <div className={`inline-flex w-28 items-center justify-center px-2 py-1 rounded-full text-xs font-medium ${getRolBadgeColor(empleado.rol)}`}>
-                                                <span className="ml-1">{getRolLabel(empleado.rol)}</span>
-                                            </div>
-                                        </td>
-
-                                        {/* Sector */}
-                                        <td className="py-4 px-4">
-                                            <div className="text-sm">
-                                                {empleado.sectorResponsable ? (
-                                                    <span className="text-slate-900">
-                                                        {empleado.sectorResponsable.nombre}
-                                                    </span>
-                                                ) : (
-                                                    <span className="text-slate-400">Sin asignar</span>
-                                                )}
-                                            </div>
-                                        </td>
-
-                                        {/* Estado */}
-                                        <td className="py-4 px-4">
-                                            <span className={`inline-flex w-16 items-center justify-center px-2 py-1 rounded-full text-xs font-medium ${
-                                                empleado.activo 
-                                                    ? 'bg-green-100 text-green-800' 
-                                                    : 'bg-red-100 text-red-800'
-                                            }`}>
-                                                {empleado.activo ? (
-                                                    <>
-                                                        Activo
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        Inactivo
-                                                    </>
-                                                )}
-                                            </span>
-                                        </td>
-
-                                        {/* Acciones */}
-                                        <td className="py-4 px-4">
-                                            <div className="flex items-center justify-end space-x-2">
-                                                <button
-                                                    onClick={() => {
-                                                        setEmpleadoSeleccionado(empleado);
-                                                        setModalEditarAbierto(true);
-                                                    }}
-                                                    className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                                                    title="Editar empleado"
-                                                >
-                                                    <Edit className="h-4 w-4" />
-                                                </button>
-
-                                                <button
-                                                    onClick={() => {
-                                                        setEmpleadoSeleccionado(empleado);
-                                                        setModalPasswordAbierto(true);
-                                                    }}
-                                                    className="p-1.5 text-slate-400 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
-                                                    title="Cambiar contraseña"
-                                                >
-                                                    <Lock className="h-4 w-4" />
-                                                </button>
-
-                                                <button
-                                                    onClick={() => {
-                                                        setEmpleadoSeleccionado(empleado);
-                                                        setModalAsignarSectorAbierto(true);
-                                                    }}
-                                                    className="p-1.5 text-slate-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
-                                                    title="Asignar sector"
-                                                >
-                                                    <Business className="h-4 w-4" />
-                                                </button>
-
-                                                <button
-                                                    onClick={() => handleToggleEstado(empleado)}
-                                                    className={`p-1.5 text-slate-400 hover:bg-slate-100 rounded-lg transition-colors ${
-                                                        empleado.activo 
-                                                            ? 'hover:text-red-600' 
-                                                            : 'hover:text-green-600'
-                                                    }`}
-                                                    title={empleado.activo ? 'Desactivar empleado' : 'Activar empleado'}
-                                                >
-                                                    {empleado.activo ? (
-                                                        <Cancel className="h-4 w-4" />
-                                                    ) : (
-                                                        <CheckCircle className="h-4 w-4" />
+                                            {/* Contacto */}
+                                            <td className="py-4 px-4">
+                                                <div className="text-sm">
+                                                    {empleado.email && (
+                                                        <p className="text-slate-900">{empleado.email}</p>
                                                     )}
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
+                                                </div>
+                                            </td>
+
+                                            {/* Rol */}
+                                            <td className="py-4 px-4">
+                                                <div className={`inline-flex w-28 items-center justify-center px-2 py-1 rounded-full text-xs font-medium ${getRolBadgeColor(empleado.rol)}`}>
+                                                    <span className="ml-1">{getRolLabel(empleado.rol)}</span>
+                                                </div>
+                                            </td>
+
+                                            {/* Sector */}
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                <SectoresCell empleado={empleado} />
+                                            </td>
+
+                                            {/* Estado */}
+                                            <td className="py-4 px-4">
+                                                <span className={`inline-flex w-16 items-center justify-center px-2 py-1 rounded-full text-xs font-medium ${empleado.activo
+                                                        ? 'bg-green-100 text-green-800'
+                                                        : 'bg-red-100 text-red-800'
+                                                    }`}>
+                                                    {empleado.activo ? (
+                                                        <>
+                                                            Activo
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            Inactivo
+                                                        </>
+                                                    )}
+                                                </span>
+                                            </td>
+
+                                            {/* Acciones */}
+                                            <td className="py-4 px-4">
+                                                <div className="flex items-center justify-end space-x-2">
+                                                    <button
+                                                        onClick={() => {
+                                                            setEmpleadoSeleccionado(empleado);
+                                                            setModalAsignarSectorAbierto(true);
+                                                        }}
+                                                        className="p-1.5 text-slate-400 hover:text-neutral-800 transition-all duration-300"
+                                                        title="Asignar sector"
+                                                    >
+                                                        {getRolLabel(empleado.rol) === 'Operador' ? (
+                                                            <DomainAddIcon className="h-4 w-4" />
+                                                        ) : (
+                                                            ""
+                                                        )}
+                                                    </button>
+
+                                                    <button
+                                                        onClick={() => {
+                                                            setEmpleadoSeleccionado(empleado);
+                                                            setModalEditarAbierto(true);
+                                                        }}
+                                                        className="p-1.5 text-slate-400 hover:text-cyan-800 transition-all duration-300"
+                                                        title="Editar empleado"
+                                                    >
+                                                        <EditDocumentIcon className="h-4 w-4" />
+                                                    </button>
+
+                                                    <button
+                                                        onClick={() => {
+                                                            setEmpleadoSeleccionado(empleado);
+                                                            setModalPasswordAbierto(true);
+                                                        }}
+                                                        className="p-1.5 text-slate-400 hover:text-amber-800 transition-all duration-300"
+                                                        title="Cambiar contraseña"
+                                                    >
+                                                        <KeyIcon className="h-4 w-4" />
+                                                    </button>
+
+
+
+                                                    <button
+                                                        onClick={() => handleToggleEstado(empleado)}
+                                                        className={`p-1.5 text-slate-400 transition-all duration-300 ${empleado.activo
+                                                                ? 'hover:text-red-600'
+                                                                : 'hover:text-green-600'
+                                                            }`}
+                                                        title={empleado.activo ? 'Desactivar empleado' : 'Activar empleado'}
+                                                    >
+                                                        {empleado.activo ? (
+                                                            <Cancel className="h-4 w-4" />
+                                                        ) : (
+                                                            <CheckCircle className="h-4 w-4" />
+                                                        )}
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
                             </tbody>
                         </table>
                     </div>
@@ -558,6 +589,13 @@ const EmpleadosSection = () => {
                     </div>
                 )}
             </div>
+
+            {/* Resumen de resultados */}
+            {empleadosFiltrados.length > 0 && (
+                <div className="text-sm text-slate-600 text-center mt-4">
+                    Mostrando {empleadosFiltrados.length} de {empleados.length} empleados
+                </div>
+            )}
 
             {/* Notificación */}
             {notificacion && (

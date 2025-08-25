@@ -206,10 +206,10 @@ const CrearEmpleadoModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-slate-200 bg-slate-50">
+                <div className="flex items-center justify-between p-6 border-b border-slate-200">
                     <div className="flex items-center">
-                        <div className="w-10 h-10 bg-[#224666] rounded-lg flex items-center justify-center mr-3">
-                            <Person className="h-6 w-6 text-white" />
+                        <div className="w-10 h-10 bg-slate-200 rounded-lg flex items-center justify-center mr-3">
+                            <Person className="h-6 w-6 text-slate-600" />
                         </div>
                         <div>
                             <h2 className="text-lg font-semibold text-slate-900">Crear Empleado</h2>
@@ -231,11 +231,6 @@ const CrearEmpleadoModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                     <div className="space-y-4">
                         {/* Credenciales */}
                         <div className="space-y-4">
-                            <h3 className="text-sm font-medium text-slate-900 flex items-center">
-                                <Badge className="h-4 w-4 mr-2" />
-                                Credenciales de Acceso
-                            </h3>
-
                             <div className="grid grid-cols-1 gap-4">
                                 {/* Username */}
                                 <div>
@@ -278,7 +273,7 @@ const CrearEmpleadoModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                                             <button
                                                 type="button"
                                                 onClick={() => setShowPassword(!showPassword)}
-                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-all duration-300"
                                             >
                                                 {showPassword ? <VisibilityOff className="h-4 w-4" /> : <Visibility className="h-4 w-4" />}
                                             </button>
@@ -306,7 +301,7 @@ const CrearEmpleadoModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                                             <button
                                                 type="button"
                                                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                                                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-all duration-300"
                                             >
                                                 {showConfirmPassword ? <VisibilityOff className="h-4 w-4" /> : <Visibility className="h-4 w-4" />}
                                             </button>
@@ -320,7 +315,7 @@ const CrearEmpleadoModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                         </div>
 
                         {/* Información Personal */}
-                        <div className="space-y-4">
+                        <div className="space-y-1">
                             <h3 className="text-sm font-medium text-slate-900 flex items-center">
                                 <Person className="h-4 w-4 mr-2" />
                                 Información Personal
@@ -372,7 +367,7 @@ const CrearEmpleadoModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                                 {/* DNI */}
                                 <div>
                                     <label className="block text-sm font-medium text-slate-700 mb-1">
-                                        DNI
+                                        DNI *
                                     </label>
                                     <input
                                         type="text"
@@ -390,47 +385,32 @@ const CrearEmpleadoModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                                     )}
                                 </div>
 
-                                {/* Teléfono */}
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">
-                                        Teléfono
+                                    <label className="block text-sm font-medium text-slate-700 mb-1 items-center">
+                                        Email *
                                     </label>
                                     <input
-                                        type="tel"
-                                        name="telefono"
-                                        value={formData.telefono}
+                                        type="email"
+                                        name="email"
+                                        value={formData.email}
                                         onChange={handleInputChange}
-                                        placeholder="+54 9 351 123-4567"
-                                        className="w-full px-3 py-2 border border-slate-300 rounded-lg"
+                                        placeholder="juan.perez@sanantonio.gov.ar"
+                                        className={`w-full px-3 py-2 border rounded-lg transition-colors ${errors.email ? 'border-red-300' : 'border-slate-300'
+                                            }`}
                                         disabled={loading}
                                     />
+                                    {errors.email && (
+                                        <p className="text-red-600 text-sm mt-1">{errors.email}</p>
+                                    )}
                                 </div>
                             </div>
 
                             {/* Email */}
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1 flex items-center">
-                                    <Email className="h-4 w-4 mr-1" />
-                                    Email
-                                </label>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleInputChange}
-                                    placeholder="juan.perez@sanantonio.gov.ar"
-                                    className={`w-full px-3 py-2 border rounded-lg transition-colors ${errors.email ? 'border-red-300' : 'border-slate-300'
-                                        }`}
-                                    disabled={loading}
-                                />
-                                {errors.email && (
-                                    <p className="text-red-600 text-sm mt-1">{errors.email}</p>
-                                )}
-                            </div>
+                            
                         </div>
 
                         {/* Rol y Permisos */}
-                        <div className="space-y-4">
+                        <div className="space-y-1">
                             <h3 className="text-sm font-medium text-slate-900 flex items-center">
                                 <AdminPanelSettings className="h-4 w-4 mr-2" />
                                 Rol y Permisos
@@ -480,7 +460,7 @@ const CrearEmpleadoModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                             </div>
 
                             {/* Sector (solo para RESPONSABLE_SECTOR) */}
-                            {formData.rol === 'RESPONSABLE_SECTOR' && (
+                            {/* {formData.rol === 'RESPONSABLE_SECTOR' && (
                                 <div>
                                     <label className="block text-sm font-medium text-slate-700 mb-1">
                                         Sector a Cargo *
@@ -507,7 +487,7 @@ const CrearEmpleadoModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                                         <p className="text-slate-500 text-sm mt-1">Cargando sectores...</p>
                                     )}
                                 </div>
-                            )}
+                            )} */}
                         </div>
                     </div>
 
