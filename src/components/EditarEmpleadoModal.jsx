@@ -10,6 +10,7 @@ import {
     Business,
     SupportAgent
 } from '@mui/icons-material';
+import empleadosService from '../services/empleadoService';
 
 /**
  * Modal para editar un empleado existente
@@ -22,7 +23,6 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
         apellido: '',
         email: '',
         dni: '',
-        telefono: '',
         rol: 'OPERADOR'
     });
 
@@ -30,17 +30,39 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
 
     // Cargar datos del empleado cuando se abre el modal
     useEffect(() => {
-        if (isOpen && empleado) {
-            setFormData({
-                nombre: empleado.nombre || '',
-                apellido: empleado.apellido || '',
-                email: empleado.email || '',
-                dni: empleado.dni || '',
-                telefono: empleado.telefono || '',
-                rol: empleado.rol || 'OPERADOR'
-            });
-            setErrors({});
-        }
+        const cargarDatosCompletos = async () => {
+            if (isOpen && empleado) {
+                try {
+                    // Obtener datos completos del empleado desde el backend
+                    const empleadoCompleto = await empleadosService.obtenerPorId(empleado.id);
+
+                    setFormData({
+                        nombre: empleadoCompleto.nombre || '',
+                        apellido: empleadoCompleto.apellido || '',
+                        email: empleadoCompleto.email || '',
+                        dni: empleadoCompleto.dni || '',
+                        rol: empleadoCompleto.rol || 'OPERADOR'
+                    });
+                } catch (error) {
+                    console.error('Error cargando datos del empleado:', error);
+                    // Fallback con datos disponibles
+                    const [apellido = '', nombre = ''] = empleado.nombreCompleto
+                        ? empleado.nombreCompleto.split(', ')
+                        : ['', ''];
+
+                    setFormData({
+                        nombre: nombre,
+                        apellido: apellido,
+                        email: empleado.email || '',
+                        dni: '',
+                        rol: empleado.rol || 'OPERADOR'
+                    });
+                }
+                setErrors({});
+            }
+        };
+
+        cargarDatosCompletos();
     }, [isOpen, empleado]);
 
     const handleInputChange = (e) => {
@@ -94,13 +116,6 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
             }
         }
 
-        // Teléfono (opcional pero debe ser válido)
-        if (formData.telefono.trim()) {
-            if (!/^[0-9\s\-\(\)]{8,20}$/.test(formData.telefono)) {
-                newErrors.telefono = 'El teléfono debe tener entre 8 y 20 caracteres';
-            }
-        }
-
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -118,7 +133,6 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
             apellido: formData.apellido.trim(),
             email: formData.email.trim() || null,
             dni: formData.dni.trim() || null,
-            telefono: formData.telefono.trim() || null,
             rol: formData.rol
         };
 
