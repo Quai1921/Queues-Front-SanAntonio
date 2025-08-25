@@ -381,16 +381,6 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
                                 </div>
                             </div>
                         </div>
-
-                        {/* Acciones adicionales */}
-                        <div className="bg-slate-50 p-4 rounded-lg">
-                            <h3 className="text-sm font-medium text-slate-900 mb-2">Acciones Adicionales</h3>
-                            <div className="text-sm text-slate-600 space-y-1">
-                                <p>• Para cambiar la contraseña, usa el botón específico de "Cambiar Contraseña"</p>
-                                <p>• Para asignar/cambiar sector, usa el botón "Asignar Sector"</p>
-                                <p>• Para activar/desactivar, usa los botones de estado en la tabla principal</p>
-                            </div>
-                        </div>
                     </div>
 
                     {/* Botones */}

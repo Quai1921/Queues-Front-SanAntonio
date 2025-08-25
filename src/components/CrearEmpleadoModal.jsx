@@ -16,7 +16,7 @@ import sectoresService from '../services/sectoresService';
 /**
  * Modal para crear un nuevo empleado
  */
-const CrearEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = false }) => {
+const CrearEmpleadoModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
     const [formData, setFormData] = useState({
         username: '',
         password: '',
@@ -37,11 +37,11 @@ const CrearEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fal
     const [loadingSectores, setLoadingSectores] = useState(false);
 
 
-    console.log(sectores)
+    // console.log(sectores)
 
     // Cargar sectores cuando se abre el modal
     useEffect(() => {
-        if (isOpen && empleado) {
+        if (isOpen) {
             cargarSectores();
             // Reset form
             setFormData({
@@ -54,11 +54,11 @@ const CrearEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fal
                 dni: '',
                 telefono: '',
                 rol: 'OPERADOR',
-                sectorId: empleado.sector?.id?.toString() || ''
+                sectorId: ''
             });
             setErrors({});
         }
-    }, [isOpen, empleado]);
+    }, [isOpen]);
 
     const cargarSectores = async () => {
         setLoadingSectores(true);
