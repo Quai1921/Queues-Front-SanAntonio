@@ -65,7 +65,7 @@ const CrearEmpleadoModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
         try {
             // Cambiar de obtenerTodos() a obtenerPublicos() para consistencia
             const data = await sectoresService.obtenerPublicos();
-            console.log('Sectores obtenidos:', data);
+            // console.log('Sectores obtenidos:', data);
 
             // Los sectores ya vienen filtrados por activos desde el backend
             setSectores(data || []);

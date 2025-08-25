@@ -326,7 +326,7 @@ class EmpleadosService {
         try {
             return await this.obtenerPorRol('RESPONSABLE_SECTOR');
         } catch (error) {
-            console.error('Error obteniendo responsables disponibles:', error);
+            // console.error('Error obteniendo responsables disponibles:', error);
             throw error;
         }
     }
@@ -371,7 +371,7 @@ class EmpleadosService {
         return {
             ...empleado,
             nombreCompleto: empleado.nombreCompleto,
-            rolLabel: this.getRolLabel(empleado.rol),
+            rolLabel: this?.getRolLabel(empleado.rol),
             estadoLabel: empleado.activo ? 'Activo' : 'Inactivo',
             estadoColor: empleado.activo ? 'text-green-600' : 'text-red-600',
             estadoBg: empleado.activo ? 'bg-green-50' : 'bg-red-50',
@@ -564,12 +564,12 @@ class EmpleadosService {
             error.message = 'Error de conexión al gestionar empleados';
         }
 
-        console.error('Empleados Service Error:', {
-            message: error.message,
-            status: error.response?.status,
-            url: error.config?.url,
-            data: error.response?.data
-        });
+        // console.error('Empleados Service Error:', {
+        //     message: error.message,
+        //     status: error.response?.status,
+        //     url: error.config?.url,
+        //     data: error.response?.data
+        // });
     }
 }
 
