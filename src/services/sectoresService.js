@@ -370,13 +370,22 @@ class SectoresService {
         } else if (error.request) {
             error.message = 'Error de conexión al gestionar sectores';
         }
-
-        // console.error('Sectores Service Error:', {
-        //     message: error.message,
-        //     status: error.response?.status,
-        //     url: error.config?.url
-        // });
     }
+
+    /**
+ * Listar sectores especiales (alias para obtenerEspeciales)
+ * @returns {Promise<Array>} - Lista de sectores especiales
+ */
+    async listarEspeciales() {
+        return await this.obtenerEspeciales();
+    }
+
+
+
+
+
+
+
 }
 
 // Exportar instancia singleton del servicio

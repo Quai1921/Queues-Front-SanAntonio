@@ -23,6 +23,7 @@ import {
 } from '@mui/icons-material';
 import SectoresSection from '../pages/SectoresSection';
 import EmpleadosSection from '../pages/EmpleadosSection';
+import HorariosSection from '../pages/HorariosSection';
 
 /**
  * Panel de administración principal - Solo para usuarios ADMIN
@@ -63,6 +64,13 @@ const AdminPanel = () => {
             description: 'Gestionar sectores de atención'
         },
         {
+            id: 'horarios',
+            title: 'Horarios',
+            icon: <Schedule />,
+            path: '/admin/horarios',
+            description: 'Gestionar horarios de sectores especiales'
+        },
+        {
             id: 'configuracion',
             title: 'Configuración',
             icon: <Settings />,
@@ -80,6 +88,7 @@ const AdminPanel = () => {
         const path = location.pathname;
         if (path.includes('empleados')) return 'empleados';
         if (path.includes('sectores')) return 'sectores';
+        if (path.includes('horarios')) return 'horarios';
         if (path.includes('configuracion')) return 'configuracion';
         return 'dashboard';
     };
@@ -174,6 +183,7 @@ const AdminPanel = () => {
                         <Route index element={<AdminDashboard />} />
                         <Route path="empleados" element={<EmpleadosSection />} />
                         <Route path="sectores" element={<SectoresSection />} />
+                        <Route path="horarios" element={<HorariosSection />} />
                         <Route path="configuracion" element={<ConfiguracionSection />} />
                     </Routes>
                 </main>
