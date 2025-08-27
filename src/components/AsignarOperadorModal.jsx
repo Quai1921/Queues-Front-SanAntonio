@@ -86,9 +86,9 @@ const AsignarOperadorModal = ({ isOpen, onClose, onSubmit, sector, loading = fal
             empleadoId: empleadoSeleccionado.id,
             sectorData: { sectorId: sector?.sector?.id }
         };
-        console.log('Datos que se envían desde AsignarOperadorModal:', datosAEnviar);
-        console.log('Sector completo:', sector);
-        console.log('Empleado seleccionado:', empleadoSeleccionado);
+        // console.log('Datos que se envían desde AsignarOperadorModal:', datosAEnviar);
+        // console.log('Sector completo:', sector);
+        // console.log('Empleado seleccionado:', empleadoSeleccionado);
 
         onSubmit(datosAEnviar);
     };

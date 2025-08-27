@@ -265,10 +265,10 @@ class EmpleadosService {
      */
     async asignarSector(id, sectorData) {
         try {
-            console.log('=== DEBUG EMPLEADO SERVICE ===');
-            console.log('ID empleado:', id);
-            console.log('SectorData recibido:', sectorData);
-            console.log('JSON que se enviará:', JSON.stringify(sectorData));
+            // console.log('=== DEBUG EMPLEADO SERVICE ===');
+            // console.log('ID empleado:', id);
+            // console.log('SectorData recibido:', sectorData);
+            // console.log('JSON que se enviará:', JSON.stringify(sectorData));
             const response = await apiClient.post(`/empleados/${id}/asignar-sector`, sectorData);
 
             if (response.data.success) {
@@ -502,35 +502,6 @@ class EmpleadosService {
      * Manejar errores específicos de empleados
      * @param {Error} error 
      */
-    // handleEmpleadosError(error) {
-    //     if (error.response) {
-    //         const { status, data } = error.response;
-
-    //         // Extraer mensaje de error del wrapper ApiResponseWrapper
-    //         if (data?.message) {
-    //             error.message = data.message;
-    //         } else if (data?.error?.detail) {
-    //             error.message = data.error.detail;
-    //         }
-
-    //         // Errores específicos de empleados
-    //         if (status === 409) {
-    //             error.message = 'El usuario o email ya existe';
-    //         } else if (status === 404) {
-    //             error.message = 'Empleado no encontrado';
-    //         } else if (status === 403) {
-    //             error.message = 'No tienes permisos para esta operación';
-    //         }
-    //     } else if (error.request) {
-    //         error.message = 'Error de conexión al gestionar empleados';
-    //     }
-
-    //     console.error('Empleados Service Error:', {
-    //         message: error.message,
-    //         status: error.response?.status,
-    //         url: error.config?.url
-    //     });
-    // }
     handleEmpleadosError(error) {
         if (error.response) {
             const { status, data } = error.response;

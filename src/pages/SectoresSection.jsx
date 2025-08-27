@@ -216,9 +216,8 @@ const SectoresSection = () => {
     };
 
     const handleAsignarOperador = async (datos) => {
-
-        console.log('Datos recibidos en handleAsignarOperador:', datos);
-        console.log('sectorData que se enviará:', datos.sectorData);
+        // console.log('Datos recibidos en handleAsignarOperador:', datos);
+        // console.log('sectorData que se enviará:', datos.sectorData);
         try {
             setLoadingOperador(true); // ← CAMBIAR setIsOperating por setLoadingOperador
 
