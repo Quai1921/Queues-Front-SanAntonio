@@ -513,7 +513,7 @@ const EmpleadosSection = () => {
                                             {/* Acciones */}
                                             <td className="py-4 px-4">
                                                 <div className="flex items-center justify-end space-x-2">
-                                                    {(empleado.sectorCodigo && empleado.rol === 'OPERADOR') && (
+                                                    {/* {(empleado.sectorCodigo && empleado.rol === 'OPERADOR') && (
                                                         <button
                                                             onClick={() => {
                                                                 setEmpleadoSeleccionado(empleado);
@@ -524,22 +524,7 @@ const EmpleadosSection = () => {
                                                         >
                                                             <DomainDisabledIcon sx={{ fontSize: '20px' }} />
                                                         </button>
-                                                    )}
-                                                    {/* <button
-                                                        onClick={() => {
-                                                            setEmpleadoSeleccionado(empleado);
-                                                            setModalAsignarSectorAbierto(true);
-                                                        }}
-                                                        className="p-1.5 text-slate-400 hover:text-neutral-800 transition-all duration-300"
-                                                        title="Asignar sector"
-                                                    >
-                                                        {getRolLabel(empleado.rol) === 'Operador' ? (
-                                                            <DomainAddIcon className="h-4 w-4" />
-                                                        ) : (
-                                                            ""
-                                                        )}
-                                                    </button> */}
-
+                                                    )} */}
                                                     <button
                                                         onClick={() => {
                                                             setEmpleadoSeleccionado(empleado);

@@ -4,7 +4,7 @@ import {
     Person,
     Save,
     Search,
-    Business
+    DomainAdd as DomainAddIcon,
 } from '@mui/icons-material';
 import empleadosService from '../services/empleadoService';
 
@@ -104,7 +104,7 @@ const AsignarResponsableModal = ({ isOpen, onClose, onSubmit, sector, loading = 
                 <div className="flex items-center justify-between p-6 border-b border-slate-200">
                     <div className="flex items-center">
                         <div className="w-10 h-10 bg-slate-200 rounded-lg flex items-center justify-center mr-3">
-                            <Person className="h-6 w-6 text-slate-600" />
+                            <DomainAddIcon className="h-6 w-6 text-slate-600" />
                         </div>
                         <div>
                             <h2 className="text-xl font-semibold text-slate-900">Asignar Responsable</h2>

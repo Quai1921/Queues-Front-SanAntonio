@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {
     Close,
-    Business,
+    EditDocument as EditDocumentIcon,
     Save,
     Public,
     Lock,
     Schedule,
     People,
     ColorLens,
-    Edit
 } from '@mui/icons-material';
 
 /**
@@ -129,7 +128,7 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                 <div className="flex items-center justify-between p-6 border-b border-slate-200">
                     <div className="flex items-center">
                         <div className="w-10 h-10 bg-slate-200 rounded-lg flex items-center justify-center mr-3">
-                            <Edit className="h-6 w-6 text-slate-600" />
+                            <EditDocumentIcon className="h-6 w-6 text-slate-600" />
                         </div>
                         <div>
                             <h2 className="text-xl font-semibold text-slate-900">Editar Sector</h2>

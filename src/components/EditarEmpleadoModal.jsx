@@ -11,12 +11,8 @@ import {
     SupportAgent
 } from '@mui/icons-material';
 import empleadosService from '../services/empleadoService';
+import EditDocumentIcon from '@mui/icons-material/EditDocument';
 
-/**
- * Modal para editar un empleado existente
- * Solo permite editar: nombre, apellido, email, dni, rol
- * La asignación de sector se hace por separado
- */
 const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = false }) => {
     const [formData, setFormData] = useState({
         nombre: '',
@@ -167,7 +163,7 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
                 <div className="flex items-center justify-between p-6 border-b border-slate-200">
                     <div className="flex items-center">
                         <div className="w-10 h-10 bg-slate-200 rounded-lg flex items-center justify-center mr-3">
-                            <Edit className="h-6 w-6 text-slate-600" />
+                            <EditDocumentIcon className="h-6 w-6 text-slate-600" />
                         </div>
                         <div>
                             <h2 className="text-lg font-semibold text-slate-900">Editar Empleado</h2>

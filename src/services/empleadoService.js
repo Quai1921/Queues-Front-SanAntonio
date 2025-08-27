@@ -393,7 +393,7 @@ class EmpleadosService {
         };
     }
 
-    
+
 
     /**
      * Obtener label del rol
@@ -415,38 +415,6 @@ class EmpleadosService {
      * @param {Object} empleadoData - Datos a validar
      * @param {boolean} esCreacion - Si es para creación
      */
-    // validarDatosEmpleado(empleadoData, esCreacion = true) {
-    //     if (!empleadoData) {
-    //         throw new Error('Los datos del empleado son requeridos');
-    //     }
-
-    //     if (esCreacion && (!empleadoData.username || empleadoData.username.trim() === '')) {
-    //         throw new Error('El nombre de usuario es requerido');
-    //     }
-
-    //     if (!empleadoData.nombre || empleadoData.nombre.trim() === '') {
-    //         throw new Error('El nombre es requerido');
-    //     }
-
-    //     if (!empleadoData.apellido || empleadoData.apellido.trim() === '') {
-    //         throw new Error('El apellido es requerido');
-    //     }
-
-    //     if (!empleadoData.email || empleadoData.email.trim() === '') {
-    //         throw new Error('El email es requerido');
-    //     }
-
-    //     // Validar formato de email
-    //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    //     if (!emailRegex.test(empleadoData.email)) {
-    //         throw new Error('El formato del email no es válido');
-    //     }
-
-    //     if (empleadoData.rol && !['ADMIN', 'RESPONSABLE_SECTOR', 'OPERADOR'].includes(empleadoData.rol)) {
-    //         throw new Error('El rol debe ser ADMIN, RESPONSABLE_SECTOR u OPERADOR');
-    //     }
-    // }
-
     validarDatosEmpleado(empleadoData, esCreacion = false) {
         if (!empleadoData) {
             throw new Error('Los datos del empleado son requeridos');
@@ -538,15 +506,68 @@ class EmpleadosService {
         } else if (error.request) {
             error.message = 'Error de conexión al gestionar empleados';
         }
-
-        // console.error('Empleados Service Error:', {
-        //     message: error.message,
-        //     status: error.response?.status,
-        //     url: error.config?.url,
-        //     data: error.response?.data
-        // });
     }
+
+    /**
+ * Obtiene el personal asignado a un sector específico
+ * @param {number} sectorId - ID del sector
+ * @returns {Promise<{responsable: Object|null, operadores: Array}>}
+ */
+    obtenerPersonalPorSector = async (sectorId) => {
+        try {
+            const response = await apiClient.get(`/empleados/por-sector/${sectorId}`);
+            return response.data.data;
+        } catch (error) {
+            console.error('Error obteniendo personal del sector:', error);
+            throw new Error(
+                error.response?.data?.message ||
+                'Error obteniendo personal del sector'
+            );
+        }
+    };
+
+    /**
+     * Obtiene operadores que no están asignados a ningún sector
+     * @returns {Promise<Array>}
+     */
+    obtenerOperadoresDisponibles = async () => {
+        try {
+            const response = await apiClient.get('/empleados/operadores-disponibles');
+            return response.data.data || [];
+        } catch (error) {
+            console.error('Error obteniendo operadores disponibles:', error);
+            throw new Error(
+                error.response?.data?.message ||
+                'Error obteniendo operadores disponibles'
+            );
+        }
+    };
+
+    /**
+     * Obtiene empleados por rol específico
+     * @param {string} rol - Rol del empleado (ADMIN, RESPONSABLE_SECTOR, OPERADOR)
+     * @returns {Promise<Array>}
+     */
+    obtenerPorRol = async (rol) => {
+        try {
+            const response = await apiClient.get(`/empleados/por-rol/${rol}`);
+            return response.data.data || [];
+        } catch (error) {
+            console.error(`Error obteniendo empleados con rol ${rol}:`, error);
+            throw new Error(
+                error.response?.data?.message ||
+                `Error obteniendo empleados con rol ${rol}`
+            );
+        }
+    };
+
+
+
+
+
+
 }
+
 
 // Exportar instancia singleton del servicio
 const empleadosService = new EmpleadosService();

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useSectores } from '../hooks/useSectores';
 import {
     Business,
+    Group,
     Add,
     Search,
     FilterList,
@@ -19,9 +20,10 @@ import CrearSectorModal from '../components/CrearSectorModal';
 import EditarSectorModal from '../components/EditarSectorModal';
 import AsignarResponsableModal from '../components/AsignarResponsableModal';
 import HorariosSectorModal from '../components/HorariosSectorModal';
-import AsignarOperadorModal from '../components/AsignarOperadorModal';
+// import AsignarOperadorModal from '../components/AsignarOperadorModal';
 import { SupportAgent } from '@mui/icons-material';
 import empleadosService from '../services/empleadoService';
+import GestionOperadoresModal from '../components/GestionOperadoresModal';
 
 /**
  * Componente principal para la gestión de sectores en AdminPanel
@@ -69,18 +71,15 @@ const SectoresSection = () => {
     const [loadingEditar, setLoadingEditar] = useState(false);
     const [notificacion, setNotificacion] = useState(null);
     const [modalAsignarResponsableAbierto, setModalAsignarResponsableAbierto] = useState(false);
-    const [sectorParaAsignar, setSectorParaAsignar] = useState(null);
-    const [loadingAsignar, setLoadingAsignar] = useState(false);
     const [modalHorariosAbierto, setModalHorariosAbierto] = useState(false);
     const [sectorParaHorarios, setSectorParaHorarios] = useState(null);
 
 
+    const [gestionPersonalModalAbierto, setGestionPersonalModalAbierto] = useState(false);
+    const [sectorSeleccionadoPersonal, setSectorSeleccionadoPersonal] = useState(null);
 
-    const [modalAsignarOperadorAbierto, setModalAsignarOperadorAbierto] = useState(false);
-    const [sectorParaOperador, setSectorParaOperador] = useState(null);
-    const [loadingOperador, setLoadingOperador] = useState(false);
-
-    
+    const [sectorSeleccionadoResponsable, setSectorSeleccionadoResponsable] = useState(null);
+    const [loadingAsignarResponsable, setLoadingAsignarResponsable] = useState(false);
 
     const mostrarNotificacion = (mensaje, tipo = 'success') => {
         setNotificacion({ mensaje, tipo });
@@ -125,24 +124,23 @@ const SectoresSection = () => {
     };
 
     const handleAsignarResponsable = (sector) => {
-        setSectorParaAsignar(sector);
+        setSectorSeleccionadoResponsable(sector);
         setModalAsignarResponsableAbierto(true);
     };
 
     // Agregar nueva función para procesar la asignación
     const handleProcesarAsignacion = async (sectorId, empleadoId) => {
         try {
-            setLoadingAsignar(true);
+            setLoadingAsignarResponsable(true);
             await asignarResponsable(sectorId, empleadoId);
             setModalAsignarResponsableAbierto(false);
-            setSectorParaAsignar(null);
+            setSectorSeleccionadoResponsable(null);
             mostrarNotificacion('Responsable asignado correctamente', 'success');
         } catch (error) {
-            // console.error('Error asignando responsable:', error);
             mostrarNotificacion('Error al asignar responsable: ' + error.message, 'error');
-            throw error; // Re-lanzar para que el modal pueda manejarlo
+            throw error;
         } finally {
-            setLoadingAsignar(false);
+            setLoadingAsignarResponsable(false);
         }
     };
 
@@ -215,30 +213,24 @@ const SectoresSection = () => {
         }
     };
 
-    const handleAsignarOperador = async (datos) => {
-        // console.log('Datos recibidos en handleAsignarOperador:', datos);
-        // console.log('sectorData que se enviará:', datos.sectorData);
-        try {
-            setLoadingOperador(true); // ← CAMBIAR setIsOperating por setLoadingOperador
-
-            // Usar el endpoint de empleados para asignar sector
-            await empleadosService.asignarSector(datos.empleadoId, datos.sectorData);
-
-            await cargarSectores();
-            setModalAsignarOperadorAbierto(false);
-            setSectorParaOperador(null);
-
-            // Mostrar notificación de éxito
-            mostrarNotificacion('Operador asignado exitosamente', 'success'); // ← CAMBIAR console.log por mostrarNotificacion
-
-        } catch (error) {
-            console.error('Error asignando operador:', error);
-            mostrarNotificacion('Error al asignar operador: ' + error.message, 'error'); // ← CAMBIAR comentario por mostrarNotificación
-        } finally {
-            setLoadingOperador(false); // ← CAMBIAR setIsOperating por setLoadingOperador
-        }
+    const handleGestionPersonal = (sector) => {
+        // console.log('Abriendo gestión de personal para sector:', sector);
+        setSectorSeleccionadoPersonal(sector);
+        setGestionPersonalModalAbierto(true);
     };
 
+
+    const handleCerrarGestionPersonal = () => {
+        setGestionPersonalModalAbierto(false);
+        setSectorSeleccionadoPersonal(null);
+    };
+
+    const handleRefreshSectores = async () => {
+        await Promise.all([
+            cargarSectores(),
+            // cargarEstadisticas()
+        ]);
+    };
 
 
     /**
@@ -317,15 +309,6 @@ const SectoresSection = () => {
                                             </div>
                                         )}
                                     </div>
-
-                                    {/* key={sector.sector?.id}
-                                className={`hover:bg-slate-50 transition-colors ${sector.sector?.tipoSector === 'ESPECIAL' ? 'cursor-pointer' : ''
-                                    }`}
-                                onClick={() => {
-                                    if (sector.sector?.tipoSector === 'ESPECIAL') {
-                                        handleVerHorarios(sector);
-                                    }
-                                }} */}
                                 </td>
                                 <td className="px-6 py-4 whitespace-nowrap">
                                     <span
@@ -367,21 +350,16 @@ const SectoresSection = () => {
                                         </button>
 
                                         <button
-                                            onClick={() => {
-                                                setSectorParaOperador(sector);
-                                                setModalAsignarOperadorAbierto(true);
-                                            }}
-                                            disabled={!sector.sector?.activo}
-                                            className="p-1 transition-all duration-300 text-gray-400 hover:text-amber-800"
-                                            title="Asignar operador al sector"
+                                            onClick={() => handleGestionPersonal(sector)}
+                                            className="p-1 transition-all duration-300 text-gray-400 hover:text-neutral-800"
+                                            title="Gestionar personal del sector"
                                         >
-                                            <SupportAgent className="h-4 w-4 mr-1" />
+                                            <Group className="h-4 w-4" />
                                         </button>
 
                                         <button
                                             onClick={() => handleToggleActivo(sector)}
                                             disabled={isOperating && operacionEnCurso}
-                                            // className={`p-1 rounded transition-all duration-300 disabled:opacity-50 ${sector.sector?.activo ? 'text-red-600' : 'text-green-600 hover:text-green-900'}`}
                                             title={sector.sector?.activo ? 'Desactivar sector' : 'Activar sector'}
                                         >
                                             {sector.sector?.activo ? (
@@ -641,22 +619,18 @@ const SectoresSection = () => {
                 isOpen={modalAsignarResponsableAbierto}
                 onClose={() => {
                     setModalAsignarResponsableAbierto(false);
-                    setSectorParaAsignar(null);
+                    setSectorSeleccionadoResponsable(null);
                 }}
                 onSubmit={handleProcesarAsignacion}
-                sector={sectorParaAsignar}
-                loading={loadingAsignar}
+                sector={sectorSeleccionadoResponsable}
+                loading={loadingAsignarResponsable}
             />
 
-            <AsignarOperadorModal
-                isOpen={modalAsignarOperadorAbierto}
-                onClose={() => {
-                    setModalAsignarOperadorAbierto(false);
-                    setSectorParaOperador(null);
-                }}
-                onSubmit={handleAsignarOperador}
-                sector={sectorParaOperador}
-                loading={loadingOperador} // ← CAMBIAR isOperating por loadingOperador
+            <GestionOperadoresModal
+                isOpen={gestionPersonalModalAbierto}
+                onClose={handleCerrarGestionPersonal}
+                onRefresh={handleRefreshSectores}
+                sector={sectorSeleccionadoPersonal}
             />
 
             <HorariosSectorModal
