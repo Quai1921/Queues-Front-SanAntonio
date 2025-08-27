@@ -3,21 +3,18 @@ import React, { useState, useEffect } from 'react';
 import {
     Add,
     Search,
-    FilterList,
     Refresh,
     EditDocument as EditDocumentIcon,
     Key as KeyIcon,
-    DomainAdd as DomainAddIcon,
+    DomainDisabled as DomainDisabledIcon,
     Group,
     Person,
     Business,
     AdminPanelSettings,
     SupportAgent,
-    MoreVert,
     CheckCircle,
     Cancel,
-    Lock,
-    PersonAdd
+    Clear,
 } from '@mui/icons-material';
 import CrearEmpleadoModal from '../components/CrearEmpleadoModal';
 import EditarEmpleadoModal from '../components/EditarEmpleadoModal';
@@ -198,9 +195,14 @@ const EmpleadosSection = () => {
         }
     };
 
-    const handleAsignarSector = async (sectorData) => {
+    const handleDesasignarSector = async (sectorData) => {
+
+        console.log('=== DEBUG EMPLEADOS SECTION ===');
+        console.log('Datos recibidos en handleAsignarSector:', sectorData);
+        console.log('Empleado seleccionado:', empleadoSeleccionado);
         setLoadingAsignar(true);
         try {
+            // CAMBIAR ESTA LÍNEA para usar el endpoint correcto:
             await empleadosService.asignarSector(empleadoSeleccionado.id, sectorData);
             await cargarEmpleados();
             setModalAsignarSectorAbierto(false);
@@ -511,7 +513,19 @@ const EmpleadosSection = () => {
                                             {/* Acciones */}
                                             <td className="py-4 px-4">
                                                 <div className="flex items-center justify-end space-x-2">
-                                                    <button
+                                                    {(empleado.sectorCodigo && empleado.rol === 'OPERADOR') && (
+                                                        <button
+                                                            onClick={() => {
+                                                                setEmpleadoSeleccionado(empleado);
+                                                                setModalAsignarSectorAbierto(true);
+                                                            }}
+                                                            className="p-1 transition-all duration-300 text-gray-400 hover:text-red-900"
+                                                            title="Desasignar sector"
+                                                        >
+                                                            <DomainDisabledIcon sx={{ fontSize: '20px' }} />
+                                                        </button>
+                                                    )}
+                                                    {/* <button
                                                         onClick={() => {
                                                             setEmpleadoSeleccionado(empleado);
                                                             setModalAsignarSectorAbierto(true);
@@ -524,7 +538,7 @@ const EmpleadosSection = () => {
                                                         ) : (
                                                             ""
                                                         )}
-                                                    </button>
+                                                    </button> */}
 
                                                     <button
                                                         onClick={() => {
@@ -652,7 +666,7 @@ const EmpleadosSection = () => {
                     setModalAsignarSectorAbierto(false);
                     setEmpleadoSeleccionado(null);
                 }}
-                onSubmit={handleAsignarSector}
+                onSubmit={handleDesasignarSector}
                 empleado={empleadoSeleccionado}
                 loading={loadingAsignar}
             />

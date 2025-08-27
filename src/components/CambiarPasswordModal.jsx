@@ -100,15 +100,15 @@ const CambiarPasswordModal = ({ isOpen, onClose, onSubmit, empleado, loading = f
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-xl shadow-xl w-full max-w-md">
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-slate-200 bg-slate-50">
+                <div className="flex items-center justify-between p-6 border-b border-slate-200">
                     <div className="flex items-center">
-                        <div className="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center mr-3">
-                            <Lock className="h-6 w-6 text-white" />
+                        <div className="w-10 h-10 bg-slate-200 rounded-lg flex items-center justify-center mr-3">
+                            <Lock className="h-6 w-6 text-slate-600" />
                         </div>
                         <div>
                             <h2 className="text-lg font-semibold text-slate-900">Cambiar Contraseña</h2>
                             <p className="text-sm text-slate-600">
-                                {empleado ? `Usuario: @${empleado.username}` : 'Cargando...'}
+                                {empleado ? `Usuario: ${empleado.username}` : 'Cargando...'}
                             </p>
                         </div>
                     </div>
@@ -123,7 +123,7 @@ const CambiarPasswordModal = ({ isOpen, onClose, onSubmit, empleado, loading = f
                 </div>
 
                 {/* Form */}
-                <form onSubmit={handleSubmit} className="p-6">
+                <form onSubmit={handleSubmit} className="px-6 py-2">
                     <div className="space-y-4">
                         {/* Información del empleado */}
                         <div className="bg-slate-50 p-3 rounded-lg">
@@ -232,14 +232,12 @@ const CambiarPasswordModal = ({ isOpen, onClose, onSubmit, empleado, loading = f
                         {/* Advertencias de seguridad */}
                         <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
                             <div className="flex items-start">
-                                <div className="w-5 h-5 text-amber-600 mt-0.5">🔒</div>
                                 <div className="ml-3 text-sm">
                                     <p className="text-amber-800 font-medium">Recomendaciones de Seguridad</p>
                                     <ul className="text-amber-700 mt-1 space-y-1">
                                         <li>• Usa al menos 6 caracteres</li>
                                         <li>• Combina letras, números y símbolos</li>
                                         <li>• Evita usar datos personales obvios</li>
-                                        <li>• El empleado deberá cambiarla en su próximo acceso</li>
                                     </ul>
                                 </div>
                             </div>
@@ -247,7 +245,7 @@ const CambiarPasswordModal = ({ isOpen, onClose, onSubmit, empleado, loading = f
                     </div>
 
                     {/* Botones */}
-                    <div className="flex items-center justify-end space-x-3 pt-6 mt-6 border-t border-slate-200">
+                    <div className="flex items-center justify-end space-x-3 pt-4 mt-6 border-t border-slate-200 pb-2">
                         <button
                             type="button"
                             onClick={handleClose}
@@ -259,7 +257,7 @@ const CambiarPasswordModal = ({ isOpen, onClose, onSubmit, empleado, loading = f
                         <button
                             type="submit"
                             disabled={loading || !formData.nuevaPassword || !formData.confirmarPassword}
-                            className="flex items-center px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50"
+                            className="flex items-center px-4 py-2 bg-[#224666] text-white rounded-lg hover:bg-[#2c3e50] transition-colors disabled:opacity-50"
                         >
                             {loading ? (
                                 <>

@@ -19,6 +19,9 @@ import CrearSectorModal from '../components/CrearSectorModal';
 import EditarSectorModal from '../components/EditarSectorModal';
 import AsignarResponsableModal from '../components/AsignarResponsableModal';
 import HorariosSectorModal from '../components/HorariosSectorModal';
+import AsignarOperadorModal from '../components/AsignarOperadorModal';
+import { SupportAgent } from '@mui/icons-material';
+import empleadosService from '../services/empleadoService';
 
 /**
  * Componente principal para la gestión de sectores en AdminPanel
@@ -70,6 +73,14 @@ const SectoresSection = () => {
     const [loadingAsignar, setLoadingAsignar] = useState(false);
     const [modalHorariosAbierto, setModalHorariosAbierto] = useState(false);
     const [sectorParaHorarios, setSectorParaHorarios] = useState(null);
+
+
+
+    const [modalAsignarOperadorAbierto, setModalAsignarOperadorAbierto] = useState(false);
+    const [sectorParaOperador, setSectorParaOperador] = useState(null);
+    const [loadingOperador, setLoadingOperador] = useState(false);
+
+    
 
     const mostrarNotificacion = (mensaje, tipo = 'success') => {
         setNotificacion({ mensaje, tipo });
@@ -202,7 +213,32 @@ const SectoresSection = () => {
             const accion = sector.sector?.activo ? 'desactivar' : 'activar';
             mostrarNotificacion(`Error al ${accion} el sector: ${error.message}`, 'error');
         }
-};
+    };
+
+    const handleAsignarOperador = async (datos) => {
+
+        console.log('Datos recibidos en handleAsignarOperador:', datos);
+        console.log('sectorData que se enviará:', datos.sectorData);
+        try {
+            setLoadingOperador(true); // ← CAMBIAR setIsOperating por setLoadingOperador
+
+            // Usar el endpoint de empleados para asignar sector
+            await empleadosService.asignarSector(datos.empleadoId, datos.sectorData);
+
+            await cargarSectores();
+            setModalAsignarOperadorAbierto(false);
+            setSectorParaOperador(null);
+
+            // Mostrar notificación de éxito
+            mostrarNotificacion('Operador asignado exitosamente', 'success'); // ← CAMBIAR console.log por mostrarNotificacion
+
+        } catch (error) {
+            console.error('Error asignando operador:', error);
+            mostrarNotificacion('Error al asignar operador: ' + error.message, 'error'); // ← CAMBIAR comentario por mostrarNotificación
+        } finally {
+            setLoadingOperador(false); // ← CAMBIAR setIsOperating por setLoadingOperador
+        }
+    };
 
 
 
@@ -329,6 +365,18 @@ const SectoresSection = () => {
                                             title="Asignar responsable"
                                         >
                                             <DomainAddIcon sx={{ fontSize: '25px' }}/>
+                                        </button>
+
+                                        <button
+                                            onClick={() => {
+                                                setSectorParaOperador(sector);
+                                                setModalAsignarOperadorAbierto(true);
+                                            }}
+                                            disabled={!sector.sector?.activo}
+                                            className="p-1 transition-all duration-300 text-gray-400 hover:text-amber-800"
+                                            title="Asignar operador al sector"
+                                        >
+                                            <SupportAgent className="h-4 w-4 mr-1" />
                                         </button>
 
                                         <button
@@ -599,6 +647,17 @@ const SectoresSection = () => {
                 onSubmit={handleProcesarAsignacion}
                 sector={sectorParaAsignar}
                 loading={loadingAsignar}
+            />
+
+            <AsignarOperadorModal
+                isOpen={modalAsignarOperadorAbierto}
+                onClose={() => {
+                    setModalAsignarOperadorAbierto(false);
+                    setSectorParaOperador(null);
+                }}
+                onSubmit={handleAsignarOperador}
+                sector={sectorParaOperador}
+                loading={loadingOperador} // ← CAMBIAR isOperating por loadingOperador
             />
 
             <HorariosSectorModal
