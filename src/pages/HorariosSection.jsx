@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     Schedule,
     Add,
@@ -45,7 +45,7 @@ const HorariosSection = () => {
     const [horarioParaAccion, setHorarioParaAccion] = useState(null);
     const [loadingAccion, setLoadingAccion] = useState(false);
 
-    console.log(sectores)
+    // console.log(sectores)
 
     // Estados de filtros
     const [filtros, setFiltros] = useState({
@@ -71,25 +71,36 @@ const HorariosSection = () => {
         cargarSectoresEspeciales();
     }, []);
 
-    // Aplicar filtros cuando cambian
     useEffect(() => {
-        aplicarFiltros();
-    }, [horarios, filtros]);
+        const interval = setInterval(() => {
+            // Refrescar sectores cada 30 segundos para detectar cambios de tipo
+            if (!loadingSectores) {
+                cargarSectoresEspeciales();
+            }
+        }, 30000);
+
+        return () => clearInterval(interval);
+    }, [loadingSectores]);
+
+    
 
     const cargarSectoresEspeciales = async () => {
         try {
             setLoadingSectores(true);
             const sectoresData = await sectoresService.obtenerEspeciales();
 
+            console.log('Sectores especiales recibidos:', sectoresData); // DEBUG
+
             const sectoresFormateados = sectoresData.map(sector =>
                 sectoresService.formatearParaUI(sector)
             );
             setSectores(sectoresFormateados);
 
-            // Agregar: verificar si el sector seleccionado sigue siendo especial
+            // Verificar si el sector seleccionado sigue siendo especial
             if (sectorSeleccionado) {
                 const sectorSigueEspecial = sectoresFormateados.find(s => s.id === sectorSeleccionado.id);
                 if (!sectorSigueEspecial) {
+                    console.log('Sector seleccionado ya no es especial, deseleccionando'); // DEBUG
                     setSectorSeleccionado(null);
                     setHorarios([]);
                     setHorariosFiltrados([]);
@@ -120,11 +131,21 @@ const HorariosSection = () => {
         try {
             setLoading(true);
             const horariosData = await horariosService.listarPorSector(sectorId);
+            console.log('Horarios cargados del backend:', horariosData); // DEBUG
+
             const horariosFormateados = horariosData.map(horario =>
                 horariosService.formatearParaUI(horario)
             );
+            console.log('Horarios formateados:', horariosFormateados); // DEBUG
+
             setHorarios(horariosFormateados);
             calcularEstadisticas(horariosFormateados);
+
+            // Aplicar filtros inmediatamente después de cargar
+            setTimeout(() => {
+                aplicarFiltros();
+            }, 100);
+
         } catch (error) {
             console.error('Error cargando horarios:', error);
             mostrarNotificacion('Error al cargar horarios', 'error');
@@ -145,7 +166,7 @@ const HorariosSection = () => {
         });
     };
 
-    const aplicarFiltros = () => {
+    const aplicarFiltros = useCallback(() => {
         let horariosFilt = [...horarios];
 
         // Filtro por búsqueda
@@ -165,19 +186,31 @@ const HorariosSection = () => {
         }
 
         // Filtro por estado
-        // if (filtros.estado !== 'TODOS') {
-        //     horariosFilt = horariosFilt.filter(horario =>
-        //         filtros.estado === 'ACTIVO' ? horario.activo : !horario.activo
-        //     );
-        // }
-        // if (filtros.estado !== 'TODOS') {
-        //     horariosFilt = horariosFilt.filter(horario =>
-        //         filtros.estado === 'ACTIVO' ? horario.activo : !horario.activo
-        //     );
-        // }
+        if (filtros.estado !== 'TODOS') {
+            horariosFilt = horariosFilt.filter(horario => {
+                if (filtros.estado === 'ACTIVO') {
+                    return horario.activo === true;
+                } else if (filtros.estado === 'INACTIVO') {
+                    return horario.activo === false;
+                }
+                return true;
+            });
+        }
+
+        console.log('Horarios después de filtrar:', horariosFilt); // DEBUG
+        console.log('Filtros aplicados:', filtros); // DEBUG
 
         setHorariosFiltrados(horariosFilt);
-    };
+    }, [horarios, filtros]);
+
+    // Aplicar filtros cuando cambian
+    useEffect(() => {
+        if (horarios.length > 0) {
+            aplicarFiltros();
+        } else {
+            setHorariosFiltrados([]);
+        }
+    }, [aplicarFiltros, horarios.length]);
 
     const handleSelectorSector = (sector) => {
         setSectorSeleccionado(sector);
