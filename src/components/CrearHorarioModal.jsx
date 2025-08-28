@@ -98,7 +98,7 @@ const CrearHorarioModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                     <button
                         onClick={onClose}
                         disabled={loading}
-                        className="text-slate-400 hover:text-slate-600 transition-colors p-2"
+                        className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors disabled:opacity-50"
                     >
                         <Close className="h-5 w-5" />
                     </button>
@@ -106,33 +106,34 @@ const CrearHorarioModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
 
                 {/* Formulario */}
                 <form onSubmit={handleSubmit} className="px-6 pt-4 pb-6 space-y-4">
-                    {/* Día de la semana */}
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">
-                            <CalendarMonth className="inline h-4 w-4 mr-1" />
-                            Día de la Semana *
-                        </label>
-                        <select
-                            name="diaSemana"
-                            value={formData.diaSemana}
-                            onChange={handleInputChange}
-                            className={`w-full px-3 py-2 border rounded-lg ${errors.diaSemana ? 'border-red-300' : 'border-slate-300'
-                                }`}
-                        >
-                            <option value="">Seleccionar día</option>
-                            {diasSemana.map(dia => (
-                                <option key={dia.valor} value={dia.valor}>
-                                    {dia.etiqueta}
-                                </option>
-                            ))}
-                        </select>
-                        {errors.diaSemana && (
-                            <p className="mt-1 text-sm text-red-600">{errors.diaSemana}</p>
-                        )}
-                    </div>
+                    {/* Día de la semana / Horarios*/}
 
-                    {/* Horarios */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                                <CalendarMonth className="inline h-4 w-4 mr-1" />
+                                Día de la Semana *
+                            </label>
+                            <select
+                                name="diaSemana"
+                                value={formData.diaSemana}
+                                onChange={handleInputChange}
+                                className={`w-full px-3 py-2 border rounded-lg ${errors.diaSemana ? 'border-red-300' : 'border-slate-300'
+                                    }`}
+                            >
+                                <option value="">Seleccionar día</option>
+                                {diasSemana.map(dia => (
+                                    <option key={dia.valor} value={dia.valor}>
+                                        {dia.etiqueta}
+                                    </option>
+                                ))}
+                            </select>
+                            {errors.diaSemana && (
+                                <p className="mt-1 text-sm text-red-600">{errors.diaSemana}</p>
+                            )}
+                        </div>
+
                         <div>
                             <label className="block text-sm font-medium text-slate-700 mb-2">
                                 <AccessTime className="inline h-4 w-4 mr-1" />

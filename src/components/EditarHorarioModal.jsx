@@ -98,8 +98,8 @@ const EditarHorarioModal = ({ isOpen, onClose, onSubmit, horario, sector, loadin
                 {/* Header */}
                 <div className="flex items-center justify-between p-6 border-b border-slate-200">
                     <div className="flex items-center">
-                        <div className="p-2 bg-[#224666] rounded-lg mr-3">
-                            <Edit className="h-6 w-6 text-white" />
+                        <div className="p-2 bg-slate-200 rounded-lg mr-3">
+                            <Edit className="h-6 w-6 text-slate-600" />
                         </div>
                         <div>
                             <h3 className="text-lg font-semibold text-slate-900">Editar Horario</h3>
@@ -114,41 +114,41 @@ const EditarHorarioModal = ({ isOpen, onClose, onSubmit, horario, sector, loadin
                     <button
                         onClick={onClose}
                         disabled={loading}
-                        className="text-slate-400 hover:text-slate-600 transition-colors p-2"
+                        className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors disabled:opacity-50"
                     >
                         <Close className="h-5 w-5" />
                     </button>
                 </div>
 
                 {/* Formulario */}
-                <form onSubmit={handleSubmit} className="p-6 space-y-6">
-                    {/* Día de la semana */}
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">
-                            <CalendarMonth className="inline h-4 w-4 mr-1" />
-                            Día de la Semana *
-                        </label>
-                        <select
-                            name="diaSemana"
-                            value={formData.diaSemana}
-                            onChange={handleInputChange}
-                            className={`w-full px-3 py-2 border rounded-lg ${errors.diaSemana ? 'border-red-300' : 'border-slate-300'
-                                }`}
-                        >
-                            <option value="">Seleccionar día</option>
-                            {diasSemana.map(dia => (
-                                <option key={dia.valor} value={dia.valor}>
-                                    {dia.etiqueta}
-                                </option>
-                            ))}
-                        </select>
-                        {errors.diaSemana && (
-                            <p className="mt-1 text-sm text-red-600">{errors.diaSemana}</p>
-                        )}
-                    </div>
+                <form onSubmit={handleSubmit} className="px-6 pt-3 py-4 space-y-3">
+                    
+                    {/* Día de la semana / Horarios*/}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                                <CalendarMonth className="inline h-4 w-4 mr-1" />
+                                Día de la Semana *
+                            </label>
+                            <select
+                                name="diaSemana"
+                                value={formData.diaSemana}
+                                onChange={handleInputChange}
+                                className={`w-full px-3 py-2 border rounded-lg ${errors.diaSemana ? 'border-red-300' : 'border-slate-300'
+                                    }`}
+                            >
+                                <option value="">Seleccionar día</option>
+                                {diasSemana.map(dia => (
+                                    <option key={dia.valor} value={dia.valor}>
+                                        {dia.etiqueta}
+                                    </option>
+                                ))}
+                            </select>
+                            {errors.diaSemana && (
+                                <p className="mt-1 text-sm text-red-600">{errors.diaSemana}</p>
+                            )}
+                        </div>
 
-                    {/* Horarios */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-slate-700 mb-2">
                                 <AccessTime className="inline h-4 w-4 mr-1" />
@@ -185,7 +185,7 @@ const EditarHorarioModal = ({ isOpen, onClose, onSubmit, horario, sector, loadin
                             )}
                         </div>
                     </div>
-
+                    
                     {/* Configuración de citas */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
@@ -266,16 +266,15 @@ const EditarHorarioModal = ({ isOpen, onClose, onSubmit, horario, sector, loadin
                     </div>
 
                     {/* Información adicional */}
-                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                    <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
                         <div className="flex items-start">
                             <Warning className="h-5 w-5 text-amber-600 mr-3 mt-0.5 flex-shrink-0" />
                             <div className="text-sm">
-                                <p className="text-amber-800 font-medium">Consideraciones importantes:</p>
-                                <ul className="text-amber-700 mt-1 space-y-1">
+                                <p className="text-slate-800 font-medium">Consideraciones importantes:</p>
+                                <ul className="text-slate-700 mt-1 space-y-1">
                                     <li>• Los cambios de horario pueden afectar citas existentes</li>
                                     <li>• Verificar que no se superponga con otros horarios del mismo día</li>
                                     <li>• Los cambios se aplicarán inmediatamente</li>
-                                    <li>• Para cambiar el estado (activar/desactivar) usar los botones de la tabla</li>
                                 </ul>
                             </div>
                         </div>

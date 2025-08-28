@@ -352,7 +352,7 @@ const HorariosSection = () => {
                         </p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
                         {sectores.map((sector) => (
                             <button
                                 key={sector.id}
@@ -362,12 +362,11 @@ const HorariosSection = () => {
                                         : 'border-slate-200 hover:border-slate-300 hover:shadow-sm'
                                     }`}
                             >
-                                <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center justify-between">
                                     <span className="font-mono text-sm font-semibold text-slate-900">
                                         {sector.codigo}
                                     </span>
-                                    <div className={`w-3 h-3 rounded-full ${sector.activo ? 'bg-green-400' : 'bg-red-400'
-                                        }`} />
+                                    <p className={`text-xs px-2 py-0.5 flex justify-center items-center rounded-full ${sector.activo ? 'bg-green-200 text-green-700' : 'bg-red-200 text-red-800'}`}>{sector.activo ? 'Activo' : 'Inactivo'}</p>
                                 </div>
                                 <h5 className="font-medium text-slate-900 mb-1">{sector.nombre}</h5>
                                 <p className="text-xs text-slate-600">{sector.descripcion}</p>
@@ -576,27 +575,6 @@ const HorariosSection = () => {
                                                         {horario.capacidadMaxima}
                                                     </span>
                                                 </td>
-                                                {/* <td className="px-6 py-4 whitespace-nowrap">
-                                                    <button
-                                                        onClick={() => handleToggleEstado(horario)}
-                                                        className={`inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium transition-colors ${horario.activo
-                                                                ? 'bg-green-100 text-green-800 hover:bg-green-200'
-                                                                : 'bg-red-100 text-red-800 hover:bg-red-200'
-                                                            }`}
-                                                    >
-                                                        {horario.activo ? (
-                                                            <>
-                                                                <CheckCircle className="w-3 h-3 mr-1" />
-                                                                Activo
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                <Cancel className="w-3 h-3 mr-1" />
-                                                                Inactivo
-                                                            </>
-                                                        )}
-                                                    </button>
-                                                </td> */}
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <span className={`flex items-center justify-center w-16 px-2.5 py-1 rounded-full text-xs font-medium ${horario.activo
                                                             ? 'bg-green-100 text-green-800'
@@ -604,12 +582,10 @@ const HorariosSection = () => {
                                                         }`}>
                                                         {horario.activo ? (
                                                             <>
-                                                                {/* <CheckCircle className="w-3 h-3 mr-1" /> */}
                                                                 Activo
                                                             </>
                                                         ) : (
                                                             <>
-                                                                {/* <Cancel className="w-3 h-3 mr-1" /> */}
                                                                 Inactivo
                                                             </>
                                                         )}

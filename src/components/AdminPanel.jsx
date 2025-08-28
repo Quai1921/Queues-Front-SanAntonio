@@ -19,11 +19,13 @@ import {
     Assignment,
     Schedule,
     Message,
-    Assessment
+    Assessment,
+    People
 } from '@mui/icons-material';
 import SectoresSection from '../pages/SectoresSection';
 import EmpleadosSection from '../pages/EmpleadosSection';
 import HorariosSection from '../pages/HorariosSection';
+import CiudadanosSection from '../pages/CiudadanosSection';
 
 /**
  * Panel de administración principal - Solo para usuarios ADMIN
@@ -48,6 +50,13 @@ const AdminPanel = () => {
             icon: <DashboardIcon />,
             path: '/admin',
             description: 'Vista general del sistema'
+        },
+        {
+            id: 'ciudadanos',
+            title: 'Ciudadanos',
+            icon: <People />,
+            path: '/admin/ciudadanos',
+            description: 'Gestionar información de ciudadanos'
         },
         {
             id: 'empleados',
@@ -86,6 +95,7 @@ const AdminPanel = () => {
 
     const getCurrentSection = () => {
         const path = location.pathname;
+        if (path.includes('ciudadanos')) return 'ciudadanos';
         if (path.includes('empleados')) return 'empleados';
         if (path.includes('sectores')) return 'sectores';
         if (path.includes('horarios')) return 'horarios';
@@ -181,6 +191,7 @@ const AdminPanel = () => {
                 <main className="flex-1 p-6">
                     <Routes>
                         <Route index element={<AdminDashboard />} />
+                        <Route path="ciudadanos" element={<CiudadanosSection />} />
                         <Route path="empleados" element={<EmpleadosSection />} />
                         <Route path="sectores" element={<SectoresSection />} />
                         <Route path="horarios" element={<HorariosSection />} />
@@ -195,6 +206,13 @@ const AdminPanel = () => {
 // Componente del Dashboard de administración
 const AdminDashboard = () => {
     const statsCards = [
+        {
+            title: 'Ciudadanos',
+            value: '1,248',
+            icon: <People />,
+            color: 'from-blue-500 to-blue-600',
+            change: '+12 esta semana'
+        },
         {
             title: 'Total Empleados',
             value: '--',
@@ -222,6 +240,12 @@ const AdminDashboard = () => {
     ];
 
     const quickActions = [
+        {
+            title: 'Nuevo Ciudadano',
+            description: 'Registrar un nuevo ciudadano',
+            icon: <Add />,
+            onClick: () => navigate('/admin/ciudadanos')
+        },
         {
             title: 'Crear Empleado',
             description: 'Agregar nuevo usuario al sistema',
@@ -323,93 +347,6 @@ const AdminDashboard = () => {
     );
 };
 
-// Componente de gestión de empleados
-// const EmpleadosSection = () => {
-//     return (
-//         <div className="space-y-6">
-
-//             {/* Header con acciones */}
-//             <div className="flex items-center justify-between">
-//                 <div>
-//                     <h3 className="text-lg font-semibold text-slate-900">Lista de Empleados</h3>
-//                     <p className="text-slate-600 text-sm">Gestiona usuarios y sus permisos</p>
-//                 </div>
-//                 <button className="flex items-center px-4 py-2 bg-[#224666] text-white rounded-lg hover:bg-[#1a3a52] transition-colors">
-//                     <Add className="mr-2 h-4 w-4" />
-//                     Nuevo Empleado
-//                 </button>
-//             </div>
-
-//             {/* Filtros y búsqueda */}
-//             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
-//                 <div className="flex flex-col sm:flex-row gap-4">
-//                     <div className="flex-1">
-//                         <div className="relative">
-//                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
-//                             <input
-//                                 type="text"
-//                                 placeholder="Buscar empleados..."
-//                                 className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg"
-//                             />
-//                         </div>
-//                     </div>
-//                     <button className="flex items-center px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50">
-//                         <FilterList className="mr-2 h-4 w-4" />
-//                         Filtros
-//                     </button>
-//                 </div>
-//             </div>
-
-//             {/* Tabla placeholder */}
-//             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-//                 <div className="text-center py-12">
-//                     <Group className="mx-auto h-12 w-12 text-slate-400" />
-//                     <h3 className="mt-4 text-lg font-medium text-slate-900">Lista de Empleados</h3>
-//                     <p className="mt-2 text-slate-600">
-//                         Aquí se mostrará la tabla con todos los empleados del sistema
-//                     </p>
-//                     <p className="mt-1 text-sm text-slate-500">
-//                         Implementación pendiente - Requiere integración con API /api/admin/empleados
-//                     </p>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
-
-// Componente de gestión de sectores
-// const SectoresSection = () => {
-//     return (
-//         <div className="space-y-6">
-
-//             {/* Header con acciones */}
-//             <div className="flex items-center justify-between">
-//                 <div>
-//                     <h3 className="text-lg font-semibold text-slate-900">Sectores Municipales</h3>
-//                     <p className="text-slate-600 text-sm">Administra sectores y responsables</p>
-//                 </div>
-//                 <button className="flex items-center px-4 py-2 bg-[#224666] text-white rounded-lg hover:bg-[#1a3a52] transition-colors">
-//                     <Add className="mr-2 h-4 w-4" />
-//                     Nuevo Sector
-//                 </button>
-//             </div>
-
-//             {/* Contenido placeholder */}
-//             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-//                 <div className="text-center py-12">
-//                     <Business className="mx-auto h-12 w-12 text-slate-400" />
-//                     <h3 className="mt-4 text-lg font-medium text-slate-900">Gestión de Sectores</h3>
-//                     <p className="mt-2 text-slate-600">
-//                         Aquí se mostrará la gestión completa de sectores municipales
-//                     </p>
-//                     <p className="mt-1 text-sm text-slate-500">
-//                         Implementación pendiente - Requiere integración con API /api/sectores
-//                     </p>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
 
 // Componente de configuración del sistema
 const ConfiguracionSection = () => {

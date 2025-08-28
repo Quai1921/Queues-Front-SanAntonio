@@ -35,7 +35,6 @@ const ConfirmarAccionModal = ({ isOpen, onClose, onConfirm, loading = false, acc
 
                 <div className="p-6">
                     <div className="flex items-start">
-                        <Warning className="h-5 w-5 text-amber-600 mr-3 mt-0.5 flex-shrink-0" />
                         <div>
                             <p className="text-slate-900">
                                 ¿Está seguro que desea <strong>{accion}</strong> este horario?
