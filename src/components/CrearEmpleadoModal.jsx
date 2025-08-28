@@ -474,9 +474,9 @@ const CrearEmpleadoModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                                         value={formData.sectorId}
                                         onChange={handleInputChange}
                                         className={`w-full px-3 py-2 border rounded-lg transition-colors ${errors.sectorId
-                                                ? 'border-red-500 focus:border-red-500'
-                                                : 'border-slate-300 focus:border-[#224666]'
-                                            } focus:ring-2 focus:ring-[#224666]/20`}
+                                                ? 'border-red-500'
+                                                : 'border-slate-300'
+                                            }`}
                                     >
                                         <option value="">
                                             {loadingSectores ? 'Cargando sectores...' : 'Seleccionar sector'}

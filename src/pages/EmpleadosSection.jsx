@@ -251,7 +251,7 @@ const EmpleadosSection = () => {
             case 'ADMIN':
                 return 'bg-purple-100 text-purple-800';
             case 'RESPONSABLE_SECTOR':
-                return 'bg-blue-100 text-blue-800';
+                return 'bg-slate-100 text-slate-800';
             case 'OPERADOR':
                 return 'bg-green-100 text-green-800';
             default:
@@ -298,8 +298,8 @@ const EmpleadosSection = () => {
             <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
                 <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
                     <div className="flex items-center">
-                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <Group className="h-6 w-6 text-blue-600" />
+                        <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
+                            <Group className="h-6 w-6 text-slate-600" />
                         </div>
                         <div className="ml-3">
                             <p className="text-sm font-medium text-slate-600">Total</p>
@@ -334,8 +334,8 @@ const EmpleadosSection = () => {
 
                 <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
                     <div className="flex items-center">
-                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <Business className="h-6 w-6 text-blue-600" />
+                        <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
+                            <Business className="h-6 w-6 text-slate-600" />
                         </div>
                         <div className="ml-3">
                             <p className="text-sm font-medium text-slate-600">Responsables</p>
@@ -394,7 +394,7 @@ const EmpleadosSection = () => {
                                 placeholder="Buscar por nombre, username, email o DNI..."
                                 value={filtros.busqueda}
                                 onChange={(e) => handleFiltroChange('busqueda', e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-[#224666] transition-colors"
+                                className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg transition-colors"
                             />
                         </div>
                     </div>
@@ -403,7 +403,7 @@ const EmpleadosSection = () => {
                     <select
                         value={filtros.rol}
                         onChange={(e) => handleFiltroChange('rol', e.target.value)}
-                        className="px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-[#224666] transition-colors"
+                        className="px-3 py-2 border border-slate-300 rounded-lg transition-colors"
                     >
                         <option value="TODOS">Todos los roles</option>
                         <option value="ADMIN">Administradores</option>
@@ -415,7 +415,7 @@ const EmpleadosSection = () => {
                     <select
                         value={filtros.estado}
                         onChange={(e) => handleFiltroChange('estado', e.target.value)}
-                        className="px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-[#224666] transition-colors"
+                        className="px-3 py-2 border border-slate-300 rounded-lg transition-colors"
                     >
                         <option value="TODOS">Todos los estados</option>
                         <option value="ACTIVO">Activos</option>

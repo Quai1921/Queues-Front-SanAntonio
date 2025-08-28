@@ -79,7 +79,7 @@ const AsignarSectorModal = ({ isOpen, onClose, onSubmit, empleado, loading = fal
             case 'ADMIN':
                 return 'bg-purple-100 text-purple-800';
             case 'RESPONSABLE_SECTOR':
-                return 'bg-blue-100 text-blue-800';
+                return 'bg-slate-100 text-slate-800';
             case 'OPERADOR':
                 return 'bg-green-100 text-green-800';
             default:
@@ -143,15 +143,15 @@ const AsignarSectorModal = ({ isOpen, onClose, onSubmit, empleado, loading = fal
                     {empleado?.sectorCodigo ? (
                         <div className="mb-6">
                             <p className="text-sm font-medium text-slate-700 mb-2">Sector Actual:</p>
-                            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                            <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg">
                                 <div className="flex items-center justify-between">
                                     <div>
-                                        <p className="text-sm font-medium text-blue-900">
+                                        <p className="text-sm font-medium text-slate-900">
                                             <span className="font-mono">{empleado.sectorCodigo}</span>
                                             <span className="ml-2">{empleado.sectorNombre}</span>
                                         </p>
                                     </div>
-                                    <Business className="h-5 w-5 text-blue-600" />
+                                    <Business className="h-5 w-5 text-slate-600" />
                                 </div>
                             </div>
                         </div>
@@ -188,12 +188,12 @@ const AsignarSectorModal = ({ isOpen, onClose, onSubmit, empleado, loading = fal
                             </div>
                         </div>
                     ) : (
-                        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <div className="mb-6 p-4 bg-slate-50 border border-slate-200 rounded-lg">
                             <div className="flex items-start">
-                                <Assignment className="h-5 w-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
+                                <Assignment className="h-5 w-5 text-slate-600 mr-3 mt-0.5 flex-shrink-0" />
                                 <div>
-                                    <p className="text-blue-800 font-medium">Para asignar sectores</p>
-                                    <p className="text-blue-700 text-sm mt-1">
+                                    <p className="text-slate-800 font-medium">Para asignar sectores</p>
+                                    <p className="text-slate-700 text-sm mt-1">
                                         Ve a <strong>Gestión de Sectores</strong> y utiliza los botones "Asignar Responsable" o "Asignar Operador" según corresponda.
                                     </p>
                                 </div>

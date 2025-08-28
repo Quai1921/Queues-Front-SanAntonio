@@ -85,8 +85,8 @@ const CrearHorarioModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                 {/* Header */}
                 <div className="flex items-center justify-between p-6 border-b border-slate-200">
                     <div className="flex items-center">
-                        <div className="p-2 bg-[#224666] rounded-lg mr-3">
-                            <Schedule className="h-6 w-6 text-white" />
+                        <div className="p-2 bg-slate-200 rounded-lg mr-3">
+                            <Schedule className="h-6 w-6 text-slate-600" />
                         </div>
                         <div>
                             <h3 className="text-lg font-semibold text-slate-900">Crear Horario</h3>
@@ -105,7 +105,7 @@ const CrearHorarioModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                 </div>
 
                 {/* Formulario */}
-                <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                <form onSubmit={handleSubmit} className="px-6 pt-4 pb-6 space-y-4">
                     {/* Día de la semana */}
                     <div>
                         <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -116,7 +116,7 @@ const CrearHorarioModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                             name="diaSemana"
                             value={formData.diaSemana}
                             onChange={handleInputChange}
-                            className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-transparent ${errors.diaSemana ? 'border-red-300' : 'border-slate-300'
+                            className={`w-full px-3 py-2 border rounded-lg ${errors.diaSemana ? 'border-red-300' : 'border-slate-300'
                                 }`}
                         >
                             <option value="">Seleccionar día</option>
@@ -143,7 +143,7 @@ const CrearHorarioModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                                 name="horaInicio"
                                 value={formData.horaInicio}
                                 onChange={handleInputChange}
-                                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-transparent ${errors.horaInicio ? 'border-red-300' : 'border-slate-300'
+                                className={`w-full px-3 py-2 border rounded-lg ${errors.horaInicio ? 'border-red-300' : 'border-slate-300'
                                     }`}
                             />
                             {errors.horaInicio && (
@@ -161,7 +161,7 @@ const CrearHorarioModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                                 name="horaFin"
                                 value={formData.horaFin}
                                 onChange={handleInputChange}
-                                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-transparent ${errors.horaFin ? 'border-red-300' : 'border-slate-300'
+                                className={`w-full px-3 py-2 border rounded-lg ${errors.horaFin ? 'border-red-300' : 'border-slate-300'
                                     }`}
                             />
                             {errors.horaFin && (
@@ -180,7 +180,7 @@ const CrearHorarioModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                                 name="intervaloCitas"
                                 value={formData.intervaloCitas}
                                 onChange={handleInputChange}
-                                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-transparent ${errors.intervaloCitas ? 'border-red-300' : 'border-slate-300'
+                                className={`w-full px-3 py-2 border rounded-lg ${errors.intervaloCitas ? 'border-red-300' : 'border-slate-300'
                                     }`}
                             >
                                 {intervalosComunes.map(intervalo => (
@@ -206,7 +206,7 @@ const CrearHorarioModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                                 max="50"
                                 value={formData.capacidadMaxima}
                                 onChange={handleInputChange}
-                                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-transparent ${errors.capacidadMaxima ? 'border-red-300' : 'border-slate-300'
+                                className={`w-full px-3 py-2 border rounded-lg ${errors.capacidadMaxima ? 'border-red-300' : 'border-slate-300'
                                     }`}
                             />
                             {errors.capacidadMaxima && (
@@ -227,20 +227,18 @@ const CrearHorarioModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                             placeholder="Notas adicionales sobre este horario..."
                             value={formData.observaciones}
                             onChange={handleInputChange}
-                            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-transparent resize-none"
+                            className="w-full px-3 py-2 border border-slate-300 rounded-lg resize-none"
                         />
                     </div>
 
                     {/* Información adicional */}
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
                         <div className="flex items-start">
-                            <Warning className="h-5 w-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
+                            <Warning className="h-5 w-5 text-amber-600 mr-3 mt-0.5 flex-shrink-0" />
                             <div className="text-sm">
-                                <p className="text-blue-800 font-medium">Información importante:</p>
-                                <ul className="text-blue-700 mt-1 space-y-1">
+                                <p className="text-slate-800 font-medium">Información importante:</p>
+                                <ul className="text-slate-700 mt-1 space-y-1">
                                     <li>• Los horarios no pueden superponerse en el mismo día</li>
-                                    <li>• El intervalo mínimo es de 5 minutos</li>
-                                    <li>• La capacidad máxima es por franja horaria</li>
                                     <li>• Los horarios nuevos se crean como activos</li>
                                 </ul>
                             </div>

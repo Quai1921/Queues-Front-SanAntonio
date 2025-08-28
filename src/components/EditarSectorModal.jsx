@@ -58,10 +58,23 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
         const { name, value, type, checked } = e.target;
         const finalValue = type === 'checkbox' ? checked : value;
 
-        setFormData(prev => ({
-            ...prev,
-            [name]: finalValue
-        }));
+        setFormData(prev => {
+            const newData = {
+                ...prev,
+                [name]: finalValue
+            };
+
+            // CAMBIO: Sincronizar requiereCitaPrevia cuando cambia tipoSector
+            if (name === 'tipoSector') {
+                if (value === 'NORMAL') {
+                    newData.requiereCitaPrevia = false;
+                } else if (value === 'ESPECIAL') {
+                    newData.requiereCitaPrevia = true;
+                }
+            }
+
+            return newData;
+        });
 
         // Limpiar error específico cuando el usuario empieza a escribir
         if (errors[name]) {
@@ -216,7 +229,7 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                             <div className="grid grid-cols-2 gap-3">
                                 {/* OPCIÓN NORMAL - ESTA FALTABA */}
                                 <label className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-colors ${formData.tipoSector === 'NORMAL'
-                                        ? 'border-blue-500 bg-blue-50'
+                                        ? 'border-slate-500 bg-slate-50'
                                         : 'border-slate-200 hover:border-slate-300'
                                     }`}>
                                     <input
@@ -239,7 +252,7 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
 
                                 {/* OPCIÓN ESPECIAL - ESTA YA ESTABA */}
                                 <label className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-colors ${formData.tipoSector === 'ESPECIAL'
-                                        ? 'border-blue-500 bg-blue-50'
+                                        ? 'border-slate-500 bg-slate-50'
                                         : 'border-slate-200 hover:border-slate-300'
                                     }`}>
                                     <input
@@ -362,9 +375,9 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
 
                         {/* Información adicional del sector */}
                         {sector.sector?.empleadoResponsable && (
-                            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                <h4 className="text-sm font-medium text-blue-800 mb-2">Responsable Asignado</h4>
-                                <p className="text-sm text-blue-700">
+                            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+                                <h4 className="text-sm font-medium text-slate-800 mb-2">Responsable Asignado</h4>
+                                <p className="text-sm text-slate-700">
                                     {sector.sector.responsableNombre || `${sector.sector.empleadoResponsable.nombre} ${sector.sector.empleadoResponsable.apellido}`}
                                 </p>
                             </div>

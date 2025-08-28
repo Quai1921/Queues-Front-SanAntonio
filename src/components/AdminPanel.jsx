@@ -199,7 +199,7 @@ const AdminDashboard = () => {
             title: 'Total Empleados',
             value: '--',
             icon: <Group className="text-2xl" />,
-            color: 'from-blue-500 to-blue-600'
+            color: 'from-slate-500 to-slate-600'
         },
         {
             title: 'Sectores Activos',
@@ -289,8 +289,8 @@ const AdminDashboard = () => {
                 <h3 className="text-lg font-semibold text-slate-900 mb-4">Actividad Reciente</h3>
                 <div className="space-y-4">
                     <div className="flex items-center p-3 bg-slate-50 rounded-lg">
-                        <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                            <Group className="text-blue-600 text-sm" />
+                        <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center">
+                            <Group className="text-slate-600 text-sm" />
                         </div>
                         <div className="ml-3">
                             <p className="text-sm font-medium text-slate-900">Nuevo empleado registrado</p>

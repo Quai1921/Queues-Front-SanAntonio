@@ -155,7 +155,7 @@ const Dashboard = () => {
                     title: 'Gestión de Turnos',
                     description: 'Administrar turnos del sector',
                     icon: <Queue className="text-3xl" />,
-                    color: 'from-blue-500 to-blue-600',
+                    color: 'from-slate-500 to-slate-600',
                     onClick: () => navigate('/responsable/turnos'),
                     roles: ['ADMIN', 'RESPONSABLE_SECTOR']
                 },
@@ -298,8 +298,8 @@ const Dashboard = () => {
                                 {
                                     title: 'Turnos Pendientes',
                                     value: statsLoading ? '...' : formatters.formatNumber(statistics.turnos.turnosPendientes),
-                                    color: 'text-blue-600',
-                                    bg: 'bg-blue-50',
+                                    color: 'text-slate-600',
+                                    bg: 'bg-slate-50',
                                     loading: statsLoading
                                 },
                                 {

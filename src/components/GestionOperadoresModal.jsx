@@ -243,7 +243,7 @@ const GestionOperadoresModal = ({ isOpen, onClose, onRefresh, sector, loading = 
                     <button
                         onClick={() => setTab('asignados')}
                         className={`px-6 py-3 font-medium transition-colors ${tab === 'asignados'
-                                ? 'text-slate-600 border-b-2 border-slate-600 bg-blue-50'
+                                ? 'text-slate-600 border-b-2 border-slate-600 bg-slate-50'
                                 : 'text-slate-600 hover:text-slate-900'
                             }`}
                     >
@@ -252,7 +252,7 @@ const GestionOperadoresModal = ({ isOpen, onClose, onRefresh, sector, loading = 
                     <button
                         onClick={() => setTab('asignar')}
                         className={`px-6 py-3 font-medium transition-colors ${tab === 'asignar'
-                                ? 'text-slate-600 border-b-2 border-slate-600 bg-blue-50'
+                                ? 'text-slate-600 border-b-2 border-slate-600 bg-slate-50'
                                 : 'text-slate-600 hover:text-slate-900'
                             }`}
                     >
@@ -389,7 +389,7 @@ const GestionOperadoresModal = ({ isOpen, onClose, onRefresh, sector, loading = 
                                         placeholder="Buscar operadores disponibles..."
                                         value={busqueda}
                                         onChange={(e) => setBusqueda(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg"
                                     />
                                 </div>
                             </div>

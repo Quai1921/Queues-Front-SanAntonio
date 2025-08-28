@@ -187,7 +187,7 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
                                 </span>
 
                                 {empleado.sector && (
-                                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-800">
                                         {empleado.sector.codigo}
                                     </span>
                                 )}
@@ -277,9 +277,9 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
                                         value={formData.dni}
                                         onChange={handleInputChange}
                                         className={`w-full px-3 py-2 border rounded-lg transition-colors ${errors.dni
-                                                ? 'border-red-500 focus:border-red-500'
-                                                : 'border-slate-300 focus:border-[#224666]'
-                                            } focus:ring-2 focus:ring-[#224666]/20`}
+                                                ? 'border-red-500'
+                                                : 'border-slate-300'
+                                            }`}
                                         placeholder="12345678"
                                         disabled={loading}
                                     />
@@ -298,9 +298,9 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
                                         value={formData.email}
                                         onChange={handleInputChange}
                                         className={`w-full px-3 py-2 border rounded-lg transition-colors ${errors.email
-                                                ? 'border-red-500 focus:border-red-500'
-                                                : 'border-slate-300 focus:border-[#224666]'
-                                            } focus:ring-2 focus:ring-[#224666]/20`}
+                                                ? 'border-red-500'
+                                                : 'border-slate-300'
+                                            }`}
                                         placeholder="ejemplo@sanantonio.gov.ar"
                                         disabled={loading}
                                     />

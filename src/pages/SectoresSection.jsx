@@ -404,8 +404,8 @@ const SectoresSection = () => {
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
                 <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
                     <div className="flex items-center">
-                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                            <Business className="h-6 w-6 text-blue-600" />
+                        <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
+                            <Business className="h-6 w-6 text-slate-600" />
                         </div>
                         <div className="ml-3">
                             <p className="text-sm font-medium text-slate-600">Total</p>
@@ -518,7 +518,7 @@ const SectoresSection = () => {
                     >
                         <FilterList className="mr-2 h-4 w-4" />
                         Filtros {Object.values(filtros).some(v => v && v !== 'TODOS') && (
-                            <span className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                            <span className="ml-2 px-2 py-1 bg-slate-100 text-slate-800 text-xs rounded-full">
                                 Aplicados
                             </span>
                         )}
@@ -582,7 +582,7 @@ const SectoresSection = () => {
             {loading && (
                 <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-12">
                     <div className="text-center">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-600 mx-auto"></div>
                         <p className="mt-4 text-slate-600">Cargando sectores...</p>
                     </div>
                 </div>

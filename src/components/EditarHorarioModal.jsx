@@ -132,7 +132,7 @@ const EditarHorarioModal = ({ isOpen, onClose, onSubmit, horario, sector, loadin
                             name="diaSemana"
                             value={formData.diaSemana}
                             onChange={handleInputChange}
-                            className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-transparent ${errors.diaSemana ? 'border-red-300' : 'border-slate-300'
+                            className={`w-full px-3 py-2 border rounded-lg ${errors.diaSemana ? 'border-red-300' : 'border-slate-300'
                                 }`}
                         >
                             <option value="">Seleccionar día</option>
@@ -159,7 +159,7 @@ const EditarHorarioModal = ({ isOpen, onClose, onSubmit, horario, sector, loadin
                                 name="horaInicio"
                                 value={formData.horaInicio}
                                 onChange={handleInputChange}
-                                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-transparent ${errors.horaInicio ? 'border-red-300' : 'border-slate-300'
+                                className={`w-full px-3 py-2 border rounded-lg ${errors.horaInicio ? 'border-red-300' : 'border-slate-300'
                                     }`}
                             />
                             {errors.horaInicio && (
@@ -177,7 +177,7 @@ const EditarHorarioModal = ({ isOpen, onClose, onSubmit, horario, sector, loadin
                                 name="horaFin"
                                 value={formData.horaFin}
                                 onChange={handleInputChange}
-                                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-transparent ${errors.horaFin ? 'border-red-300' : 'border-slate-300'
+                                className={`w-full px-3 py-2 border rounded-lg ${errors.horaFin ? 'border-red-300' : 'border-slate-300'
                                     }`}
                             />
                             {errors.horaFin && (
@@ -196,7 +196,7 @@ const EditarHorarioModal = ({ isOpen, onClose, onSubmit, horario, sector, loadin
                                 name="intervaloCitas"
                                 value={formData.intervaloCitas}
                                 onChange={handleInputChange}
-                                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-transparent ${errors.intervaloCitas ? 'border-red-300' : 'border-slate-300'
+                                className={`w-full px-3 py-2 border rounded-lg ${errors.intervaloCitas ? 'border-red-300' : 'border-slate-300'
                                     }`}
                             >
                                 {intervalosComunes.map(intervalo => (
@@ -222,7 +222,7 @@ const EditarHorarioModal = ({ isOpen, onClose, onSubmit, horario, sector, loadin
                                 max="50"
                                 value={formData.capacidadMaxima}
                                 onChange={handleInputChange}
-                                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-transparent ${errors.capacidadMaxima ? 'border-red-300' : 'border-slate-300'
+                                className={`w-full px-3 py-2 border rounded-lg ${errors.capacidadMaxima ? 'border-red-300' : 'border-slate-300'
                                     }`}
                             />
                             {errors.capacidadMaxima && (
@@ -243,7 +243,7 @@ const EditarHorarioModal = ({ isOpen, onClose, onSubmit, horario, sector, loadin
                             placeholder="Notas adicionales sobre este horario..."
                             value={formData.observaciones}
                             onChange={handleInputChange}
-                            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-transparent resize-none"
+                            className="w-full px-3 py-2 border border-slate-300 rounded-lg resize-none"
                         />
                     </div>
 

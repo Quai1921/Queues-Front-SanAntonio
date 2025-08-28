@@ -143,7 +143,7 @@ const HorariosSectorModal = ({ isOpen, onClose, sector, loading = false }) => {
                     {/* Loading de horarios */}
                     {loadingHorarios && (
                         <div className="text-center py-8">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-600 mx-auto"></div>
                             <p className="mt-4 text-slate-600">Cargando horarios...</p>
                         </div>
                     )}

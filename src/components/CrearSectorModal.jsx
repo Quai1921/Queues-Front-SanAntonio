@@ -43,10 +43,23 @@ const CrearSectorModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
         const { name, value, type, checked } = e.target;
         const finalValue = type === 'checkbox' ? checked : value;
 
-        setFormData(prev => ({
-            ...prev,
-            [name]: finalValue
-        }));
+        setFormData(prev => {
+            const newData = {
+                ...prev,
+                [name]: finalValue
+            };
+
+            // CAMBIO: Sincronizar requiereCitaPrevia cuando cambia tipoSector
+            if (name === 'tipoSector') {
+                if (value === 'NORMAL') {
+                    newData.requiereCitaPrevia = false;
+                } else if (value === 'ESPECIAL') {
+                    newData.requiereCitaPrevia = true;
+                }
+            }
+
+            return newData;
+        });
 
         // Limpiar error específico cuando el usuario empieza a escribir
         if (errors[name]) {
@@ -219,7 +232,7 @@ const CrearSectorModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                             </label>
                             <div className="grid grid-cols-2 gap-3">
                                 <label className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-colors ${formData.tipoSector === 'NORMAL'
-                                        ? 'border-blue-500 bg-blue-50'
+                                        ? 'border-slate-500 bg-slate-50'
                                         : 'border-slate-200 hover:border-slate-300'
                                     }`}>
                                     <input
@@ -241,7 +254,7 @@ const CrearSectorModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                                 </label>
 
                                 <label className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-colors ${formData.tipoSector === 'ESPECIAL'
-                                        ? 'border-blue-500 bg-blue-50'
+                                        ? 'border-slate-500 bg-slate-50'
                                         : 'border-slate-200 hover:border-slate-300'
                                     }`}>
                                     <input

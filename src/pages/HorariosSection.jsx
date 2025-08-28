@@ -324,10 +324,10 @@ const HorariosSection = () => {
                 <button
                     onClick={actualizarSectores}
                     disabled={loadingSectores}
-                    className="flex items-center px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors disabled:opacity-50"
+                    className="flex items-center px-4 py-2 bg-slate-50 text-slate-700 rounded-lg hover:bg-slate-100 transition-colors disabled:opacity-50"
                 >
                     <Refresh className="mr-2 h-4 w-4" />
-                    Actualizar Sectores
+                    Actualizar
                 </button>
             </div>
 
@@ -384,8 +384,8 @@ const HorariosSection = () => {
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
                             <div className="flex items-center">
-                                <div className="p-2 bg-blue-100 rounded-lg">
-                                    <Schedule className="h-6 w-6 text-blue-600" />
+                                <div className="p-2 bg-slate-100 rounded-lg">
+                                    <Schedule className="h-6 w-6 text-slate-600" />
                                 </div>
                                 <div className="ml-4">
                                     <p className="text-2xl font-bold text-slate-900">{estadisticas.totalHorarios}</p>
@@ -461,7 +461,7 @@ const HorariosSection = () => {
                                         placeholder="Buscar horarios..."
                                         value={filtros.busqueda}
                                         onChange={(e) => setFiltros({ ...filtros, busqueda: e.target.value })}
-                                        className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-transparent"
+                                        className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg"
                                     />
                                 </div>
                             </div>
@@ -469,7 +469,7 @@ const HorariosSection = () => {
                             <select
                                 value={filtros.dia}
                                 onChange={(e) => setFiltros({ ...filtros, dia: e.target.value })}
-                                className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-transparent"
+                                className="px-4 py-2 border border-slate-300 rounded-lg"
                             >
                                 <option value="TODOS">Todos los días</option>
                                 <option value="MONDAY">Lunes</option>
@@ -484,7 +484,7 @@ const HorariosSection = () => {
                             <select
                                 value={filtros.estado}
                                 onChange={(e) => setFiltros({ ...filtros, estado: e.target.value })}
-                                className="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-transparent"
+                                className="px-4 py-2 border border-slate-300 rounded-lg"
                             >
                                 <option value="TODOS">Todos</option>
                                 <option value="ACTIVO">Activos</option>

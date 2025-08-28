@@ -127,7 +127,7 @@ const AsignarResponsableModal = ({ isOpen, onClose, onSubmit, sector, loading = 
 
                     {/* Responsable actual */}
                     {sector.sector?.responsable && (
-                        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <div className="mb-6 p-4 bg-slate-50 border border-slate-200 rounded-lg">
                             <h3 className="text-sm font-medium text-slate-800 mb-2">Responsable actual:</h3>
                             <div className="flex items-center">
                                 <div className="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center mr-3">

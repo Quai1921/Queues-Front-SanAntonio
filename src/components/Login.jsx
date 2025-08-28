@@ -142,7 +142,7 @@ const Login = ({ onLogin, loading = false, error = null }) => {
                                     checked={formData.rememberMe}
                                     onChange={handleChange}
                                     disabled={loading}
-                                    className="h-4 w-4 text-blue-600 border-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="h-4 w-4 text-slate-600 border-gray-300 rounded disabled:opacity-50 disabled:cursor-not-allowed"
                                 />
                                 <label htmlFor="rememberMe" className="ml-3 text-sm text-gray-600">
                                     Recordarme en este dispositivo
