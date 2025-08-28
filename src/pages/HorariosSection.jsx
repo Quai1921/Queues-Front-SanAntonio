@@ -141,10 +141,10 @@ const HorariosSection = () => {
             setHorarios(horariosFormateados);
             calcularEstadisticas(horariosFormateados);
 
-            // Aplicar filtros inmediatamente después de cargar
-            setTimeout(() => {
-                aplicarFiltros();
-            }, 100);
+            // ELIMINAR esta línea del setTimeout:
+            // setTimeout(() => {
+            //     aplicarFiltros();
+            // }, 100);
 
         } catch (error) {
             console.error('Error cargando horarios:', error);
@@ -167,6 +167,11 @@ const HorariosSection = () => {
     };
 
     const aplicarFiltros = useCallback(() => {
+        if (horarios.length === 0) {
+            setHorariosFiltrados([]);
+            return;
+        }
+
         let horariosFilt = [...horarios];
 
         // Filtro por búsqueda
@@ -201,16 +206,12 @@ const HorariosSection = () => {
         console.log('Filtros aplicados:', filtros); // DEBUG
 
         setHorariosFiltrados(horariosFilt);
-    }, [horarios, filtros]);
+    }, [horarios, filtros]); // Mantener las dependencias
 
     // Aplicar filtros cuando cambian
     useEffect(() => {
-        if (horarios.length > 0) {
-            aplicarFiltros();
-        } else {
-            setHorariosFiltrados([]);
-        }
-    }, [aplicarFiltros, horarios.length]);
+        aplicarFiltros();
+    }, [aplicarFiltros]);
 
     const handleSelectorSector = (sector) => {
         setSectorSeleccionado(sector);
