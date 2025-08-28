@@ -70,7 +70,7 @@ const CiudadanoCard = ({
                         <div className="flex-1 min-w-0">
                             <div className="flex items-center space-x-2">
                                 <h3 className="font-semibold text-slate-900 truncate">
-                                    {ciudadano.nombreCompleto}
+                                    {ciudadano.apellido}, {ciudadano.nombre}
                                 </h3>
                                 {ciudadano.esPrioritario && (
                                     <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
