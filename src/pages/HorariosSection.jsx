@@ -16,6 +16,7 @@ import {
     Warning,
     Info
 } from '@mui/icons-material';
+import EditDocumentIcon from '@mui/icons-material/EditDocument';
 import CrearHorarioModal from '../components/CrearHorarioModal';
 import EditarHorarioModal from '../components/EditarHorarioModal';
 import horariosService from '../services/horarioService';
@@ -71,41 +72,35 @@ const HorariosSection = () => {
         cargarSectoresEspeciales();
     }, []);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            // Refrescar sectores cada 30 segundos para detectar cambios de tipo
-            if (!loadingSectores) {
-                cargarSectoresEspeciales();
-            }
-        }, 30000);
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         // Refrescar sectores cada 30 segundos para detectar cambios de tipo
+    //         if (!loadingSectores) {
+    //             cargarSectoresEspeciales();
+    //         }
+    //     }, 30000);
 
-        return () => clearInterval(interval);
-    }, [loadingSectores]);
+    //     return () => clearInterval(interval);
+    // }, [loadingSectores]);
 
     
 
     const cargarSectoresEspeciales = async () => {
         try {
             setLoadingSectores(true);
-            const sectoresData = await sectoresService.obtenerEspeciales();
+            const sectoresEspeciales = await sectoresService.obtenerEspeciales();
+            console.log('Sectores recibidos del backend:', sectoresEspeciales);
 
-            console.log('Sectores especiales recibidos:', sectoresData); // DEBUG
+            // Verificar que efectivamente sean especiales
+            const sectoresFiltrados = sectoresEspeciales.filter(sector => {
+                const esEspecial = sector.tipoSector === 'ESPECIAL' || sector.requiereCitaPrevia === true;
+                console.log(`Sector ${sector.codigo}: tipo=${sector.tipoSector}, requiereCita=${sector.requiereCitaPrevia}, esEspecial=${esEspecial}`);
+                return esEspecial;
+            });
 
-            const sectoresFormateados = sectoresData.map(sector =>
-                sectoresService.formatearParaUI(sector)
-            );
-            setSectores(sectoresFormateados);
+            console.log('Sectores después del filtro:', sectoresFiltrados);
+            setSectores(sectoresFiltrados);
 
-            // Verificar si el sector seleccionado sigue siendo especial
-            if (sectorSeleccionado) {
-                const sectorSigueEspecial = sectoresFormateados.find(s => s.id === sectorSeleccionado.id);
-                if (!sectorSigueEspecial) {
-                    console.log('Sector seleccionado ya no es especial, deseleccionando'); // DEBUG
-                    setSectorSeleccionado(null);
-                    setHorarios([]);
-                    setHorariosFiltrados([]);
-                }
-            }
         } catch (error) {
             console.error('Error cargando sectores especiales:', error);
             mostrarNotificacion('Error al cargar sectores especiales', 'error');
@@ -131,20 +126,15 @@ const HorariosSection = () => {
         try {
             setLoading(true);
             const horariosData = await horariosService.listarPorSector(sectorId);
-            console.log('Horarios cargados del backend:', horariosData); // DEBUG
+            console.log('Horarios cargados del backend:', horariosData);
 
             const horariosFormateados = horariosData.map(horario =>
                 horariosService.formatearParaUI(horario)
             );
-            console.log('Horarios formateados:', horariosFormateados); // DEBUG
+            console.log('Horarios formateados:', horariosFormateados);
 
             setHorarios(horariosFormateados);
             calcularEstadisticas(horariosFormateados);
-
-            // ELIMINAR esta línea del setTimeout:
-            // setTimeout(() => {
-            //     aplicarFiltros();
-            // }, 100);
 
         } catch (error) {
             console.error('Error cargando horarios:', error);
@@ -608,18 +598,18 @@ const HorariosSection = () => {
                                                     </button>
                                                 </td> */}
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <span className={`inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium ${horario.activo
+                                                    <span className={`flex items-center justify-center w-16 px-2.5 py-1 rounded-full text-xs font-medium ${horario.activo
                                                             ? 'bg-green-100 text-green-800'
                                                             : 'bg-red-100 text-red-800'
                                                         }`}>
                                                         {horario.activo ? (
                                                             <>
-                                                                <CheckCircle className="w-3 h-3 mr-1" />
+                                                                {/* <CheckCircle className="w-3 h-3 mr-1" /> */}
                                                                 Activo
                                                             </>
                                                         ) : (
                                                             <>
-                                                                <Cancel className="w-3 h-3 mr-1" />
+                                                                {/* <Cancel className="w-3 h-3 mr-1" /> */}
                                                                 Inactivo
                                                             </>
                                                         )}
@@ -630,28 +620,20 @@ const HorariosSection = () => {
                                                         {horario.observaciones || '-'}
                                                     </span>
                                                 </td>
-                                                {/* <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                    <button
-                                                        onClick={() => handleEditarHorario(horario)}
-                                                        className="text-[#224666] hover:text-[#1a3a52] mr-3"
-                                                    >
-                                                        <Edit className="h-4 w-4" />
-                                                    </button>
-                                                </td> */}
                                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                                     <div className="flex items-center justify-end space-x-2">
                                                         <button
                                                             onClick={() => handleEditarHorario(horario)}
-                                                            className="text-[#224666] hover:text-[#1a3a52] p-1"
+                                                            className="p-1.5 text-slate-400 hover:text-cyan-800 transition-all duration-300"
                                                             title="Editar horario"
                                                         >
-                                                            <Edit className="h-4 w-4" />
+                                                            <EditDocumentIcon className="h-4 w-4" />
                                                         </button>
                                                         <button
                                                             onClick={() => handleToggleEstado(horario)}
-                                                            className={`p-1 ${horario.activo
-                                                                    ? 'text-red-600 hover:text-red-800'
-                                                                    : 'text-green-600 hover:text-green-800'
+                                                            className={`p-1.5 text-slate-400 transition-all duration-300 ${horario.activo
+                                                                    ? 'hover:text-red-600'
+                                                                    : 'hover:text-green-600'
                                                                 }`}
                                                             title={horario.activo ? 'Desactivar horario' : 'Activar horario'}
                                                         >
