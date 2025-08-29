@@ -72,19 +72,6 @@ const HorariosSection = () => {
         cargarSectoresEspeciales();
     }, []);
 
-    // useEffect(() => {
-    //     const interval = setInterval(() => {
-    //         // Refrescar sectores cada 30 segundos para detectar cambios de tipo
-    //         if (!loadingSectores) {
-    //             cargarSectoresEspeciales();
-    //         }
-    //     }, 30000);
-
-    //     return () => clearInterval(interval);
-    // }, [loadingSectores]);
-
-    
-
     const cargarSectoresEspeciales = async () => {
         try {
             setLoadingSectores(true);
@@ -297,11 +284,19 @@ const HorariosSection = () => {
         <div>
             {/* Notificación */}
             {notificacion && (
-                <div className={`fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg ${notificacion.tipo === 'error'
-                        ? 'bg-red-100 text-red-800 border border-red-200'
-                        : 'bg-green-100 text-green-800 border border-green-200'
-                    } transition-all duration-300`}>
-                    {notificacion.mensaje}
+                <div className={`fixed top-4 left-1/2 -translate-x-1/2  z-[60] px-4 py-6 rounded-lg shadow-lg border transition-all duration-300 ${notificacion.tipo === 'success'
+                        ? 'bg-green-50 border-green-200 text-green-800'
+                        : 'bg-red-50 border-red-200 text-red-800'
+                    }`}>
+                    <div className="flex items-center">
+                        <span className="font-medium">{notificacion.mensaje}</span>
+                        <button
+                            onClick={() => setNotificacion(null)}
+                            className="ml-3 text-sm opacity-70 hover:opacity-100"
+                        >
+                            ✕
+                        </button>
+                    </div>
                 </div>
             )}
 
