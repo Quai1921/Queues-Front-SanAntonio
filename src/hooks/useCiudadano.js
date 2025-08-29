@@ -78,6 +78,8 @@ export const useCiudadano = () => {
             resultado = resultado.filter(ciudadano =>
                 ciudadano.dni.includes(termino) ||
                 ciudadano.nombreCompleto?.toLowerCase().includes(termino) ||
+                ciudadano.nombre?.toLowerCase().includes(termino) ||
+                ciudadano.apellido?.toLowerCase().includes(termino) ||
                 ciudadano.telefono.includes(termino)
             );
         }
