@@ -26,6 +26,7 @@ import SectoresSection from '../pages/SectoresSection';
 import EmpleadosSection from '../pages/EmpleadosSection';
 import HorariosSection from '../pages/HorariosSection';
 import CiudadanosSection from '../pages/CiudadanosSection';
+import ConfiguracionesSection from '../pages/ConfiguracionesSection';
 
 /**
  * Panel de administración principal - Solo para usuarios ADMIN
@@ -195,7 +196,7 @@ const AdminPanel = () => {
                         <Route path="empleados" element={<EmpleadosSection />} />
                         <Route path="sectores" element={<SectoresSection />} />
                         <Route path="horarios" element={<HorariosSection />} />
-                        <Route path="configuracion" element={<ConfiguracionSection />} />
+                        <Route path="configuracion" element={<ConfiguracionesSection />} />
                     </Routes>
                 </main>
             </div>
@@ -347,33 +348,5 @@ const AdminDashboard = () => {
     );
 };
 
-
-// Componente de configuración del sistema
-const ConfiguracionSection = () => {
-    return (
-        <div className="space-y-6">
-
-            {/* Header */}
-            <div>
-                <h3 className="text-lg font-semibold text-slate-900">Configuración del Sistema</h3>
-                <p className="text-slate-600 text-sm">Ajusta parámetros generales y configuraciones</p>
-            </div>
-
-            {/* Contenido placeholder */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                <div className="text-center py-12">
-                    <Settings className="mx-auto h-12 w-12 text-slate-400" />
-                    <h3 className="mt-4 text-lg font-medium text-slate-900">Configuraciones</h3>
-                    <p className="mt-2 text-slate-600">
-                        Panel de configuración general del sistema de turnos
-                    </p>
-                    <p className="mt-1 text-sm text-slate-500">
-                        Implementación pendiente - Requiere integración con API /api/configuracion
-                    </p>
-                </div>
-            </div>
-        </div>
-    );
-};
 
 export default AdminPanel;
