@@ -89,16 +89,13 @@ const HorariosSection = () => {
         try {
             setLoadingSectores(true);
             const sectoresEspeciales = await sectoresService.obtenerEspeciales();
-            console.log('Sectores recibidos del backend:', sectoresEspeciales);
 
             // Verificar que efectivamente sean especiales
             const sectoresFiltrados = sectoresEspeciales.filter(sector => {
                 const esEspecial = sector.tipoSector === 'ESPECIAL' || sector.requiereCitaPrevia === true;
-                console.log(`Sector ${sector.codigo}: tipo=${sector.tipoSector}, requiereCita=${sector.requiereCitaPrevia}, esEspecial=${esEspecial}`);
                 return esEspecial;
             });
 
-            console.log('Sectores después del filtro:', sectoresFiltrados);
             setSectores(sectoresFiltrados);
 
         } catch (error) {
@@ -126,12 +123,10 @@ const HorariosSection = () => {
         try {
             setLoading(true);
             const horariosData = await horariosService.listarPorSector(sectorId);
-            console.log('Horarios cargados del backend:', horariosData);
 
             const horariosFormateados = horariosData.map(horario =>
                 horariosService.formatearParaUI(horario)
             );
-            console.log('Horarios formateados:', horariosFormateados);
 
             setHorarios(horariosFormateados);
             calcularEstadisticas(horariosFormateados);
@@ -191,9 +186,6 @@ const HorariosSection = () => {
                 return true;
             });
         }
-
-        console.log('Horarios después de filtrar:', horariosFilt); // DEBUG
-        console.log('Filtros aplicados:', filtros); // DEBUG
 
         setHorariosFiltrados(horariosFilt);
     }, [horarios, filtros]); // Mantener las dependencias
@@ -302,7 +294,7 @@ const HorariosSection = () => {
     };
 
     return (
-        <div className="space-y-6">
+        <div>
             {/* Notificación */}
             {notificacion && (
                 <div className={`fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg ${notificacion.tipo === 'error'
@@ -314,7 +306,7 @@ const HorariosSection = () => {
             )}
 
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mb-3">
                 <div>
                     <h3 className="text-lg font-semibold text-slate-900">Gestión de Horarios</h3>
                     <p className="text-slate-600 text-sm">
@@ -332,7 +324,7 @@ const HorariosSection = () => {
             </div>
 
             {/* Selector de Sector */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-3">
                 <div className="flex items-center mb-4">
                     <Business className="h-5 w-5 text-slate-600 mr-2" />
                     <h4 className="text-md font-medium text-slate-900">Seleccionar Sector</h4>
@@ -380,7 +372,7 @@ const HorariosSection = () => {
             {sectorSeleccionado && (
                 <>
                     {/* Estadísticas */}
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-3">
                         <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
                             <div className="flex items-center">
                                 <div className="p-2 bg-slate-100 rounded-lg">
@@ -431,7 +423,7 @@ const HorariosSection = () => {
                     </div>
 
                     {/* Header con acciones */}
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between mb-3">
                         <div>
                             <h4 className="text-lg font-semibold text-slate-900">
                                 Horarios de {sectorSeleccionado.codigo}
@@ -450,7 +442,7 @@ const HorariosSection = () => {
                     </div>
 
                     {/* Filtros y búsqueda */}
-                    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+                    <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-3">
                         <div className="flex flex-col sm:flex-row gap-4">
                             <div className="flex-1">
                                 <div className="relative">

@@ -9,12 +9,14 @@ import {
     Groups,
     Warning,
     Schedule,
-    Badge
+    Badge,
+    ViewList,
+    ViewModule
 } from '@mui/icons-material';
-import useCiudadano from '../hooks/useCiudadano'; // Usar el hook personalizado
+import useCiudadano from '../hooks/useCiudadano';
 import CrearCiudadanoModal from '../components/CrearCiudadanoModal';
 import EstablecerPrioridadModal from '../components/EstablecerPrioridadModal';
-import CiudadanoCard from '../components/CiudadanoCard';
+import CiudadanoTabla from '../components/CiudadanoTabla';
 
 /**
  * Sección principal para la gestión de ciudadanos
@@ -36,6 +38,7 @@ const CiudadanosSection = () => {
         // Setters
         setBusqueda,
         setFiltroActivo,
+        setNotificacion,
 
         // Operaciones
         crearCiudadano,
@@ -46,12 +49,11 @@ const CiudadanosSection = () => {
         limpiarSeleccion
     } = useCiudadano();
 
-    console.log(ciudadanosFiltrados)
-
-    // Estados locales para modales
+    // Estados locales para modales y vista
     const [modalCrearAbierto, setModalCrearAbierto] = useState(false);
     const [modalPrioridadAbierto, setModalPrioridadAbierto] = useState(false);
     const [modoEdicion, setModoEdicion] = useState('crear');
+    const [vistaTabla, setVistaTabla] = useState(true);
 
     /**
      * Maneja la creación de un nuevo ciudadano
@@ -107,12 +109,11 @@ const CiudadanosSection = () => {
     };
 
     /**
-     * Maneja ver historial de turnos (placeholder)
+     * Maneja ver historial de turnos
      */
     const handleVerHistorial = (ciudadano) => {
         console.log('Ver historial de:', ciudadano);
         // TODO: Implementar modal de historial
-        // mostrarNotificacion('Funcionalidad de historial próximamente', 'info');
     };
 
     /**
@@ -125,46 +126,60 @@ const CiudadanosSection = () => {
         setModoEdicion('crear');
     };
 
-    // Configuración de filtros
-    const filtros = [
-        { id: 'todos', nombre: 'Todos', icono: Groups, color: 'bg-slate-100 text-slate-700' },
-        { id: 'prioritarios', nombre: 'Prioritarios', icono: PriorityHigh, color: 'bg-red-100 text-red-700' },
-        { id: 'conTurno', nombre: 'Con turno', icono: Schedule, color: 'bg-yellow-100 text-yellow-700' },
-        { id: 'sinTurnos', nombre: 'Sin turnos', icono: Person, color: 'bg-blue-100 text-blue-700' }
+    // Opciones de filtro
+    const opcionesFiltro = [
+        { valor: '', etiqueta: 'Todos los ciudadanos' },
+        { valor: 'prioritarios', etiqueta: 'Solo prioritarios' },
+        { valor: 'normales', etiqueta: 'Solo normales' },
+        { valor: 'con_turnos', etiqueta: 'Con turnos pendientes' }
     ];
 
     return (
-        <div className="p-6 space-y-6">
+        <div>
             {/* Notificación */}
-            {notificacion.visible && (
-                <div className={`fixed top-4 right-4 z-50 px-4 py-2 rounded-lg shadow-lg ${notificacion.tipo === 'error' ? 'bg-red-500 text-white' :
-                        notificacion.tipo === 'info' ? 'bg-blue-500 text-white' :
-                            'bg-green-500 text-white'
+            {notificacion && notificacion.visible && (
+                <div className={`fixed top-4 left-1/2 -translate-x-1/2 z-[60] px-4 py-6 rounded-lg shadow-lg border transition-all duration-300 ${notificacion.tipo === 'success'
+                        ? 'bg-green-50 border-green-200 text-green-800'
+                        : notificacion.tipo === 'error'
+                            ? 'bg-red-50 border-red-200 text-red-800'
+                            : notificacion.tipo === 'info'
+                                ? 'bg-blue-50 border-blue-200 text-blue-800'
+                                : 'bg-gray-50 border-gray-200 text-gray-800'
                     }`}>
-                    {notificacion.mensaje}
+                    <div className="flex items-center">
+                        <span className="font-medium">{notificacion.mensaje}</span>
+                        <button
+                            onClick={() => setNotificacion({ ...notificacion, visible: false })}
+                            className="ml-3 text-sm opacity-70 hover:opacity-100"
+                        >
+                            ✕
+                        </button>
+                    </div>
                 </div>
             )}
 
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mb-3">
                 <div>
-                    <h1 className="text-2xl font-bold text-slate-900">Gestión de Ciudadanos</h1>
-                    <p className="text-slate-600 mt-1">
+                    <h1 className="text-lg font-bold text-slate-900">Gestión de Ciudadanos</h1>
+                    <p className="text-slate-600 mt-1 text-sm">
                         Administre la información de los ciudadanos registrados en el sistema
                     </p>
                 </div>
 
-                <button
-                    onClick={() => setModalCrearAbierto(true)}
-                    className="flex items-center px-4 py-2 bg-[#224666] text-white rounded-lg hover:bg-[#2c3e50] transition-colors"
-                >
-                    <PersonAdd className="h-5 w-5 mr-2" />
-                    Nuevo Ciudadano
-                </button>
+                <div className="flex items-center space-x-3">
+                    <button
+                        onClick={() => setModalCrearAbierto(true)}
+                        className="flex items-center px-4 py-2 bg-[#224666] text-white rounded-lg hover:bg-[#2c3e50] transition-colors"
+                    >
+                        <PersonAdd className="h-5 w-5 mr-2" />
+                        Nuevo Ciudadano
+                    </button>
+                </div>
             </div>
 
             {/* Estadísticas */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-2">
                 <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <div className="flex items-center">
                         <div className="p-2 bg-slate-100 rounded-lg">
@@ -184,7 +199,7 @@ const CiudadanosSection = () => {
                         </div>
                         <div className="ml-3">
                             <p className="text-sm text-slate-600">Prioritarios</p>
-                            <p className="text-2xl font-bold text-red-600">{estadisticas.prioritarios}</p>
+                            <p className="text-2xl font-bold text-slate-900">{estadisticas.prioritarios}</p>
                         </div>
                     </div>
                 </div>
@@ -195,8 +210,8 @@ const CiudadanosSection = () => {
                             <Warning className="h-6 w-6 text-yellow-600" />
                         </div>
                         <div className="ml-3">
-                            <p className="text-sm text-slate-600">Con turno</p>
-                            <p className="text-2xl font-bold text-yellow-600">{estadisticas.conTurnoPendiente}</p>
+                            <p className="text-sm text-slate-600">Con Turnos</p>
+                            <p className="text-2xl font-bold text-slate-900">{estadisticas.conTurnos}</p>
                         </div>
                     </div>
                 </div>
@@ -204,140 +219,125 @@ const CiudadanosSection = () => {
                 <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
                     <div className="flex items-center">
                         <div className="p-2 bg-blue-100 rounded-lg">
-                            <Badge className="h-6 w-6 text-blue-600" />
+                            <Schedule className="h-6 w-6 text-blue-600" />
                         </div>
                         <div className="ml-3">
-                            <p className="text-sm text-slate-600">Sin turnos</p>
-                            <p className="text-2xl font-bold text-blue-600">{estadisticas.sinTurnos}</p>
+                            <p className="text-sm text-slate-600">Atendidos Hoy</p>
+                            <p className="text-2xl font-bold text-slate-900">{estadisticas.atendidosHoy || 0}</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Barra de búsqueda y filtros */}
-            <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+            {/* Controles de búsqueda y filtros */}
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-4">
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0 lg:space-x-4">
                     {/* Búsqueda */}
                     <div className="flex-1 max-w-md">
                         <div className="relative">
-                            <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
                             <input
                                 type="text"
-                                placeholder="Buscar por DNI, nombre o teléfono..."
+                                placeholder="Buscar por nombre, apellido o DNI..."
                                 value={busqueda}
                                 onChange={(e) => setBusqueda(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-transparent"
                             />
-                            {busqueda && (
-                                <button
-                                    onClick={() => setBusqueda('')}
-                                    className="absolute right-3 top-3 text-slate-400 hover:text-slate-600"
-                                >
-                                    <Clear className="h-4 w-4" />
-                                </button>
-                            )}
                         </div>
                     </div>
 
                     {/* Filtros */}
-                    <div className="flex items-center space-x-2">
-                        <FilterList className="h-5 w-5 text-slate-600" />
-                        <div className="flex space-x-2">
-                            {filtros.map(filtro => {
-                                const IconoFiltro = filtro.icono;
-                                const estaActivo = filtroActivo === filtro.id;
-
-                                return (
-                                    <button
-                                        key={filtro.id}
-                                        onClick={() => setFiltroActivo(filtro.id)}
-                                        className={`flex items-center px-3 py-2 rounded-lg text-sm font-medium transition-colors ${estaActivo ? filtro.color : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                                            }`}
-                                    >
-                                        <IconoFiltro className="h-4 w-4 mr-1" />
-                                        {filtro.nombre}
-                                    </button>
-                                );
-                            })}
+                    <div className="flex items-center space-x-3">
+                        <div className="flex items-center space-x-2">
+                            <FilterList className="h-5 w-5 text-slate-600" />
+                            <select
+                                value={filtroActivo}
+                                onChange={(e) => setFiltroActivo(e.target.value)}
+                                className="border border-slate-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#224666] focus:border-transparent"
+                            >
+                                {opcionesFiltro.map((opcion) => (
+                                    <option key={opcion.valor} value={opcion.valor}>
+                                        {opcion.etiqueta}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
 
-                        {(busqueda || filtroActivo !== 'todos') && (
+                        {(busqueda || filtroActivo) && (
                             <button
                                 onClick={limpiarFiltros}
-                                className="px-3 py-2 text-sm text-slate-500 hover:text-slate-700 underline"
+                                className="px-4 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
                             >
                                 Limpiar
                             </button>
                         )}
                     </div>
                 </div>
-
-                {/* Contador de resultados */}
-                <div className="mt-3 text-sm text-slate-600">
-                    Mostrando {ciudadanosFiltrados.length} ciudadanos
-                </div>
             </div>
 
-            {/* Lista de ciudadanos */}
+            {/* Contenido principal */}
             {loading ? (
-                <div className="flex justify-center py-12">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <div className="text-center py-8">
+                    <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#224666]"></div>
+                    <p className="mt-2 text-slate-600">Cargando ciudadanos...</p>
                 </div>
             ) : ciudadanosFiltrados.length === 0 ? (
-                <div className="text-center py-12">
-                    <Person className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-slate-900 mb-2">
-                        {estadisticas.total === 0 ? 'No hay ciudadanos registrados' : 'No se encontraron ciudadanos'}
-                    </h3>
-                    <p className="text-slate-600 mb-6">
-                        {estadisticas.total === 0
-                            ? 'Comience agregando el primer ciudadano al sistema'
-                            : 'Intente con otros términos de búsqueda o cambie los filtros'
-                        }
-                    </p>
-                    {estadisticas.total === 0 && (
-                        <button
-                            onClick={() => setModalCrearAbierto(true)}
-                            className="flex items-center px-4 py-2 bg-[#224666] text-white rounded-lg hover:bg-[#2c3e50] transition-colors mx-auto"
-                        >
-                            <PersonAdd className="h-5 w-5 mr-2" />
-                            Crear Primer Ciudadano
-                        </button>
-                    )}
+                <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-12">
+                    <div className="text-center">
+                        <Person className="mx-auto h-12 w-12 text-slate-400 mb-4" />
+                        <h3 className="text-lg font-medium text-slate-900 mb-2">
+                            {estadisticas.total === 0
+                                ? 'No hay ciudadanos registrados'
+                                : 'No se encontraron ciudadanos'}
+                        </h3>
+                        <p className="text-slate-500 mb-6">
+                            {estadisticas.total === 0
+                                ? 'Comience agregando el primer ciudadano al sistema'
+                                : 'Intente con otros términos de búsqueda o cambie los filtros'}
+                        </p>
+                        {estadisticas.total === 0 && (
+                            <button
+                                onClick={() => setModalCrearAbierto(true)}
+                                className="inline-flex items-center px-4 py-2 bg-[#224666] text-white rounded-lg hover:bg-[#2c3e50] transition-colors"
+                            >
+                                <PersonAdd className="h-5 w-5 mr-2" />
+                                Crear Primer Ciudadano
+                            </button>
+                        )}
+                    </div>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {ciudadanosFiltrados.map(ciudadano => (
-                        <CiudadanoCard
-                            key={ciudadano.id}
-                            ciudadano={ciudadano}
-                            onEditar={handleEditarCiudadano}
-                            onCambiarPrioridad={handleCambiarPrioridad}
-                            onVerHistorial={handleVerHistorial}
-                            loading={loadingOperacion}
-                        />
-                    ))}
-                </div>
+                <CiudadanoTabla
+                    ciudadanos={ciudadanosFiltrados}
+                    onEditar={handleEditarCiudadano}
+                    onCambiarPrioridad={handleCambiarPrioridad}
+                    onVerHistorial={handleVerHistorial}
+                    loading={loading}
+                />
             )}
 
             {/* Modal Crear/Editar Ciudadano */}
-            <CrearCiudadanoModal
-                isOpen={modalCrearAbierto}
-                onClose={cerrarModales}
-                onSubmit={modoEdicion === 'editar' ? handleActualizarCiudadano : handleCrearCiudadano}
-                ciudadano={modoEdicion === 'editar' ? ciudadanoSeleccionado : null}
-                modo={modoEdicion}
-                loading={loadingOperacion}
-            />
+            {modalCrearAbierto && (
+                <CrearCiudadanoModal
+                    isOpen={modalCrearAbierto}
+                    onClose={cerrarModales}
+                    onSubmit={modoEdicion === 'crear' ? handleCrearCiudadano : handleActualizarCiudadano}
+                    ciudadano={modoEdicion === 'editar' ? ciudadanoSeleccionado : null}
+                    modo={modoEdicion}
+                    loading={loadingOperacion === 'crear' || loadingOperacion === ciudadanoSeleccionado?.dni}
+                />
+            )}
 
             {/* Modal Establecer Prioridad */}
-            <EstablecerPrioridadModal
-                isOpen={modalPrioridadAbierto}
-                onClose={cerrarModales}
-                onSubmit={handleEstablecerPrioridad}
-                ciudadano={ciudadanoSeleccionado}
-                loading={loadingOperacion}
-            />
+            {modalPrioridadAbierto && ciudadanoSeleccionado && (
+                <EstablecerPrioridadModal
+                    isOpen={modalPrioridadAbierto}
+                    onClose={cerrarModales}
+                    onSubmit={handleEstablecerPrioridad}
+                    ciudadano={ciudadanoSeleccionado}
+                    loading={loadingOperacion === ciudadanoSeleccionado.dni}
+                />
+            )}
         </div>
     );
 };

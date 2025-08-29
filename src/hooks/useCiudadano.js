@@ -74,10 +74,10 @@ export const useCiudadano = () => {
 
         // Aplicar búsqueda por DNI, nombre o teléfono
         if (busqueda.trim()) {
-            const termino = busqueda.trim().toLowerCase();
+            const termino = busqueda.trim()?.toLowerCase();
             resultado = resultado.filter(ciudadano =>
                 ciudadano.dni.includes(termino) ||
-                ciudadano.nombreCompleto.toLowerCase().includes(termino) ||
+                ciudadano.nombreCompleto?.toLowerCase().includes(termino) ||
                 ciudadano.telefono.includes(termino)
             );
         }
@@ -99,7 +99,7 @@ export const useCiudadano = () => {
         }
 
         // Ordenar por apellido
-        resultado.sort((a, b) => a.nombreCompleto.localeCompare(b.nombreCompleto));
+        resultado.sort((a, b) => a.nombreCompleto?.localeCompare(b.nombreCompleto));
         setCiudadanosFiltrados(resultado);
     }, [ciudadanos, busqueda, filtroActivo]);
 

@@ -103,11 +103,18 @@ const CrearCiudadanoModal = ({
 
     // Verificar DNI existente solo en modo crear
     const verificarDniExistenteFn = async (dni) => {
-        if (modo === 'editar' || !dni || dni.length < 7) return;
+        if (!dni || dni.length < 7) return;
 
         try {
             setVerificandoDni(true);
             const existe = await verificarDniExistente(dni);
+
+            if (existe && !(modo === 'editar' && ciudadano && ciudadano.dni === dni)) {
+                setErrors(prev => ({
+                    ...prev,
+                    dni: 'Ya existe un ciudadano con este DNI'
+                }));
+            }
 
             if (existe) {
                 setErrors(prev => ({
@@ -197,11 +204,11 @@ const CrearCiudadanoModal = ({
                                 value={formData.dni}
                                 onChange={handleInputChange}
                                 onBlur={handleDniBlur}
-                                disabled={modo === 'editar'}
+                                // disabled={modo === 'editar'}
                                 placeholder="Ej: 12345678"
                                 maxLength="8"
                                 className={`w-full px-3 py-2 border rounded-lg ${errors.dni ? 'border-red-300' : 'border-slate-300'
-                                    } ${modo === 'editar' ? 'bg-slate-100' : ''}`}
+                                    }`}
                             />
                             {verificandoDni && (
                                 <div className="absolute right-3 top-2">
