@@ -167,33 +167,33 @@ const CrearCiudadanoModal = ({
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-xl shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto text-sm">
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-slate-200">
+                <div className="flex items-center justify-between p-4 border-b border-slate-200">
                     <div className="flex items-center">
-                        <div className="p-2 bg-slate-200 rounded-lg mr-3">
+                        <div className="w-10 h-10 bg-slate-200 rounded-md flex items-center justify-center mr-3">
                             <PersonAdd className="h-6 w-6 text-slate-600" />
                         </div>
                         <div>
                             <h3 className="text-lg font-semibold text-slate-900">{titulo}</h3>
-                            <p className="text-sm text-slate-600">{subtitulo}</p>
+                            <p className=" text-slate-600">{subtitulo}</p>
                         </div>
                     </div>
                     <button
                         onClick={onClose}
                         disabled={loading}
-                        className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors disabled:opacity-50"
+                        className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md transition-colors disabled:opacity-50"
                     >
                         <Close className="h-5 w-5" />
                     </button>
                 </div>
 
                 {/* Formulario */}
-                <form onSubmit={handleSubmit} className="px-6 pt-4 pb-6 space-y-6">
+                <form onSubmit={handleSubmit} className="px-4 pt-3 pb-4 space-y-3">
                     {/* DNI / Apellido / Nombre */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                        <label className="block  font-medium text-slate-700 mb-2">
                             <Badge className="inline h-4 w-4 mr-1" />
                             DNI *
                         </label>
@@ -207,7 +207,7 @@ const CrearCiudadanoModal = ({
                                 // disabled={modo === 'editar'}
                                 placeholder="Ej: 12345678"
                                 maxLength="8"
-                                className={`w-full px-3 py-2 border rounded-lg ${errors.dni ? 'border-red-300' : 'border-slate-300'
+                                className={`w-full px-3 h-8 border rounded-md ${errors.dni ? 'border-red-300' : 'border-slate-300'
                                     }`}
                             />
                             {verificandoDni && (
@@ -217,12 +217,12 @@ const CrearCiudadanoModal = ({
                             )}
                         </div>
                         {errors.dni && (
-                            <p className="mt-1 text-sm text-red-600">{errors.dni}</p>
+                            <p className="mt-1  text-red-600">{errors.dni}</p>
                         )}
                     </div>
 
                     <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                            <label className="block  font-medium text-slate-700 mb-2">
                                 <Person className="inline h-4 w-4 mr-1" />
                                 Nombre *
                             </label>
@@ -233,16 +233,16 @@ const CrearCiudadanoModal = ({
                                 onChange={handleInputChange}
                                 placeholder="Ej: Juan Carlos"
                                 maxLength="100"
-                                className={`w-full px-3 py-2 border rounded-lg ${errors.nombre ? 'border-red-300' : 'border-slate-300'
+                                className={`w-full px-3 h-8 border rounded-md ${errors.nombre ? 'border-red-300' : 'border-slate-300'
                                     }`}
                             />
                             {errors.nombre && (
-                                <p className="mt-1 text-sm text-red-600">{errors.nombre}</p>
+                                <p className="mt-1  text-red-600">{errors.nombre}</p>
                             )}
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                            <label className="block  font-medium text-slate-700 mb-2">
                                 Apellido *
                             </label>
                             <input
@@ -252,11 +252,11 @@ const CrearCiudadanoModal = ({
                                 onChange={handleInputChange}
                                 placeholder="Ej: González Pérez"
                                 maxLength="100"
-                                className={`w-full px-3 py-2 border rounded-lg ${errors.apellido ? 'border-red-300' : 'border-slate-300'
+                                className={`w-full px-3 h-8 border rounded-md ${errors.apellido ? 'border-red-300' : 'border-slate-300'
                                     }`}
                             />
                             {errors.apellido && (
-                                <p className="mt-1 text-sm text-red-600">{errors.apellido}</p>
+                                <p className="mt-1  text-red-600">{errors.apellido}</p>
                             )}
                         </div>
                     </div>
@@ -264,7 +264,7 @@ const CrearCiudadanoModal = ({
                     {/* Contacto */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                            <label className="block  font-medium text-slate-700 mb-2">
                                 <ContactPhone className="inline h-4 w-4 mr-1" />
                                 Teléfono *
                             </label>
@@ -275,16 +275,16 @@ const CrearCiudadanoModal = ({
                                 onChange={handleInputChange}
                                 placeholder="Ej: 0351-1234567"
                                 maxLength="20"
-                                className={`w-full px-3 py-2 border rounded-lg ${errors.telefono ? 'border-red-300' : 'border-slate-300'
+                                className={`w-full px-3 h-8 border rounded-md ${errors.telefono ? 'border-red-300' : 'border-slate-300'
                                     }`}
                             />
                             {errors.telefono && (
-                                <p className="mt-1 text-sm text-red-600">{errors.telefono}</p>
+                                <p className="mt-1  text-red-600">{errors.telefono}</p>
                             )}
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                            <label className="block  font-medium text-slate-700 mb-2">
                                 <Home className="inline h-4 w-4 mr-1" />
                                 Dirección *
                             </label>
@@ -295,11 +295,11 @@ const CrearCiudadanoModal = ({
                                 onChange={handleInputChange}
                                 placeholder="Ej: Av. Colón 1234"
                                 maxLength="200"
-                                className={`w-full px-3 py-2 border rounded-lg ${errors.direccion ? 'border-red-300' : 'border-slate-300'
+                                className={`w-full px-3 h-8 border rounded-md ${errors.direccion ? 'border-red-300' : 'border-slate-300'
                                     }`}
                             />
                             {errors.direccion && (
-                                <p className="mt-1 text-sm text-red-600">{errors.direccion}</p>
+                                <p className="mt-1  text-red-600">{errors.direccion}</p>
                             )}
                         </div>
                     </div>
@@ -315,7 +315,7 @@ const CrearCiudadanoModal = ({
                                 onChange={handleInputChange}
                                 className="h-4 w-4 text-red-600 border-slate-300 rounded"
                             />
-                            <label htmlFor="esPrioritario" className="ml-2 block text-sm text-slate-700">
+                            <label htmlFor="esPrioritario" className="ml-2 block  text-slate-700">
                                 {/* <PriorityHigh className="inline h-4 w-4 mr-1 text-red-500" /> */}
                                 Ciudadano prioritario
                             </label>
@@ -323,14 +323,14 @@ const CrearCiudadanoModal = ({
 
                         {formData.esPrioritario && (
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-2">
+                                <label className="block  font-medium text-slate-700 mb-2">
                                     Motivo de prioridad *
                                 </label>
                                 <select
                                     name="motivoPrioridad"
                                     value={formData.motivoPrioridad}
                                     onChange={handleInputChange}
-                                    className={`w-full px-3 py-2 border rounded-lg ${errors.motivoPrioridad ? 'border-red-300' : 'border-slate-300'
+                                    className={`w-full px-3 h-8 border rounded-md ${errors.motivoPrioridad ? 'border-red-300' : 'border-slate-300'
                                         }`}
                                 >
                                     <option value="">Seleccionar motivo</option>
@@ -341,7 +341,7 @@ const CrearCiudadanoModal = ({
                                     ))}
                                 </select>
                                 {errors.motivoPrioridad && (
-                                    <p className="mt-1 text-sm text-red-600">{errors.motivoPrioridad}</p>
+                                    <p className="mt-1  text-red-600">{errors.motivoPrioridad}</p>
                                 )}
                             </div>
                         )}
@@ -349,7 +349,7 @@ const CrearCiudadanoModal = ({
 
                     {/* Observaciones */}
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                        <label className="block  font-medium text-slate-700 mb-1">
                             <Notes className="inline h-4 w-4 mr-1" />
                             Observaciones
                         </label>
@@ -360,32 +360,32 @@ const CrearCiudadanoModal = ({
                             placeholder="Información adicional sobre el ciudadano..."
                             rows="3"
                             maxLength="500"
-                            className="w-full px-3 py-2 border border-slate-300 rounded-lg resize-none"
+                            className="w-full px-3 py-1.5 h-12 border border-slate-300 rounded-md resize-none"
                         />
-                        <div className="text-xs text-slate-500 mt-1">
+                        <div className="text-xs text-slate-500">
                             {formData.observaciones.length}/500 caracteres
                         </div>
                     </div>
 
                     {/* Botones */}
-                    <div className="flex justify-end space-x-3 pt-4 border-t border-slate-200">
+                    <div className="flex justify-end space-x-3 pt-2 border-t border-slate-200">
                         <button
                             type="button"
                             onClick={onClose}
                             disabled={loading}
-                            className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 disabled:opacity-50"
+                            className="px-4 h-8  font-medium text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50 disabled:opacity-50"
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
                             disabled={loading || verificandoDni}
-                            className="px-4 py-2 text-sm font-medium bg-[#224666] text-white rounded-lg hover:bg-[#2c3e50] disabled:opacity-50 flex items-center"
+                            className="px-4 h-8  font-medium bg-[#224666] text-white rounded-md hover:bg-[#2c3e50] disabled:opacity-50 flex items-center"
                         >
                             {loading ? (
                                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                             ) : (
-                                <Save className="h-4 w-4 mr-2" />
+                                <Save sx={{ fontSize: '20px' }} className="mr-2" />
                             )}
                             {modo === 'editar' ? 'Actualizar' : 'Crear'}
                         </button>

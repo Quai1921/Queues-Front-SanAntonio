@@ -83,9 +83,9 @@ const EstablecerPrioridadModal = ({
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl">
+            <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl text-sm">
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-slate-200">
+                <div className="flex items-center justify-between p-4 border-b border-slate-200">
                     <div className="flex items-center">
                         <div className={`p-2 rounded-lg mr-3 ${esPrioritario ? 'bg-slate-100' : 'bg-slate-100'
                             }`}>
@@ -94,8 +94,8 @@ const EstablecerPrioridadModal = ({
                         </div>
                         <div>
                             <h3 className="text-lg font-semibold text-slate-900">{titulo}</h3>
-                            <p className="text-sm text-slate-600">
-                                {ciudadano.nombreCompleto} - DNI: {ciudadano.dni}
+                            <p className=" text-slate-600">
+                                {ciudadano.apellido}, {ciudadano.nombre} - DNI: {ciudadano.dni}
                             </p>
                         </div>
                     </div>
@@ -109,7 +109,7 @@ const EstablecerPrioridadModal = ({
                 </div>
 
                 {/* Contenido */}
-                <form onSubmit={handleSubmit} className="p-6 space-y-6">
+                <form onSubmit={handleSubmit} className="p-4 space-y-3">
                     {/* Estado actual */}
                     {estadoActual !== esPrioritario && (
                         <div className={`p-4 rounded-lg border ${estadoActual ? 'bg-slate-50 border-slate-200' : 'bg-slate-50 border-slate-200'
@@ -118,7 +118,7 @@ const EstablecerPrioridadModal = ({
                                 <Person className="h-5 w-5 mr-2 text-slate-600" />
                                 <div>
                                     <div className="font-medium text-slate-900">Estado actual</div>
-                                    <div className="text-sm text-slate-600">
+                                    <div className=" text-slate-600">
                                         {estadoActual ? (
                                             <>
                                                 Ciudadano prioritario
@@ -148,7 +148,7 @@ const EstablecerPrioridadModal = ({
                             <label htmlFor="esPrioritario" className="block font-medium text-slate-900">
                                 Establecer como ciudadano prioritario
                             </label>
-                            <p className="text-sm text-slate-600 mt-1">
+                            <p className=" text-slate-600 mt-1">
                                 Los ciudadanos prioritarios tienen preferencia en la atención y pueden acceder a turnos especiales.
                             </p>
                         </div>
@@ -157,14 +157,14 @@ const EstablecerPrioridadModal = ({
                     {/* Motivo de prioridad */}
                     {esPrioritario && (
                         <div className="space-y-3">
-                            <label className="block text-sm font-medium text-slate-700">
+                            <label className="block  font-medium text-slate-700">
                                 Motivo de prioridad *
                             </label>
 
                             <select
                                 value={motivo}
                                 onChange={handleMotivoChange}
-                                className={`w-full px-3 py-2 border rounded-lg ${errors.motivo ? 'border-red-300' : 'border-slate-300'
+                                className={`w-full px-3 h-8 border rounded-lg ${errors.motivo ? 'border-red-300' : 'border-slate-300'
                                     }`}
                             >
                                 <option value="">Seleccionar motivo</option>
@@ -187,7 +187,7 @@ const EstablecerPrioridadModal = ({
                             )}
 
                             {errors.motivo && (
-                                <p className="text-sm text-red-600">{errors.motivo}</p>
+                                <p className=" text-red-600">{errors.motivo}</p>
                             )}
                         </div>
                     )}
@@ -198,7 +198,7 @@ const EstablecerPrioridadModal = ({
                             <Warning className="h-5 w-5 text-amber-600 mt-0.5" />
                             <div>
                                 <div className="font-medium text-slate-900">Quitar prioridad</div>
-                                <div className="text-sm text-slate-700 mt-1">
+                                <div className=" text-slate-700 mt-1">
                                     Al quitar la prioridad, este ciudadano perderá los beneficios de atención preferencial
                                     y acceso a turnos especiales.
                                 </div>
@@ -212,14 +212,14 @@ const EstablecerPrioridadModal = ({
                             type="button"
                             onClick={onClose}
                             disabled={loading}
-                            className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 disabled:opacity-50"
+                            className="px-4 h-8  font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 disabled:opacity-50"
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className={`px-4 py-2 text-sm font-medium text-white rounded-lg disabled:opacity-50 flex items-center ${esPrioritario
+                            className={`px-4 h-8  font-medium text-white rounded-lg disabled:opacity-50 flex items-center ${esPrioritario
                                     ? 'bg-[#224666] hover:bg-[#2c3e50] transition-all duration-300'
                                     : 'bg-[#224666] hover:bg-[#2c3e50] transition-all duration-300'
                                     
@@ -228,7 +228,7 @@ const EstablecerPrioridadModal = ({
                             {loading ? (
                                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
                             ) : (
-                                <Save className="h-4 w-4 mr-2" />
+                                <Save sx={{ fontSize: '20px' }} className="mr-2" />
                             )}
                             {esPrioritario ? 'Establecer Prioridad' : 'Quitar Prioridad'}
                         </button>

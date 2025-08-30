@@ -143,11 +143,11 @@ const ConfigurarSonidoModal = ({ isOpen, onClose, onSubmit, configuracion, loadi
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-xl shadow-xl max-w-md w-full">
+            <div className="bg-white rounded-xl shadow-xl max-w-md w-full text-sm">
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-slate-200">
+                <div className="flex items-center justify-between p-4 border-b border-slate-200">
                     <div className="flex items-center">
-                        <div className='p-2 bg-slate-200 rounded-lg mr-3'>
+                        <div className='w-10 h-10 bg-slate-200 rounded-md flex items-center justify-center mr-3'>
                             {formData.activo ? (
                                 <VolumeUp className="h-6 w-6 text-slate-600" />
                             ) : (
@@ -155,21 +155,21 @@ const ConfigurarSonidoModal = ({ isOpen, onClose, onSubmit, configuracion, loadi
                             )}
                         </div>
                         <div>
-                            <h2 className="text-xl font-semibold text-slate-900">Configurar Sonido</h2>
-                            <p className="text-sm text-slate-600 mt-1">{configuracion?.nombre}</p>
+                            <h2 className="text-lg font-semibold text-slate-900">Configurar Sonido</h2>
+                            <p className=" text-slate-600 mt-1">{configuracion?.nombre}</p>
                         </div>
                     </div>
                     <button
                         onClick={handleClose}
                         disabled={loading}
-                        className="p-2 hover:bg-slate-100 rounded-lg transition-colors duration-300 disabled:opacity-50"
+                        className="p-2 hover:bg-slate-100 rounded-md transition-colors duration-300 disabled:opacity-50"
                     >
                         <Close className="h-5 w-5" />
                     </button>
                 </div>
 
                 {/* Form */}
-                <form onSubmit={handleSubmit} className="p-6">
+                <form onSubmit={handleSubmit} className="p-4">
                     <div className="space-y-6">
                         {/* Activar/Desactivar Sonido */}
                         <div className="flex items-center space-x-3">
@@ -181,18 +181,18 @@ const ConfigurarSonidoModal = ({ isOpen, onClose, onSubmit, configuracion, loadi
                                 disabled={loading}
                                 className="w-4 h-4 text-[#224666] border-slate-300 rounded disabled:opacity-50"
                             />
-                            <label className="text-sm font-medium text-slate-700">
+                            <label className=" font-medium text-slate-700">
                                 Activar sonido de notificaciones
                             </label>
                         </div>
 
                         {/* Configuración de sonido activo */}
                         {formData.activo && (
-                            <div className="space-y-4">
+                            <div className="space-y-2">
                                 {/* Archivo de Sonido */}
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-2">
-                                        Archivo de Sonido (URL)
+                                    <label className="block  font-medium text-slate-700 mb-2">
+                                        URL Sonido
                                     </label>
                                     <div className="flex space-x-2">
                                         <input
@@ -201,7 +201,7 @@ const ConfigurarSonidoModal = ({ isOpen, onClose, onSubmit, configuracion, loadi
                                             value={formData.archivo}
                                             onChange={handleInputChange}
                                             disabled={loading}
-                                            className={`flex-1 px-3 py-2 border rounded-lg transition-colors duration-300 ${errors.archivo ? 'border-red-300' : 'border-slate-300'
+                                            className={`flex-1 px-3 h-8 border rounded-md transition-colors duration-300 ${errors.archivo ? 'border-red-300' : 'border-slate-300'
                                                 } disabled:opacity-50`}
                                             placeholder="https://ejemplo.com/sonido.wav"
                                         />
@@ -209,7 +209,7 @@ const ConfigurarSonidoModal = ({ isOpen, onClose, onSubmit, configuracion, loadi
                                             type="button"
                                             onClick={handlePlaySound}
                                             disabled={loading || !formData.archivo}
-                                            className="px-3 py-2 bg-slate-100 text-slate-700 border border-slate-300 rounded-lg hover:bg-slate-200 transition-colors duration-300 disabled:opacity-50 flex items-center"
+                                            className="px-3 h-8 bg-slate-100 text-slate-700 border border-slate-300 rounded-md hover:bg-slate-200 transition-colors duration-300 disabled:opacity-50 flex items-center"
                                         >
                                             {isPlaying ? (
                                                 <Stop className="h-4 w-4" />
@@ -219,7 +219,7 @@ const ConfigurarSonidoModal = ({ isOpen, onClose, onSubmit, configuracion, loadi
                                         </button>
                                     </div>
                                     {errors.archivo && (
-                                        <p className="mt-1 text-sm text-red-600">{errors.archivo}</p>
+                                        <p className="mt-1  text-red-600">{errors.archivo}</p>
                                     )}
                                     <p className="mt-1 text-xs text-slate-500">
                                         Formatos compatibles: .wav, .mp3, .ogg
@@ -228,7 +228,7 @@ const ConfigurarSonidoModal = ({ isOpen, onClose, onSubmit, configuracion, loadi
 
                                 {/* Volumen */}
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                                    <label className="block font-medium text-slate-700 mb-2">
                                         Volumen ({formData.volumen}%)
                                     </label>
                                     <div className="flex items-center space-x-3">
@@ -242,18 +242,18 @@ const ConfigurarSonidoModal = ({ isOpen, onClose, onSubmit, configuracion, loadi
                                             min="0"
                                             max="100"
                                             step="5"
-                                            className="flex-1 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer slider disabled:opacity-50"
+                                            className="flex-1 h-2 bg-slate-200 rounded-md appearance-none cursor-pointer slider disabled:opacity-50"
                                         />
                                         <VolumeUp className="h-4 w-4 text-slate-600" />
                                     </div>
                                     {errors.volumen && (
-                                        <p className="mt-1 text-sm text-red-600">{errors.volumen}</p>
+                                        <p className="mt-1  text-red-600">{errors.volumen}</p>
                                     )}
                                 </div>
 
                                 {/* Preview del volumen */}
-                                <div className="bg-slate-50 rounded-lg p-3 border border-slate-200">
-                                    <div className="flex items-center justify-between text-sm">
+                                <div className="bg-slate-50 rounded-md p-3 border border-slate-200">
+                                    <div className="flex items-center justify-between ">
                                         <span className="text-slate-600">Nivel de volumen:</span>
                                         <div className="flex items-center space-x-2">
                                             <div className="w-20 bg-slate-200 rounded-full h-2">
@@ -272,14 +272,14 @@ const ConfigurarSonidoModal = ({ isOpen, onClose, onSubmit, configuracion, loadi
                         )}
 
                         {!formData.activo && (
-                            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+                            <div className="bg-slate-50 border border-slate-200 rounded-md p-4">
                                 <div className="flex items-center">
                                     <VolumeOff className="h-5 w-5 text-amber-600 mr-2" />
                                     <div>
-                                        <p className="text-sm font-medium text-slate-800">
+                                        <p className=" font-medium text-slate-800">
                                             Sonido desactivado
                                         </p>
-                                        <p className="text-sm text-slate-700 mt-1">
+                                        <p className=" text-slate-700 mt-1">
                                             Las pantallas no reproducirán sonidos de notificación
                                         </p>
                                     </div>
@@ -294,14 +294,14 @@ const ConfigurarSonidoModal = ({ isOpen, onClose, onSubmit, configuracion, loadi
                             type="button"
                             onClick={handleClose}
                             disabled={loading}
-                            className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors duration-300 disabled:opacity-50"
+                            className="px-4 h-8 font-medium text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50 transition-colors duration-300 disabled:opacity-50"
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="px-4 py-2 text-sm font-medium text-white bg-[#224666] border border-transparent rounded-lg hover:bg-[#2c3e50] transition-colors duration-300 disabled:opacity-50 flex items-center"
+                            className="px-4 h-8 font-medium text-white bg-[#224666] border border-transparent rounded-md hover:bg-[#2c3e50] transition-colors duration-300 disabled:opacity-50 flex items-center"
                         >
                             {loading ? (
                                 <>
@@ -310,7 +310,7 @@ const ConfigurarSonidoModal = ({ isOpen, onClose, onSubmit, configuracion, loadi
                                 </>
                             ) : (
                                 <>
-                                    <Save className="h-4 w-4 mr-2" />
+                                    <Save sx={{ fontSize: '20px' }} className="mr-2" />
                                     Guardar Configuración
                                 </>
                             )}

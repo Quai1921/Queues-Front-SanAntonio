@@ -117,39 +117,39 @@ const CrearConfiguracionModal = ({ isOpen, onClose, onSubmit, loading = false })
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-xl shadow-xl max-w-3xl w-full max-h-[95vh] overflow-y-auto text-sm">
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-slate-200">
+                <div className="flex items-center justify-between p-4 border-b border-slate-200">
                     <div className="flex items-center">
-                        <div className='p-2 bg-slate-200 rounded-lg mr-3'>
+                        <div className='w-10 h-10 bg-slate-200 rounded-md flex items-center justify-center mr-3'>
                             <Settings className="h-6 w-6 text-slate-600" />
                         </div>
-                        <h2 className="text-xl font-semibold text-slate-900">Nueva Configuración</h2>
+                        <h2 className="text-lg font-semibold text-slate-900">Nueva Configuración</h2>
                     </div>
                     <button
                         onClick={handleClose}
                         disabled={loading}
-                        className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors disabled:opacity-50"
+                        className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md transition-colors disabled:opacity-50"
                     >
                         <Close className="h-5 w-5" />
                     </button>
                 </div>
 
                 {/* Form */}
-                <form onSubmit={handleSubmit} className="px-6 pt-3 pb-4">
+                <form onSubmit={handleSubmit} className="px-4 pt-3 pb-4">
                     <div className="space-y-4">
                         {/* Información General */}
-                        <div className="space-y-2">
-                            <h3 className="text-lg font-medium text-slate-900 flex items-center">
+                        <div className="space-y-2 border-b pb-3">
+                            <h3 className="font-medium text-slate-900 flex items-center">
                                 <TextFields className="h-5 w-5 mr-2 text-slate-600" />
-                                Información General
+                                Información General / Configuración de Tiempo
                             </h3>
 
-                            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                            <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
                                 {/* Nombre */}
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-2">
-                                        Nombre de la Configuración *
+                                    <label className="block font-medium text-slate-700 mb-1">
+                                        Nombre Config. *
                                     </label>
                                     <input
                                         type="text"
@@ -157,18 +157,18 @@ const CrearConfiguracionModal = ({ isOpen, onClose, onSubmit, loading = false })
                                         value={formData.nombre}
                                         onChange={handleInputChange}
                                         disabled={loading}
-                                        className={`w-full px-3 py-2 border rounded-lg transition-colors duration-300 ${errors.nombre ? 'border-red-300' : 'border-slate-300'
+                                        className={`w-full px-3 h-8 border rounded-md transition-colors duration-300 ${errors.nombre ? 'border-red-300' : 'border-slate-300'
                                             } disabled:opacity-50`}
-                                        placeholder="Ej: Configuración Principal"
+                                        placeholder="Ej: Config. Principal"
                                     />
                                     {errors.nombre && (
-                                        <p className="mt-1 text-sm text-red-600">{errors.nombre}</p>
+                                        <p className="mt-1  text-red-600">{errors.nombre}</p>
                                     )}
                                 </div>
 
                                 {/* Texto Encabezado */}
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                                    <label className="block  font-medium text-slate-700 mb-1">
                                         Texto del Encabezado
                                     </label>
                                     <input
@@ -177,29 +177,18 @@ const CrearConfiguracionModal = ({ isOpen, onClose, onSubmit, loading = false })
                                         value={formData.textoEncabezado}
                                         onChange={handleInputChange}
                                         disabled={loading}
-                                        className={`w-full px-3 py-2 border rounded-lg transition-colors duration-300 ${errors.textoEncabezado ? 'border-red-300' : 'border-slate-300'
+                                        className={`w-full px-3 h-8 border rounded-md transition-colors duration-300 ${errors.textoEncabezado ? 'border-red-300' : 'border-slate-300'
                                             } disabled:opacity-50`}
-                                        placeholder="Ej: Portal de Atención - Municipalidad de San Antonio de Arredondo"
+                                        placeholder="Ej: Portal Atención"
                                     />
                                     {errors.textoEncabezado && (
-                                        <p className="mt-1 text-sm text-red-600">{errors.textoEncabezado}</p>
+                                        <p className="mt-1  text-red-600">{errors.textoEncabezado}</p>
                                     )}
                                 </div>
-                            </div>
-                        </div>
 
-                        {/* Configuración de Tiempo */}
-                        <div className="space-y-4">
-                            <h3 className="text-lg font-medium text-slate-900 flex items-center">
-                                <Timer className="h-5 w-5 mr-2 text-slate-600" />
-                                Configuración de Tiempo
-                            </h3>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {/* Tiempo Mensaje */}
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-2">
-                                        Tiempo de Mensaje (segundos) *
+                                    <label className="block  font-medium text-slate-700 mb-1">
+                                        Tpo. Msje. (seg) *
                                     </label>
                                     <input
                                         type="number"
@@ -209,18 +198,17 @@ const CrearConfiguracionModal = ({ isOpen, onClose, onSubmit, loading = false })
                                         disabled={loading}
                                         min="3"
                                         max="60"
-                                        className={`w-full px-3 py-2 border rounded-lg transition-colors duration-300 ${errors.tiempoMensaje ? 'border-red-300' : 'border-slate-300'
+                                        className={`w-full px-3 h-8 border rounded-md transition-colors duration-300 ${errors.tiempoMensaje ? 'border-red-300' : 'border-slate-300'
                                             } disabled:opacity-50`}
                                     />
                                     {errors.tiempoMensaje && (
-                                        <p className="mt-1 text-sm text-red-600">{errors.tiempoMensaje}</p>
+                                        <p className="mt-1  text-red-600">{errors.tiempoMensaje}</p>
                                     )}
                                 </div>
 
-                                {/* Tiempo Turno */}
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-2">
-                                        Tiempo de Turno (segundos) *
+                                    <label className="block  font-medium text-slate-700 mb-1">
+                                        Tpo. Turno (seg) *
                                     </label>
                                     <input
                                         type="number"
@@ -230,48 +218,52 @@ const CrearConfiguracionModal = ({ isOpen, onClose, onSubmit, loading = false })
                                         disabled={loading}
                                         min="3"
                                         max="30"
-                                        className={`w-full px-3 py-2 border rounded-lg transition-colors duration-300 ${errors.tiempoTurno ? 'border-red-300' : 'border-slate-300'
+                                        className={`w-full px-3 h-8 border rounded-md transition-colors duration-300 ${errors.tiempoTurno ? 'border-red-300' : 'border-slate-300'
                                             } disabled:opacity-50`}
                                     />
                                     {errors.tiempoTurno && (
-                                        <p className="mt-1 text-sm text-red-600">{errors.tiempoTurno}</p>
+                                        <p className="mt-1  text-red-600">{errors.tiempoTurno}</p>
                                     )}
                                 </div>
                             </div>
                         </div>
 
                         {/* Configuración de Sonido */}
-                        <div className="space-y-4">
-                            <h3 className="text-lg font-medium text-slate-900 flex items-center">
-                                {formData.sonidoActivo ? (
-                                    <VolumeUp className="h-5 w-5 mr-2 text-slate-600" />
-                                ) : (
-                                    <VolumeOff className="h-5 w-5 mr-2 text-slate-600" />
-                                )}
-                                Configuración de Sonido
-                            </h3>
-
-                            {/* Sonido Activo */}
-                            <div className="flex items-center space-x-3">
-                                <input
-                                    type="checkbox"
-                                    name="sonidoActivo"
-                                    checked={formData.sonidoActivo}
-                                    onChange={handleInputChange}
-                                    disabled={loading}
-                                    className="w-4 h-4 text-[#224666] border-slate-300 rounded focus:ring-[#224666] disabled:opacity-50"
-                                />
-                                <label className="text-sm font-medium text-slate-700">
-                                    Activar sonido de notificaciones
-                                </label>
+                        <div className="flex items-start gap-4 border-b border-slate-200 pb-3">
+                            <div>
+                                {/* Sonido Activo */}
+                                <div className="flex items-center space-x-1 pt-1">
+                                    <input
+                                        type="checkbox"
+                                        name="sonidoActivo"
+                                        checked={formData.sonidoActivo}
+                                        onChange={handleInputChange}
+                                        disabled={loading}
+                                        className="w-4 h-4 text-[#224666] border-slate-300 rounded disabled:opacity-50"
+                                    />
+                                </div>
                             </div>
 
+                            <h3 className="font-medium text-slate-900 flex items-center">
+                                {formData.sonidoActivo ? (
+                                    <>
+                                        <VolumeUp className="h-5 w-5 mr-2 text-slate-600" />
+                                        Agregar sonido
+                                    </>
+                                ) : (
+                                    <>
+                                        <VolumeOff className="h-5 w-5 mr-2 text-slate-600" />
+                                        Sin sonido
+                                    </>
+                                )}
+                            </h3>
+
                             {formData.sonidoActivo && (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
+                                <div className='ml-12 flex flex-1 items-start gap-4'>
                                     {/* Archivo de Sonido */}
-                                    <div>
-                                        <label className="block text-sm font-medium text-slate-700 mb-1">
-                                            Archivo de Sonido (URL)
+                                    <div className='flex flex-1'>
+                                        <label className="w-28 font-medium text-slate-700 pt-0.5">
+                                            URL Sonido
                                         </label>
                                         <input
                                             type="url"
@@ -279,18 +271,18 @@ const CrearConfiguracionModal = ({ isOpen, onClose, onSubmit, loading = false })
                                             value={formData.archivoSonido}
                                             onChange={handleInputChange}
                                             disabled={loading}
-                                            className={`w-full px-3 py-2 border rounded-lg transition-colors duration-300 ${errors.archivoSonido ? 'border-red-300' : 'border-slate-300'
+                                            className={`w-full px-3 h-8 border rounded-md transition-colors duration-300 ${errors.archivoSonido ? 'border-red-300' : 'border-slate-300'
                                                 } disabled:opacity-50`}
                                             placeholder="https://ejemplo.com/sonido.wav"
                                         />
                                         {errors.archivoSonido && (
-                                            <p className="mt-1 text-sm text-red-600">{errors.archivoSonido}</p>
+                                            <p className="mt-1  text-red-600">{errors.archivoSonido}</p>
                                         )}
                                     </div>
 
                                     {/* Volumen */}
                                     <div>
-                                        <label className="block text-sm font-medium text-slate-700 mt-[26px]">
+                                        <label className="block font-medium text-slate-700">
                                             Volumen ({formData.volumenSonido}%)
                                         </label>
                                         <input
@@ -302,10 +294,10 @@ const CrearConfiguracionModal = ({ isOpen, onClose, onSubmit, loading = false })
                                             min="0"
                                             max="100"
                                             step="5"
-                                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer slider disabled:opacity-50"
+                                            className="w-full h-2 bg-slate-200 rounded-md appearance-none cursor-pointer slider disabled:opacity-50"
                                         />
                                         {errors.volumenSonido && (
-                                            <p className="mt-1 text-sm text-red-600">{errors.volumenSonido}</p>
+                                            <p className="mt-1  text-red-600">{errors.volumenSonido}</p>
                                         )}
                                     </div>
                                 </div>
@@ -313,22 +305,19 @@ const CrearConfiguracionModal = ({ isOpen, onClose, onSubmit, loading = false })
                         </div>
 
                         {/* Configuración de Apariencia */}
-                        <div className="space-y-4">
-                            <h3 className="text-lg font-medium text-slate-900 flex items-center">
+                        <div className="space-y-1">
+                            <h3 className="font-medium text-slate-900 flex items-center">
                                 <Palette className="h-5 w-5 mr-2 text-slate-600" />
                                 Configuración de Apariencia
                             </h3>
 
                             {/* Tema de Color */}
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-3">
-                                    Color de Tema
-                                </label>
+                            <div className='border-b border-slate-200 pb-3'>
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                     {temasDisponibles.map((tema) => (
                                         <label
                                             key={tema.value}
-                                            className={`relative cursor-pointer rounded-lg border-2 p-2 transition-all duration-300 ${formData.temaColor === tema.value
+                                            className={`relative cursor-pointer rounded-md border-2 p-2 transition-all duration-300 ${formData.temaColor === tema.value
                                                 ? 'border-[#224666] bg-slate-50'
                                                 : 'border-slate-200 hover:border-slate-300'
                                                 } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -344,10 +333,10 @@ const CrearConfiguracionModal = ({ isOpen, onClose, onSubmit, loading = false })
                                             />
                                             <div className="flex items-center space-x-3">
                                                 <div
-                                                    className="w-6 h-6 rounded-full border border-slate-300"
+                                                    className="size-5 rounded-full border border-slate-300"
                                                     style={{ backgroundColor: tema.color }}
                                                 />
-                                                <span className="text-sm font-medium text-slate-700">
+                                                <span className="font-medium text-slate-700">
                                                     {tema.label}
                                                 </span>
                                             </div>
@@ -357,26 +346,25 @@ const CrearConfiguracionModal = ({ isOpen, onClose, onSubmit, loading = false })
                             </div>
 
                             {/* Configuración de Logo */}
-                            <div className="space-y-4">
-                                <div className="flex items-center space-x-3">
+                            <div className="space-y-1">
+                                <div className="flex items-center gap-4 pt-2">
                                     <input
                                         type="checkbox"
                                         name="mostrarLogo"
                                         checked={formData.mostrarLogo}
                                         onChange={handleInputChange}
                                         disabled={loading}
-                                        className="w-4 h-4 text-[#224666] border-slate-300 rounded focus:ring-[#224666] disabled:opacity-50"
+                                        className="w-4 h-4 text-[#224666] border-slate-300 rounded disabled:opacity-50"
                                     />
-                                    <label className="text-sm font-medium text-slate-700 flex items-center">
+                                    <label className="font-medium text-slate-700 flex items-center">
                                         <ImageIcon className="h-4 w-4 mr-1" />
                                         Mostrar logo institucional
                                     </label>
-                                </div>
 
-                                {formData.mostrarLogo && (
-                                    <div>
-                                        <label className="block text-sm font-medium text-slate-700 mb-2">
-                                            URL del Logo
+                                    {formData.mostrarLogo && (
+                                    <div className='flex flex-1 items-center'>
+                                        <label className="ml-12 block w-32 font-medium text-slate-700">
+                                            URL Logo
                                         </label>
                                         <input
                                             type="url"
@@ -384,33 +372,34 @@ const CrearConfiguracionModal = ({ isOpen, onClose, onSubmit, loading = false })
                                             value={formData.rutaLogo}
                                             onChange={handleInputChange}
                                             disabled={loading}
-                                            className={`w-full px-3 py-2 border rounded-lg transition-colors duration-300 ${errors.rutaLogo ? 'border-red-300' : 'border-slate-300'
+                                            className={`w-full px-3 h-8 border rounded-md transition-colors duration-300 ${errors.rutaLogo ? 'border-red-300' : 'border-slate-300'
                                                 } disabled:opacity-50`}
                                             placeholder="https://ejemplo.com/logo.png"
                                         />
                                         {errors.rutaLogo && (
-                                            <p className="mt-1 text-sm text-red-600">{errors.rutaLogo}</p>
+                                            <p className="mt-1  text-red-600">{errors.rutaLogo}</p>
                                         )}
                                     </div>
                                 )}
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     {/* Actions */}
-                    <div className="flex items-center justify-end space-x-3 mt-8 pt-6 border-t border-slate-200">
+                    <div className="flex items-center justify-end space-x-3 mt-3 pt-3 border-t border-slate-200">
                         <button
                             type="button"
                             onClick={handleClose}
                             disabled={loading}
-                            className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors duration-300 disabled:opacity-50"
+                            className="px-4 h-8  font-medium text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50 transition-colors duration-300 disabled:opacity-50"
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="px-4 py-2 text-sm font-medium text-white bg-[#224666] border border-transparent rounded-lg hover:bg-[#2c3e50] transition-colors duration-300 disabled:opacity-50 flex items-center"
+                            className="px-4 h-8  font-medium text-white bg-[#224666] border border-transparent rounded-md hover:bg-[#2c3e50] transition-colors duration-300 disabled:opacity-50 flex items-center"
                         >
                             {loading ? (
                                 <>
@@ -419,7 +408,7 @@ const CrearConfiguracionModal = ({ isOpen, onClose, onSubmit, loading = false })
                                 </>
                             ) : (
                                 <>
-                                    <Save className="h-4 w-4 mr-2" />
+                                    <Save sx={{ fontSize: '20px' }} className="mr-2" />
                                     Crear Configuración
                                 </>
                             )}

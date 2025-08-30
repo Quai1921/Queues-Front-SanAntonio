@@ -228,11 +228,11 @@ const HorariosSection = () => {
         }
     };
 
-    const handleToggleEstado = (horario) => {
-    setHorarioParaAccion(horario);
-    setAccionConfirmar(horario.activo ? 'desactivar' : 'activar');
-    setModalConfirmarAbierto(true);
-};
+    const handleCambiarEstado = (horario) => {
+        setHorarioParaAccion(horario);
+        setAccionConfirmar(horario.activo ? 'desactivar' : 'activar');
+        setModalConfirmarAbierto(true);
+    };
 
     const confirmarAccion = async () => {
         if (!horarioParaAccion || !accionConfirmar) return;
@@ -593,7 +593,7 @@ const HorariosSection = () => {
                                                             <EditDocumentIcon className="h-4 w-4" />
                                                         </button>
                                                         <button
-                                                            onClick={() => handleToggleEstado(horario)}
+                                                            onClick={() => handleCambiarEstado(horario)}
                                                             className={`p-1.5 text-slate-400 transition-all duration-300 ${horario.activo
                                                                     ? 'hover:text-red-600'
                                                                     : 'hover:text-green-600'
@@ -648,8 +648,12 @@ const HorariosSection = () => {
                 }}
                 onConfirm={confirmarAccion}
                 loading={loadingAccion}
-                accion={accionConfirmar}
-                elemento={horarioParaAccion ? `${getDiaLabel(horarioParaAccion.diaSemana)} de ${formatearHora(horarioParaAccion.horaInicio)} a ${formatearHora(horarioParaAccion.horaFin)}` : ''}
+                titulo={accionConfirmar === 'activar' ? 'Activar Horario' : 'Desactivar Horario'}
+                mensaje={`¿Está seguro que desea ${accionConfirmar} este horario?`}
+                descripcion={horarioParaAccion ? `${getDiaLabel(horarioParaAccion.diaSemana)} de ${formatearHora(horarioParaAccion.horaInicio)} a ${formatearHora(horarioParaAccion.horaFin)}` : ''}
+                textoConfirmar={accionConfirmar === 'activar' ? 'Activar' : 'Desactivar'}
+                textoCancel="Cancelar"
+                tipoAccion={accionConfirmar}
             />
         </div>
     );
