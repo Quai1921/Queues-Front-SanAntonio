@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useConfiguraciones } from '../hooks/useConfiguraciones';
 import {
     Settings,
@@ -14,7 +14,11 @@ import {
     RadioButtonUnchecked,
     Timer,
     Clear,
-    PlayArrow
+    PlayArrow,
+    FirstPage,
+    LastPage,
+    KeyboardArrowLeft,
+    KeyboardArrowRight
 } from '@mui/icons-material';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CrearConfiguracionModal from '../components/CrearConfiguracionModal';
@@ -81,6 +85,14 @@ const ConfiguracionesSection = () => {
     const [loadingActivar, setLoadingActivar] = useState(false);
 
     const [notificacion, setNotificacion] = useState(null);
+
+    const [paginaActual, setPaginaActual] = useState(1);
+    const [elementosPorPagina] = useState(10);
+
+    useEffect(() => {
+        // Resetear a página 1 cuando cambien los filtros
+        setPaginaActual(1);
+    }, [filtros.busqueda, filtros.estado, filtros.sonido]);
 
     const mostrarNotificacion = (mensaje, tipo = 'success') => {
         setNotificacion({ mensaje, tipo });
@@ -232,6 +244,13 @@ const ConfiguracionesSection = () => {
         return themeMap[normalizedTheme] || themeMap['default'];
     };
 
+    const irAPagina = (numeroPagina) => {
+        const totalPaginas = Math.ceil(configuracionesFiltradas.length / elementosPorPagina);
+        if (numeroPagina >= 1 && numeroPagina <= totalPaginas) {
+            setPaginaActual(numeroPagina);
+        }
+    };
+
     const renderEstadisticas = () => (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
@@ -370,158 +389,251 @@ const ConfiguracionesSection = () => {
         </div>
     );
 
-    const renderTablaConfiguraciones = () => (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200">
-            <div className="overflow-x-auto">
-                <table className="w-full">
-                    <thead>
-                        <tr className="border-b border-slate-200 bg-slate-50">
-                            <th className="text-left py-3 px-4 font-medium text-slate-900 w-[200px]">Configuración</th>
-                            <th className="text-left py-3 px-4 font-medium text-slate-900 w-[225px]">Tiempos</th>
-                            <th className="text-left py-3 px-4 font-medium text-slate-900">Estado</th>
-                            <th className="text-left py-3 px-4 font-medium text-slate-900">Sonido</th>
-                            <th className="text-left py-3 px-4 font-medium text-slate-900">Tema</th>
-                            <th className="text-left py-3 px-4 font-medium text-slate-900 w-[150px]">Fecha</th>
-                            <th className="text-center py-3 px-4 font-medium text-slate-900">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {configuracionesFiltradas.map((configuracion, index) => (
-                            // CAMBIO: Usar combinación de id y index para key única
-                            <tr key={`configuracion-${configuracion.id}-${index}`} className="border-b border-slate-100 hover:bg-slate-50 transition-colors duration-300">
-                                <td className="py-4 px-4">
-                                    <div>
-                                        <p className="font-medium text-slate-900">{configuracion.nombre}</p>
-                                        {configuracion?.textoEncabezado && (
-                                            <p className="text-sm text-slate-600 mt-1">{configuracion?.textoEncabezado}</p>
-                                        )}
-                                    </div>
-                                </td>
+    const renderTablaConfiguraciones = () => {
 
-                                <td className="py-4 px-4">
-                                    <div className="flex items-center space-x-4 text-sm">
-                                        <div className="flex items-center">
-                                            <AccessTimeIcon className="h-4 w-4 text-slate-400 mr-1" />
-                                            <span>Msg: {configuracion.tiempoMensaje}s</span>
-                                        </div>
-                                        <div className="flex items-center">
-                                            <AccessTimeIcon className="h-4 w-4 text-slate-400 mr-1" />
-                                            <span>Turno: {configuracion.tiempoTurno}s</span>
-                                        </div>
-                                    </div>
-                                </td>
+        const totalElementos = configuracionesFiltradas.length;
+        const totalPaginas = Math.ceil(totalElementos / elementosPorPagina);
+        const indiceInicio = (paginaActual - 1) * elementosPorPagina;
+        const indiceFin = indiceInicio + elementosPorPagina;
+        const configuracionesPaginadas = configuracionesFiltradas.slice(indiceInicio, indiceFin);
 
-                                <td className="py-4 px-4">
-                                    <button
-                                        className={`inline-flex justify-center items-center px-2 py-1 rounded-full text-xs font-medium w-16 ${configuracion.activo
-                                            ? 'bg-green-100 text-green-800'
-                                            : 'bg-slate-100 text-slate-600'
-                                            } disabled:opacity-50`}
-                                    >
-                                        {configuracion.estadoLabel}
-                                    </button>
-                                </td>
-
-                                <td className="py-4 px-4">
-                                    <button
-                                        className={`inline-flex justify-center items-center px-2 py-1 w-24 rounded-full text-xs font-medium transition-colors duration-300 ${configuracion.sonidoActivo
-                                            ? 'bg-green-100 text-green-800'
-                                            : 'bg-red-100 text-red-800'
-                                            }`}
-                                    >
-                                        {configuracion.sonidoActivo ? 'Activo' : 'Inactivo'}
-                                    </button>
-                                </td>
-
-                                {/* SOLUCIÓN 4: Botón de tema dinámico según el color */}
-                                <td className="py-4 px-4">
-                                    <button
-                                        className={`inline-flex justify-center items-center px-2 py-1 rounded-full text-xs font-medium w-24 ${getThemeClasses(configuracion.temaColor)}`}
-                                    >
-                                        {configuracion.temaLabel}
-                                    </button>
-                                </td>
-
-                                <td className="py-4 px-4 text-sm text-slate-600">
-                                    {configuracion.fechaCreacion ?
-                                        new Date(configuracion.fechaCreacion).toLocaleDateString() :
-                                        'No disponible'
-                                    }
-                                </td>
-
-                                <td className="py-4 px-4">
-                                    <div className="flex justify-center space-x-2">
-                                        {/* Botones de acción */}
-                                        {!configuracion.activo && (
-                                            <button
-                                                onClick={() => handleActivarConfiguracion(configuracion)}
-                                                disabled={isOperating}
-                                                className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors disabled:opacity-50"
-                                                title="Activar configuración"
-                                            >
-                                                <PlayArrow className="h-4 w-4" />
-                                            </button>
-                                        )}
-
-                                        <button
-                                            onClick={() => handleAbrirEditar(configuracion)}
-                                            disabled={isOperating}
-                                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors disabled:opacity-50"
-                                            title="Editar configuración"
-                                        >
-                                            <Edit className="h-4 w-4" />
-                                        </button>
-
-                                        <button
-                                            onClick={() => handleAbrirSonido(configuracion)}
-                                            disabled={isOperating}
-                                            className="p-2 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors disabled:opacity-50"
-                                            title="Configurar sonido"
-                                        >
-                                            {configuracion.sonidoActivo ? <VolumeUp className="h-4 w-4" /> : <VolumeOff className="h-4 w-4" />}
-                                        </button>
-
-                                        <button
-                                            onClick={() => handleAbrirApariencia(configuracion)}
-                                            disabled={isOperating}
-                                            className="p-2 text-orange-600 hover:bg-orange-50 rounded-lg transition-colors disabled:opacity-50"
-                                            title="Configurar apariencia"
-                                        >
-                                            <Palette className="h-4 w-4" />
-                                        </button>
-                                    </div>
-                                </td>
+        return (
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200">
+                <div className="overflow-x-auto">
+                    <table className="w-full">
+                        <thead>
+                            <tr className="border-b border-slate-200 bg-slate-50">
+                                <th className="text-left py-3 px-4 font-medium text-slate-900 w-[250px]">Configuración</th>
+                                <th className="text-left py-3 px-4 font-medium text-slate-900 w-[250px]">Tiempos</th>
+                                <th className="text-left py-3 px-4 font-medium text-slate-900">Estado</th>
+                                <th className="text-left py-3 px-4 font-medium text-slate-900">Sonido</th>
+                                <th className="text-left py-3 px-4 font-medium text-slate-900">Tema</th>
+                                {/* <th className="text-left py-3 px-4 font-medium text-slate-900 w-[200px]">Fecha</th> */}
+                                <th className="text-center py-3 px-4 font-medium text-slate-900">Acciones</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {configuracionesPaginadas.map((configuracion, index) => (
+                                // CAMBIO: Usar combinación de id y index para key única
+                                <tr key={`configuracion-${configuracion.id}-${index}`} className="border-b border-slate-100 hover:bg-slate-50 transition-colors duration-300">
+                                    <td className="py-4 px-4">
+                                        <div>
+                                            <p className="font-medium text-sm text-slate-900">{configuracion.nombre}</p>
+                                            {configuracion?.textoEncabezado && (
+                                                <p className="text-xs text-slate-600 mt-1">{configuracion?.textoEncabezado}</p>
+                                            )}
+                                        </div>
+                                    </td>
 
-                {configuracionesFiltradas.length === 0 && !loading && (
-                    <div className="text-center py-12">
-                        <Settings className="h-12 w-12 text-slate-300 mx-auto mb-4" />
-                        <h3 className="text-lg font-medium text-slate-900 mb-2">
-                            {configuraciones.length === 0 ? 'No hay configuraciones' : 'No se encontraron configuraciones'}
-                        </h3>
-                        <p className="text-slate-600 mb-6">
-                            {configuraciones.length === 0
-                                ? 'Crea tu primera configuración de pantalla para comenzar.'
-                                : 'Intenta ajustar los filtros para encontrar lo que buscas.'
-                            }
-                        </p>
-                        {configuraciones.length === 0 && (
-                            <button
-                                onClick={() => setModalCrearAbierto(true)}
-                                className="px-4 py-2 bg-[#224666] text-white rounded-lg hover:bg-[#2c3e50] transition-colors duration-300 flex items-center mx-auto"
-                            >
-                                <Add className="h-4 w-4 mr-2" />
-                                Crear Primera Configuración
-                            </button>
-                        )}
-                    </div>
-                )}
+                                    <td className="py-4 px-4">
+                                        <div className="flex items-center space-x-4 text-xs">
+                                            <div className="flex items-center">
+                                                <AccessTimeIcon className="h-4 w-4 text-slate-400 mr-1" />
+                                                <span>Msg: {configuracion.tiempoMensaje}s</span>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <AccessTimeIcon className="h-4 w-4 text-slate-400 mr-1" />
+                                                <span>Turno: {configuracion.tiempoTurno}s</span>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <td className="py-4 px-4">
+                                        <button
+                                            className={`inline-flex justify-center items-center px-2 py-1 rounded-full text-xs font-medium w-16 ${configuracion.activo
+                                                ? 'bg-green-100 text-green-800'
+                                                : 'bg-slate-100 text-slate-600'
+                                                } disabled:opacity-50`}
+                                        >
+                                            {configuracion.estadoLabel}
+                                        </button>
+                                    </td>
+
+                                    <td className="py-4 px-4">
+                                        <button
+                                            className={`inline-flex justify-center items-center px-2 py-1 w-16 rounded-full text-xs font-medium transition-colors duration-300 ${configuracion.sonidoActivo
+                                                ? 'bg-green-100 text-green-800'
+                                                : 'bg-red-100 text-red-800'
+                                                }`}
+                                        >
+                                            {configuracion.sonidoActivo ? 'Activo' : 'Inactivo'}
+                                        </button>
+                                    </td>
+
+                                    {/* SOLUCIÓN 4: Botón de tema dinámico según el color */}
+                                    <td className="py-4 px-4">
+                                        <button
+                                            className={`inline-flex justify-center items-center px-2 py-1 rounded-full text-xs font-medium w-24 ${getThemeClasses(configuracion.temaColor)}`}
+                                        >
+                                            {configuracion.temaLabel}
+                                        </button>
+                                    </td>
+
+                                    {/* <td className="py-4 px-4 text-sm text-slate-600">
+                                        {configuracion.fechaCreacion ?
+                                            new Date(configuracion.fechaCreacion).toLocaleDateString() :
+                                            'No disponible'
+                                        }
+                                    </td> */}
+
+                                    <td className="py-4 px-4">
+                                        <div className="flex justify-end">
+                                            {/* Botones de acción */}
+                                            {!configuracion.activo && (
+                                                <button
+                                                    onClick={() => handleActivarConfiguracion(configuracion)}
+                                                    disabled={isOperating}
+                                                    className="p-1 transition-all duration-300 text-gray-400 hover:text-green-500 cursor-pointer"
+                                                    title="Activar configuración"
+                                                >
+                                                    <PlayArrow className="h-4 w-4" />
+                                                </button>
+                                            )}
+
+                                            <button
+                                                onClick={() => handleAbrirEditar(configuracion)}
+                                                disabled={isOperating}
+                                                className="p-1 transition-all duration-300 text-gray-400 hover:text-cyan-800 cursor-pointer"
+                                                title="Editar configuración"
+                                            >
+                                                <Edit className="h-4 w-4" />
+                                            </button>
+
+                                            <button
+                                                onClick={() => handleAbrirSonido(configuracion)}
+                                                disabled={isOperating}
+                                                className="p-1 transition-all duration-300 text-gray-400 hover:text-neutral-800 cursor-pointer"
+                                                title="Configurar sonido"
+                                            >
+                                                {configuracion.sonidoActivo ? <VolumeUp className="h-4 w-4" /> : <VolumeOff className="h-4 w-4" />}
+                                            </button>
+
+                                            <button
+                                                onClick={() => handleAbrirApariencia(configuracion)}
+                                                disabled={isOperating}
+                                                className="p-1 transition-all duration-300 text-gray-400 hover:text-neutral-800 cursor-pointer"
+                                                title="Configurar apariencia"
+                                            >
+                                                <Palette className="h-4 w-4" />
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+
+                    {totalPaginas > 1 && (
+                        <div className="px-6 py-4 border-t border-slate-200 bg-white">
+                            <div className="flex items-center justify-end">
+                                <div className="flex items-center space-x-2">
+                                    <button
+                                        onClick={() => irAPagina(1)}
+                                        disabled={paginaActual === 1}
+                                        className={`p-2 rounded-lg ${paginaActual === 1
+                                                ? 'text-slate-300 cursor-not-allowed'
+                                                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                                            }`}
+                                        title="Primera página"
+                                    >
+                                        <FirstPage className="h-4 w-4" />
+                                    </button>
+
+                                    <button
+                                        onClick={() => irAPagina(paginaActual - 1)}
+                                        disabled={paginaActual === 1}
+                                        className={`p-2 rounded-lg ${paginaActual === 1
+                                                ? 'text-slate-300 cursor-not-allowed'
+                                                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                                            }`}
+                                        title="Página anterior"
+                                    >
+                                        <KeyboardArrowLeft className="h-4 w-4" />
+                                    </button>
+
+                                    <div className="flex items-center space-x-1">
+                                        {Array.from({ length: Math.min(5, totalPaginas) }, (_, i) => {
+                                            let pageNum;
+                                            if (totalPaginas <= 5) {
+                                                pageNum = i + 1;
+                                            } else if (paginaActual <= 3) {
+                                                pageNum = i + 1;
+                                            } else if (paginaActual >= totalPaginas - 2) {
+                                                pageNum = totalPaginas - 4 + i;
+                                            } else {
+                                                pageNum = paginaActual - 2 + i;
+                                            }
+
+                                            return (
+                                                <button
+                                                    key={pageNum}
+                                                    onClick={() => irAPagina(pageNum)}
+                                                    className={`flex justify-center items-center size-6 text-sm rounded-full ${paginaActual === pageNum
+                                                            ? 'bg-[#224666] text-white'
+                                                            : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                                                        }`}
+                                                >
+                                                    {pageNum}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+
+                                    <button
+                                        onClick={() => irAPagina(paginaActual + 1)}
+                                        disabled={paginaActual === totalPaginas}
+                                        className={`p-2 rounded-lg ${paginaActual === totalPaginas
+                                                ? 'text-slate-300 cursor-not-allowed'
+                                                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                                            }`}
+                                        title="Página siguiente"
+                                    >
+                                        <KeyboardArrowRight className="h-4 w-4" />
+                                    </button>
+
+                                    <button
+                                        onClick={() => irAPagina(totalPaginas)}
+                                        disabled={paginaActual === totalPaginas}
+                                        className={`p-2 rounded-lg ${paginaActual === totalPaginas
+                                                ? 'text-slate-300 cursor-not-allowed'
+                                                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                                            }`}
+                                        title="Última página"
+                                    >
+                                        <LastPage className="h-4 w-4" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {configuracionesFiltradas.length === 0 && !loading && (
+                        <div className="text-center py-12">
+                            <Settings className="h-12 w-12 text-slate-300 mx-auto mb-4" />
+                            <h3 className="text-lg font-medium text-slate-900 mb-2">
+                                {configuraciones.length === 0 ? 'No hay configuraciones' : 'No se encontraron configuraciones'}
+                            </h3>
+                            <p className="text-slate-600 mb-6">
+                                {configuraciones.length === 0
+                                    ? 'Crea tu primera configuración de pantalla para comenzar.'
+                                    : 'Intenta ajustar los filtros para encontrar lo que buscas.'
+                                }
+                            </p>
+                            {configuraciones.length === 0 && (
+                                <button
+                                    onClick={() => setModalCrearAbierto(true)}
+                                    className="px-4 py-2 bg-[#224666] text-white rounded-lg hover:bg-[#2c3e50] transition-colors duration-300 flex items-center mx-auto"
+                                >
+                                    <Add className="h-4 w-4 mr-2" />
+                                    Crear Primera Configuración
+                                </button>
+                            )}
+                        </div>
+                    )}
+                </div>
             </div>
-        </div>
-    );
+        )
+    };
 
     return (
         <div className="p-6">

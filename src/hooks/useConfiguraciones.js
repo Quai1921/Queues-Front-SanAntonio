@@ -83,13 +83,32 @@ export const useConfiguraciones = (options = {}) => {
             setError(null);
 
             const data = await configuracionPantallaService.obtenerTodas();
+            // const data = await configuracionPantallaService.listar();
+
+            const configuracionesFormateadas = data.map(configuracion => ({
+            ...configuracion,
+            estadoLabel: configuracion.activo ? 'Activa' : 'Inactiva',
+            estadoColor: configuracion.activo ? 'text-green-800' : 'text-slate-600',
+            estadoBg: configuracion.activo ? 'bg-green-50' : 'bg-slate-50',
+            sonidoLabel: configuracion.sonidoActivo ? 'Activado' : 'Desactivado',
+            sonidoColor: configuracion.sonidoActivo ? 'text-green-600' : 'text-red-600',
+            temaLabel: obtenerTemaLabel(configuracion.temaColor),
+            logoLabel: configuracion.mostrarLogo ? 'Mostrar' : 'Ocultar',
+            fechaCreacionFormateada: configuracion.fechaCreacion
+                ? new Date(configuracion.fechaCreacion).toLocaleDateString('es-ES')
+                : ''
+        }));
             
-            setConfiguraciones(data);
-            setEstadisticas(calcularEstadisticasDeConfiguraciones(data));
+            setConfiguraciones(configuracionesFormateadas);
+            setEstadisticas(calcularEstadisticasDeConfiguraciones(configuracionesFormateadas));
+
+            if (onSuccess) {
+            onSuccess(null, 'cargar');
+        }
 
             // Obtener configuración activa
-            const activa = data.find(config => config.activo);
-            setConfiguracionActiva(activa || null);
+            // const activa = data.find(config => config.activo);
+            // setConfiguracionActiva(activa || null);
 
         } catch (err) {
             const errorMessage = err.message || 'Error cargando configuraciones';
@@ -98,6 +117,7 @@ export const useConfiguraciones = (options = {}) => {
             if (onError) {
                 onError(err, 'cargar');
             }
+            throw err;
         } finally {
             setLoading(false);
         }
@@ -141,18 +161,32 @@ export const useConfiguraciones = (options = {}) => {
 
             const nuevaConfiguracion = await configuracionPantallaService.crear(configuracionData);
 
+            const nuevaConfiguracionFormateada = {
+                ...nuevaConfiguracion,
+                estadoLabel: nuevaConfiguracion.activo ? 'Activa' : 'Inactiva',
+                estadoColor: nuevaConfiguracion.activo ? 'text-green-800' : 'text-slate-600',
+                estadoBg: nuevaConfiguracion.activo ? 'bg-green-50' : 'bg-slate-50',
+                sonidoLabel: nuevaConfiguracion.sonidoActivo ? 'Activado' : 'Desactivado',
+                sonidoColor: nuevaConfiguracion.sonidoActivo ? 'text-green-600' : 'text-red-600',
+                temaLabel: obtenerTemaLabel(nuevaConfiguracion.temaColor),
+                logoLabel: nuevaConfiguracion.mostrarLogo ? 'Mostrar' : 'Ocultar',
+                fechaCreacionFormateada: nuevaConfiguracion.fechaCreacion
+                    ? new Date(nuevaConfiguracion.fechaCreacion).toLocaleDateString('es-ES')
+                    : '',
+            };
+
             // Actualizar estado local
             setConfiguraciones(prev => {
-                const nuevaLista = [...prev, nuevaConfiguracion];
+                const nuevaLista = [...prev, nuevaConfiguracionFormateada];
                 setEstadisticas(calcularEstadisticasDeConfiguraciones(nuevaLista));
                 return nuevaLista;
             });
 
             if (onSuccess) {
-                onSuccess(nuevaConfiguracion, 'crear');
+                onSuccess(nuevaConfiguracionFormateada, 'crear');
             }
 
-            return nuevaConfiguracion;
+            return nuevaConfiguracionFormateada;
 
         } catch (err) {
             const errorMessage = err.message || 'Error creando configuración';

@@ -18,7 +18,7 @@ const CiudadanoTabla = ({
     loading = false
 }) => {
     const [paginaActual, setPaginaActual] = useState(1);
-    const elementosPorPagina = 10;
+    const elementosPorPagina = 20;
 
     // Calcular paginación
     const totalElementos = ciudadanos.length;
