@@ -6,7 +6,7 @@ import {
     Search,
     FilterList,
     Refresh,
-    Edit,
+    EditDocument as Edit,
     VolumeUp,
     VolumeOff,
     Palette,
@@ -21,6 +21,7 @@ import CrearConfiguracionModal from '../components/CrearConfiguracionModal';
 import EditarConfiguracionModal from '../components/EditarConfiguracionModal';
 import ConfigurarSonidoModal from '../components/ConfigurarSonidoModal';
 import ConfigurarAparienciaModal from '../components/ConfigurarAparienciaModal';
+import ConfirmarAccionModal from '../components/ConfirmarAccionModal';
 
 /**
  * Componente principal para la gestión de configuraciones de pantalla en AdminPanel
@@ -75,6 +76,10 @@ const ConfiguracionesSection = () => {
     const [loadingSonido, setLoadingSonido] = useState(false);
     const [loadingApariencia, setLoadingApariencia] = useState(false);
 
+    const [modalConfirmarAbierto, setModalConfirmarAbierto] = useState(false);
+    const [configuracionParaActivar, setConfiguracionParaActivar] = useState(null);
+    const [loadingActivar, setLoadingActivar] = useState(false);
+
     const [notificacion, setNotificacion] = useState(null);
 
     const mostrarNotificacion = (mensaje, tipo = 'success') => {
@@ -105,12 +110,34 @@ const ConfiguracionesSection = () => {
         }
     };
 
+    // const handleActivarConfiguracion = async (configuracion) => {
+    //     try {
+    //         await activarConfiguracion(configuracion.id);
+    //     } catch (error) {
+    //         console.error('Error activando configuración:', error);
+    //     }
+    // };
     const handleActivarConfiguracion = async (configuracion) => {
+        setConfiguracionParaActivar(configuracion);
+        setModalConfirmarAbierto(true);
+    };
+
+    const handleConfirmarActivacion = async () => {
         try {
-            await activarConfiguracion(configuracion.id);
+            setLoadingActivar(true);
+            await activarConfiguracion(configuracionParaActivar.id);
+            setModalConfirmarAbierto(false);
+            setConfiguracionParaActivar(null);
         } catch (error) {
             console.error('Error activando configuración:', error);
+        } finally {
+            setLoadingActivar(false);
         }
+    };
+
+    const handleCancelarActivacion = () => {
+        setModalConfirmarAbierto(false);
+        setConfiguracionParaActivar(null);
     };
 
     const handleConfigurarSonido = async (id, configuracionSonido) => {
@@ -330,18 +357,26 @@ const ConfiguracionesSection = () => {
 
                                 <td className="py-4 px-4">
                                     <button
-                                        onClick={() => handleActivarConfiguracion(configuracion)}
-                                        disabled={configuracion.activo || isOperating.activar}
-                                        className={`inline-flex justify-center items-center px-2 py-1 rounded-full text-xs font-medium w-16 transition-colors duration-300 ${configuracion.activo
+                                        // onClick={() => handleActivarConfiguracion(configuracion)}
+                                        // onClick={() => configuracion.activo ? null : handleActivarConfiguracion(configuracion)}
+                                        // disabled={configuracion.activo || isOperating.activar}
+                                        className={`inline-flex justify-center items-center px-2 py-1 rounded-full text-xs font-medium w-16 ${configuracion.activo
                                                 ? 'bg-green-100 text-green-800'
-                                                : 'bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer'
+                                                : 'bg-slate-100 text-slate-600'
                                             } disabled:opacity-50`}
                                     >
                                         {configuracion.estadoLabel}
                                     </button>
                                 </td>
                                 <td className="py-4 px-4">
-                                    
+                                    <button
+                                        className={`inline-flex justify-center items-center px-2 py-1 w-24 rounded-full text-xs font-medium transition-colors duration-300 hover:opacity-80 ${configuracion.sonidoActivo
+                                                ? 'bg-green-100 text-green-800'
+                                                : 'bg-red-100 text-red-800'
+                                            }`}
+                                    >
+                                        {configuracion.sonidoActivo ? 'Activado' : 'Desactivado'}
+                                    </button>
                                 </td>
 
                                 <td className="py-4 px-4">
@@ -365,6 +400,17 @@ const ConfiguracionesSection = () => {
 
                                 <td className="py-4 px-4">
                                     <div className="flex items-center justify-center space-x-2">
+                                        {!configuracion.activo && (
+                                            <button
+                                                onClick={() => handleActivarConfiguracion(configuracion)}
+                                                disabled={isOperating.activar}
+                                                className="p-1 text-slate-600 hover:text-green-600 hover:bg-green-50 rounded transition-colors duration-300 disabled:opacity-50"
+                                                title="Activar configuración"
+                                            >
+                                                <PlayArrow className="h-4 w-4" />
+                                            </button>
+                                        )}
+
                                         <button
                                             onClick={() => {
                                                 setConfiguracionSeleccionada(configuracion);
@@ -401,17 +447,6 @@ const ConfiguracionesSection = () => {
                                         >
                                             <Palette className="h-4 w-4" />
                                         </button>
-
-                                        {!configuracion.activo && (
-                                            <button
-                                                onClick={() => handleActivarConfiguracion(configuracion)}
-                                                disabled={isOperating.activar}
-                                                className="p-1 text-slate-600 hover:text-green-600 hover:bg-green-50 rounded transition-colors duration-300 disabled:opacity-50"
-                                                title="Activar configuración"
-                                            >
-                                                <PlayArrow className="h-4 w-4" />
-                                            </button>
-                                        )}
                                     </div>
                                 </td>
                             </tr>
@@ -596,6 +631,18 @@ const ConfiguracionesSection = () => {
                 onSubmit={handleConfigurarApariencia}
                 configuracion={configuracionSeleccionada}
                 loading={loadingApariencia}
+            />
+
+            <ConfirmarAccionModal
+                isOpen={modalConfirmarAbierto}
+                onClose={handleCancelarActivacion}
+                onConfirm={handleConfirmarActivacion}
+                loading={loadingActivar}
+                titulo="Activar Configuración"
+                mensaje={`¿Estás seguro de que quieres activar la configuración "${configuracionParaActivar?.nombre}"?`}
+                descripcion="Esta acción desactivará la configuración actual y activará la seleccionada. Las pantallas comenzarán a usar esta nueva configuración inmediatamente."
+                textoConfirmar="Activar"
+                tipoAccion="activar"
             />
         </div>
     );

@@ -198,7 +198,9 @@ class ConfiguracionPantallaService {
             estadoBg: configuracion.activo ? 'bg-green-50' : 'bg-slate-50',
             sonidoLabel: configuracion.sonidoActivo ? 'Activado' : 'Desactivado',
             sonidoColor: configuracion.sonidoActivo ? 'text-green-600' : 'text-red-600',
+            // temaLabel: this.getTemaLabel(configuracion.temaColor),
             temaLabel: this.getTemaLabel(configuracion.temaColor),
+            temaColor: configuracion.temaColor,
             logoLabel: configuracion.mostrarLogo ? 'Mostrar' : 'Ocultar',
             fechaCreacionFormateada: configuracion.fechaCreacion
                 ? new Date(configuracion.fechaCreacion).toLocaleDateString('es-ES')
