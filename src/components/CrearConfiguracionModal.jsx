@@ -55,35 +55,26 @@ const CrearConfiguracionModal = ({ isOpen, onClose, onSubmit, loading = false })
     const validateForm = () => {
         const newErrors = {};
 
-        // Validaciones requeridas
         if (!formData.nombre.trim()) {
-            newErrors.nombre = 'El nombre es requerido';
-        } else if (formData.nombre.length > 100) {
-            newErrors.nombre = 'El nombre no puede tener más de 100 caracteres';
+            newErrors.nombre = 'El nombre es obligatorio';
         }
 
         if (!formData.tiempoMensaje || formData.tiempoMensaje < 3 || formData.tiempoMensaje > 60) {
-            newErrors.tiempoMensaje = 'El tiempo de mensaje debe estar entre 3 y 60 segundos';
+            newErrors.tiempoMensaje = 'El tiempo debe estar entre 3 y 60 segundos';
         }
 
         if (!formData.tiempoTurno || formData.tiempoTurno < 3 || formData.tiempoTurno > 30) {
-            newErrors.tiempoTurno = 'El tiempo de turno debe estar entre 3 y 30 segundos';
+            newErrors.tiempoTurno = 'El tiempo debe estar entre 3 y 30 segundos';
         }
 
-        if (formData.textoEncabezado && formData.textoEncabezado.length > 200) {
-            newErrors.textoEncabezado = 'El texto del encabezado no puede exceder 200 caracteres';
+        // NUEVA VALIDACIÓN: Si activa logo institucional, debe tener URL
+        if (formData.mostrarLogo && !formData.rutaLogo.trim()) {
+            newErrors.rutaLogo = 'La URL del logo es obligatoria cuando se activa mostrar logo';
         }
 
-        if (formData.volumenSonido < 0 || formData.volumenSonido > 100) {
-            newErrors.volumenSonido = 'El volumen debe estar entre 0 y 100';
-        }
-
-        if (formData.rutaLogo && formData.rutaLogo.length > 200) {
-            newErrors.rutaLogo = 'La ruta del logo no puede exceder 200 caracteres';
-        }
-
-        if (formData.archivoSonido && formData.archivoSonido.length > 200) {
-            newErrors.archivoSonido = 'La ruta del archivo de sonido no puede exceder 200 caracteres';
+        // NUEVA VALIDACIÓN: Si activa sonido, debe tener archivo de sonido
+        if (formData.sonidoActivo && !formData.archivoSonido.trim()) {
+            newErrors.archivoSonido = 'La URL del archivo de sonido es obligatoria cuando se activa el sonido';
         }
 
         setErrors(newErrors);
@@ -336,8 +327,8 @@ const CrearConfiguracionModal = ({ isOpen, onClose, onSubmit, loading = false })
                                         <label
                                             key={tema.value}
                                             className={`relative cursor-pointer rounded-lg border-2 p-3 transition-all duration-300 ${formData.temaColor === tema.value
-                                                    ? 'border-[#224666] bg-slate-50'
-                                                    : 'border-slate-200 hover:border-slate-300'
+                                                ? 'border-[#224666] bg-slate-50'
+                                                : 'border-slate-200 hover:border-slate-300'
                                                 } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                                         >
                                             <input

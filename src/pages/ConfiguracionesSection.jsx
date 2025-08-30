@@ -197,6 +197,41 @@ const ConfiguracionesSection = () => {
         }));
     };
 
+    const getThemeClasses = (temaColor) => {
+        const themeMap = {
+            'verde': 'bg-green-100 text-green-800',
+            'green': 'bg-green-100 text-green-800',
+            'azul': 'bg-blue-100 text-blue-800',
+            'blue': 'bg-blue-100 text-blue-800',
+            'rojo': 'bg-red-100 text-red-800',
+            'red': 'bg-red-100 text-red-800',
+            'amarillo': 'bg-yellow-100 text-yellow-800',
+            'yellow': 'bg-yellow-100 text-yellow-800',
+            'morado': 'bg-purple-100 text-purple-800',
+            'purple': 'bg-purple-100 text-purple-800',
+            'naranja': 'bg-orange-100 text-orange-800',
+            'orange': 'bg-orange-200 text-orange-800',
+            'gris': 'bg-gray-100 text-gray-800',
+            'gray': 'bg-gray-100 text-gray-800',
+            'rosa': 'bg-pink-100 text-pink-800',
+            'pink': 'bg-pink-100 text-pink-800',
+            'indigo': 'bg-indigo-100 text-indigo-800',
+            'teal': 'bg-teal-100 text-teal-800',
+            'cyan': 'bg-cyan-100 text-cyan-800',
+            'lime': 'bg-lime-100 text-lime-800',
+            'emerald': 'bg-emerald-100 text-emerald-800',
+            'sky': 'bg-sky-100 text-sky-800',
+            'dark': 'bg-gray-800 text-gray-100',
+            'violet': 'bg-violet-100 text-violet-800',
+            'fuchsia': 'bg-fuchsia-100 text-fuchsia-800',
+            'default': 'bg-slate-100 text-slate-800'
+        };
+
+        // Buscar el tema, si no se encuentra usar default
+        const normalizedTheme = temaColor?.toLowerCase() || 'default';
+        return themeMap[normalizedTheme] || themeMap['default'];
+    };
+
     const renderEstadisticas = () => (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
@@ -351,8 +386,9 @@ const ConfiguracionesSection = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {configuracionesFiltradas.map((configuracion) => (
-                            <tr key={configuracion.id} className="border-b border-slate-100 hover:bg-slate-50 transition-colors duration-300">
+                        {configuracionesFiltradas.map((configuracion, index) => (
+                            // CAMBIO: Usar combinación de id y index para key única
+                            <tr key={`configuracion-${configuracion.id}-${index}`} className="border-b border-slate-100 hover:bg-slate-50 transition-colors duration-300">
                                 <td className="py-4 px-4">
                                     <div>
                                         <p className="font-medium text-slate-900">{configuracion.nombre}</p>
@@ -378,50 +414,49 @@ const ConfiguracionesSection = () => {
                                 <td className="py-4 px-4">
                                     <button
                                         className={`inline-flex justify-center items-center px-2 py-1 rounded-full text-xs font-medium w-16 ${configuracion.activo
-                                                ? 'bg-green-100 text-green-800'
-                                                : 'bg-slate-100 text-slate-600'
+                                            ? 'bg-green-100 text-green-800'
+                                            : 'bg-slate-100 text-slate-600'
                                             } disabled:opacity-50`}
                                     >
                                         {configuracion.estadoLabel}
                                     </button>
                                 </td>
-                                <td className="py-4 px-4">
-                                    <button
-                                        className={`inline-flex justify-center items-center px-2 py-1 w-24 rounded-full text-xs font-medium transition-colors duration-300 ${configuracion.sonidoActivo
-                                                ? 'bg-green-100 text-green-800'
-                                                : 'bg-red-100 text-red-800'
-                                            }`}
-                                    >
-                                        {configuracion.sonidoActivo ? 'Activado' : 'Desactivado'}
-                                    </button>
-                                </td>
 
                                 <td className="py-4 px-4">
                                     <button
-                                        className="inline-flex justify-center items-center px-2 py-1 rounded-full text-xs font-medium w-24 bg-slate-100 text-slate-800"
+                                        className={`inline-flex justify-center items-center px-2 py-1 w-24 rounded-full text-xs font-medium transition-colors duration-300 ${configuracion.sonidoActivo
+                                            ? 'bg-green-100 text-green-800'
+                                            : 'bg-red-100 text-red-800'
+                                            }`}
+                                    >
+                                        {configuracion.sonidoActivo ? 'Activo' : 'Inactivo'}
+                                    </button>
+                                </td>
+
+                                {/* SOLUCIÓN 4: Botón de tema dinámico según el color */}
+                                <td className="py-4 px-4">
+                                    <button
+                                        className={`inline-flex justify-center items-center px-2 py-1 rounded-full text-xs font-medium w-24 ${getThemeClasses(configuracion.temaColor)}`}
                                     >
                                         {configuracion.temaLabel}
                                     </button>
                                 </td>
 
-                                <td className="py-4 px-4">
-                                    <div className="text-sm text-slate-600">
-                                        <p>{configuracion.fechaCreacionFormateada}</p>
-                                        {configuracion.fechaModificacionFormateada && (
-                                            <p className="text-xs text-slate-500">
-                                                Mod: {configuracion.fechaModificacionFormateada}
-                                            </p>
-                                        )}
-                                    </div>
+                                <td className="py-4 px-4 text-sm text-slate-600">
+                                    {configuracion.fechaCreacion ?
+                                        new Date(configuracion.fechaCreacion).toLocaleDateString() :
+                                        'No disponible'
+                                    }
                                 </td>
 
                                 <td className="py-4 px-4">
-                                    <div className="flex items-center justify-end space-x-2">
+                                    <div className="flex justify-center space-x-2">
+                                        {/* Botones de acción */}
                                         {!configuracion.activo && (
                                             <button
                                                 onClick={() => handleActivarConfiguracion(configuracion)}
-                                                disabled={isOperating.activar}
-                                                className="p-1 text-slate-600 hover:text-green-600 hover:bg-green-50 rounded transition-colors duration-300 disabled:opacity-50"
+                                                disabled={isOperating}
+                                                className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors disabled:opacity-50"
                                                 title="Activar configuración"
                                             >
                                                 <PlayArrow className="h-4 w-4" />
@@ -429,37 +464,27 @@ const ConfiguracionesSection = () => {
                                         )}
 
                                         <button
-                                            onClick={() => {
-                                                setConfiguracionSeleccionada(configuracion);
-                                                setModalEditarAbierto(true);
-                                            }}
-                                            className="p-1 text-slate-600 hover:text-[#224666] hover:bg-slate-100 rounded transition-colors duration-300"
+                                            onClick={() => handleAbrirEditar(configuracion)}
+                                            disabled={isOperating}
+                                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors disabled:opacity-50"
                                             title="Editar configuración"
                                         >
                                             <Edit className="h-4 w-4" />
                                         </button>
 
                                         <button
-                                            onClick={() => {
-                                                setConfiguracionSeleccionada(configuracion);
-                                                setModalSonidoAbierto(true);
-                                            }}
-                                            className="p-1 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded transition-colors duration-300"
+                                            onClick={() => handleAbrirSonido(configuracion)}
+                                            disabled={isOperating}
+                                            className="p-2 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors disabled:opacity-50"
                                             title="Configurar sonido"
                                         >
-                                            {configuracion.sonidoActivo ? (
-                                                <VolumeUp className="h-4 w-4" />
-                                            ) : (
-                                                <VolumeOff className="h-4 w-4" />
-                                            )}
+                                            {configuracion.sonidoActivo ? <VolumeUp className="h-4 w-4" /> : <VolumeOff className="h-4 w-4" />}
                                         </button>
 
                                         <button
-                                            onClick={() => {
-                                                setConfiguracionSeleccionada(configuracion);
-                                                setModalAparienciaAbierto(true);
-                                            }}
-                                            className="p-1 text-slate-600 hover:text-purple-600 hover:bg-purple-50 rounded transition-colors duration-300"
+                                            onClick={() => handleAbrirApariencia(configuracion)}
+                                            disabled={isOperating}
+                                            className="p-2 text-orange-600 hover:bg-orange-50 rounded-lg transition-colors disabled:opacity-50"
                                             title="Configurar apariencia"
                                         >
                                             <Palette className="h-4 w-4" />
@@ -516,27 +541,10 @@ const ConfiguracionesSection = () => {
             )}
 
             {/* Notificación */}
-            {/* {notificacion && (
-                <div className={`mb-6 px-4 py-3 rounded-lg border ${notificacion.tipo === 'success'
-                        ? 'bg-green-50 border-green-200 text-green-800'
-                        : 'bg-red-50 border-red-200 text-red-800'
-                    }`}>
-                    <div className="flex items-center">
-                        <span className="font-medium">{notificacion.mensaje}</span>
-                        <button
-                            onClick={() => setNotificacion(null)}
-                            className="ml-3 text-sm opacity-70 hover:opacity-100"
-                        >
-                            ✕
-                        </button>
-                    </div>
-                </div>
-            )} */}
-            {/* Notificación */}
             {notificacion && (
                 <div className={`fixed top-4 left-1/2 -translate-x-1/2  z-[60] px-4 py-6 rounded-lg shadow-lg border transition-all duration-300 ${notificacion.tipo === 'success'
-                        ? 'bg-green-50 border-green-200 text-green-800'
-                        : 'bg-red-50 border-red-200 text-red-800'
+                    ? 'bg-green-50 border-green-200 text-green-800'
+                    : 'bg-red-50 border-red-200 text-red-800'
                     }`}>
                     <div className="flex items-center">
                         <span className="font-medium">{notificacion.mensaje}</span>

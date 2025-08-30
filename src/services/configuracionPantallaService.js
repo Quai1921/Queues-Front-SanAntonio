@@ -16,12 +16,6 @@ class ConfiguracionPantallaService {
     async obtenerConfiguracionActiva() {
         try {
             const response = await apiClient.get('/configuraciones-pantalla/activa');
-            console.log('=== DEBUG CONFIGURACIONES ===');
-            console.log('Response completo:', response.data);
-            console.log('Data array:', response.data.data);
-            if (response.data.data && response.data.data[0]) {
-                console.log('Primera configuración:', response.data.data[0]);
-            }
             return response.data.success ? response.data.data : null;
         } catch (error) {
             this.handleConfiguracionError(error);
@@ -36,14 +30,6 @@ class ConfiguracionPantallaService {
     async obtenerTodas() {
         try {
             const response = await apiClient.get('/configuraciones-pantalla');
-            console.log('=== RESPONSE CONFIGURACIONES ===');
-            console.log('Response status:', response.status);
-            console.log('Response data:', response.data);
-            console.log('Configuraciones recibidas:', response.data.data);
-            if (response.data.data && response.data.data[0]) {
-                console.log('Primera configuración completa:', response.data.data[0]);
-            }
-            console.log('=== FIN DEBUG ===');
             if (response.data.success) {
                 return response.data.data.map(config => this.formatearParaUI(config));
             } else {
