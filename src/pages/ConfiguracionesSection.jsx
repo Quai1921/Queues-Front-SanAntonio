@@ -90,7 +90,7 @@ const ConfiguracionesSection = () => {
     // Aplicar filtros
     const configuracionesFiltradas = filtrarConfiguraciones(filtros);
 
-    console.log(configuracionesFiltradas)
+    // console.log(configuracionesFiltradas.map(c => c.id));
 
     const handleCrearConfiguracion = async (configuracionData) => {
         try {
@@ -143,7 +143,17 @@ const ConfiguracionesSection = () => {
     const handleConfigurarSonido = async (id, configuracionSonido) => {
         try {
             setLoadingSonido(true);
+            console.log('=== DEBUG SONIDO ===');
+            console.log('ID:', id);
+            console.log('Configuración sonido:', configuracionSonido);
+
             await configurarSonido(id, configuracionSonido);
+
+            // Mostrar éxito
+            mostrarNotificacion('Sonido configurado correctamente', 'success');
+        } catch (error) {
+            console.error('Error configurando sonido:', error);
+            mostrarNotificacion(`Error configurando sonido: ${error.message}`, 'error');
         } finally {
             setLoadingSonido(false);
         }
@@ -152,7 +162,17 @@ const ConfiguracionesSection = () => {
     const handleConfigurarApariencia = async (id, configuracionApariencia) => {
         try {
             setLoadingApariencia(true);
+            console.log('=== DEBUG APARIENCIA ===');
+            console.log('ID:', id);
+            console.log('Configuración apariencia:', configuracionApariencia);
+
             await configurarApariencia(id, configuracionApariencia);
+
+            // Mostrar éxito
+            mostrarNotificacion('Apariencia configurada correctamente', 'success');
+        } catch (error) {
+            console.error('Error configurando apariencia:', error);
+            mostrarNotificacion(`Error configurando apariencia: ${error.message}`, 'error');
         } finally {
             setLoadingApariencia(false);
         }
@@ -321,12 +341,12 @@ const ConfiguracionesSection = () => {
                 <table className="w-full">
                     <thead>
                         <tr className="border-b border-slate-200 bg-slate-50">
-                            <th className="text-left py-3 px-4 font-medium text-slate-900">Configuración</th>
-                            <th className="text-left py-3 px-4 font-medium text-slate-900">Tiempos</th>
+                            <th className="text-left py-3 px-4 font-medium text-slate-900 w-[200px]">Configuración</th>
+                            <th className="text-left py-3 px-4 font-medium text-slate-900 w-[225px]">Tiempos</th>
                             <th className="text-left py-3 px-4 font-medium text-slate-900">Estado</th>
                             <th className="text-left py-3 px-4 font-medium text-slate-900">Sonido</th>
                             <th className="text-left py-3 px-4 font-medium text-slate-900">Tema</th>
-                            <th className="text-left py-3 px-4 font-medium text-slate-900">Fecha</th>
+                            <th className="text-left py-3 px-4 font-medium text-slate-900 w-[150px]">Fecha</th>
                             <th className="text-center py-3 px-4 font-medium text-slate-900">Acciones</th>
                         </tr>
                     </thead>
@@ -357,9 +377,6 @@ const ConfiguracionesSection = () => {
 
                                 <td className="py-4 px-4">
                                     <button
-                                        // onClick={() => handleActivarConfiguracion(configuracion)}
-                                        // onClick={() => configuracion.activo ? null : handleActivarConfiguracion(configuracion)}
-                                        // disabled={configuracion.activo || isOperating.activar}
                                         className={`inline-flex justify-center items-center px-2 py-1 rounded-full text-xs font-medium w-16 ${configuracion.activo
                                                 ? 'bg-green-100 text-green-800'
                                                 : 'bg-slate-100 text-slate-600'
@@ -370,7 +387,7 @@ const ConfiguracionesSection = () => {
                                 </td>
                                 <td className="py-4 px-4">
                                     <button
-                                        className={`inline-flex justify-center items-center px-2 py-1 w-24 rounded-full text-xs font-medium transition-colors duration-300 hover:opacity-80 ${configuracion.sonidoActivo
+                                        className={`inline-flex justify-center items-center px-2 py-1 w-24 rounded-full text-xs font-medium transition-colors duration-300 ${configuracion.sonidoActivo
                                                 ? 'bg-green-100 text-green-800'
                                                 : 'bg-red-100 text-red-800'
                                             }`}
@@ -399,7 +416,7 @@ const ConfiguracionesSection = () => {
                                 </td>
 
                                 <td className="py-4 px-4">
-                                    <div className="flex items-center justify-center space-x-2">
+                                    <div className="flex items-center justify-end space-x-2">
                                         {!configuracion.activo && (
                                             <button
                                                 onClick={() => handleActivarConfiguracion(configuracion)}
@@ -642,6 +659,7 @@ const ConfiguracionesSection = () => {
                 mensaje={`¿Estás seguro de que quieres activar la configuración "${configuracionParaActivar?.nombre}"?`}
                 descripcion="Esta acción desactivará la configuración actual y activará la seleccionada. Las pantallas comenzarán a usar esta nueva configuración inmediatamente."
                 textoConfirmar="Activar"
+                textoCancel="Cancelar"
                 tipoAccion="activar"
             />
         </div>

@@ -279,8 +279,20 @@ export const useConfiguraciones = (options = {}) => {
 
             await configuracionPantallaService.configurarSonido(id, configuracionSonido);
 
-            // Recargar configuraciones para obtener los datos actualizados
-            await cargarConfiguraciones();
+            // Actualizar solo la configuración específica sin recargar todo
+            setConfiguraciones(prev => prev.map(config => {
+                if (config.id === id) {
+                    return {
+                        ...config,
+                        sonidoActivo: configuracionSonido.activo,
+                        archivoSonido: configuracionSonido.archivo || config.archivoSonido,
+                        volumenSonido: configuracionSonido.volumen || config.volumenSonido,
+                        sonidoLabel: configuracionSonido.activo ? 'Activado' : 'Desactivado',
+                        sonidoColor: configuracionSonido.activo ? 'text-green-600' : 'text-red-600'
+                    };
+                }
+                return config;
+            }));
 
             if (onSuccess) {
                 onSuccess(null, 'configurar_sonido');
@@ -299,7 +311,7 @@ export const useConfiguraciones = (options = {}) => {
             setIsOperating(prev => ({ ...prev, configurarSonido: false }));
             setOperacionEnCurso(null);
         }
-    }, [cargarConfiguraciones, onError, onSuccess]);
+    }, [onError, onSuccess]);
 
     /**
      * Configurar apariencia de una configuración
@@ -312,8 +324,20 @@ export const useConfiguraciones = (options = {}) => {
 
             await configuracionPantallaService.configurarApariencia(id, configuracionApariencia);
 
-            // Recargar configuraciones para obtener los datos actualizados
-            await cargarConfiguraciones();
+            // Actualizar solo la configuración específica
+            setConfiguraciones(prev => prev.map(config => {
+                if (config.id === id) {
+                    return {
+                        ...config,
+                        temaColor: configuracionApariencia.tema || config.temaColor,
+                        mostrarLogo: configuracionApariencia.mostrarLogo !== undefined ? configuracionApariencia.mostrarLogo : config.mostrarLogo,
+                        rutaLogo: configuracionApariencia.rutaLogo || config.rutaLogo,
+                        // temaLabel: configuracionPantallaService.getTemaLabel(configuracionApariencia.tema || config.temaColor)
+                        temaLabel: obtenerTemaLabel(configuracionApariencia.tema || config.temaColor)
+                    };
+                }
+                return config;
+            }));
 
             if (onSuccess) {
                 onSuccess(null, 'configurar_apariencia');
@@ -332,7 +356,7 @@ export const useConfiguraciones = (options = {}) => {
             setIsOperating(prev => ({ ...prev, configurarApariencia: false }));
             setOperacionEnCurso(null);
         }
-    }, [cargarConfiguraciones, onError, onSuccess]);
+}, [onError, onSuccess]);
 
     /**
      * Filtrar configuraciones
@@ -398,6 +422,21 @@ export const useConfiguraciones = (options = {}) => {
             mounted = false;
         };
     }, [autoLoad]); // Solo depende de autoLoad
+
+    // Función auxiliar para obtener label del tema (copia de la del service)
+    const obtenerTemaLabel = (tema) => {
+        const temas = {
+            'default': 'Por Defecto',
+            'blue': 'Azul',
+            'green': 'Verde',
+            'red': 'Rojo',
+            'purple': 'Morado',
+            'orange': 'Naranja',
+            'dark': 'Oscuro',
+            'light': 'Claro'
+        };
+        return temas[tema] || tema || 'Por Defecto';
+    };
 
     return {
         // Estados
