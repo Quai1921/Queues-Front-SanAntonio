@@ -47,6 +47,7 @@ const ConfiguracionesSection = () => {
         limpiarError
     } = useConfiguraciones({
         onSuccess: (configuracion, operacion) => {
+            if (operacion === 'cargar') return;
             const mensajes = {
                 crear: 'Configuración creada exitosamente',
                 actualizar: 'Configuración actualizada exitosamente',
@@ -499,7 +500,8 @@ const ConfiguracionesSection = () => {
                                             {!configuracion.activo && (
                                                 <button
                                                     onClick={() => handleActivarConfiguracion(configuracion)}
-                                                    disabled={isOperating}
+                                                    // disabled={isOperating}
+                                                    disabled={isOperating.crear || isOperating.actualizar}
                                                     className="p-1 transition-all duration-300 text-gray-400 hover:text-green-500 cursor-pointer"
                                                     title="Activar configuración"
                                                 >
@@ -509,7 +511,8 @@ const ConfiguracionesSection = () => {
 
                                             <button
                                                 onClick={() => handleAbrirEditar(configuracion)}
-                                                disabled={isOperating}
+                                                // disabled={isOperating}
+                                                disabled={isOperating.crear || isOperating.actualizar}
                                                 className="p-1 transition-all duration-300 text-gray-400 hover:text-cyan-800 cursor-pointer"
                                                 title="Editar configuración"
                                             >
@@ -518,7 +521,8 @@ const ConfiguracionesSection = () => {
 
                                             <button
                                                 onClick={() => handleAbrirSonido(configuracion)}
-                                                disabled={isOperating}
+                                                // disabled={isOperating}
+                                                disabled={isOperating.crear || isOperating.actualizar}
                                                 className="p-1 transition-all duration-300 text-gray-400 hover:text-neutral-800 cursor-pointer"
                                                 title="Configurar sonido"
                                             >
@@ -527,7 +531,8 @@ const ConfiguracionesSection = () => {
 
                                             <button
                                                 onClick={() => handleAbrirApariencia(configuracion)}
-                                                disabled={isOperating}
+                                                // disabled={isOperating}
+                                                disabled={isOperating.crear || isOperating.actualizar}
                                                 className="p-1 transition-all duration-300 text-gray-400 hover:text-neutral-800 cursor-pointer"
                                                 title="Configurar apariencia"
                                             >

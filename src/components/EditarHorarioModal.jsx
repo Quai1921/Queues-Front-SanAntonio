@@ -94,39 +94,46 @@ const EditarHorarioModal = ({ isOpen, onClose, onSubmit, horario, sector, loadin
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[95vh] overflow-y-auto text-sm">
                 {/* Header */}
                 <div className="flex items-center justify-between p-6 border-b border-slate-200">
                     <div className="flex items-center">
-                        <div className="p-2 bg-slate-200 rounded-lg mr-3">
+                        <div className="w-10 h-10 bg-slate-200 rounded-md flex items-center justify-center mr-3">
                             <Edit className="h-6 w-6 text-slate-600" />
                         </div>
                         <div>
                             <h3 className="text-lg font-semibold text-slate-900">Editar Horario</h3>
-                            <p className="text-sm text-slate-600">
+                            <p className=" text-slate-600">
                                 Sector: <span className="font-medium">{sector?.codigo} - {sector?.nombre}</span>
                             </p>
                             <p className="text-xs text-slate-500 mt-1">
                                 Horario actual: {getDiaLabel(horario.diaSemana)} {horario.horaInicio?.substring(0, 5)} - {horario.horaFin?.substring(0, 5)}
                             </p>
+                            <div className={`inline-flex items-center px-2 py-1 rounded-md mt-1 text-xs font-medium ${horario.activo
+                                    ? 'bg-green-100 text-green-800'
+                                    : 'bg-red-100 text-red-800'
+                                }`}>
+                                Este horario está actualmente {horario.activo ? 'activo' : 'inactivo'}
+                            </div>
                         </div>
                     </div>
+                    
                     <button
                         onClick={onClose}
                         disabled={loading}
-                        className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors disabled:opacity-50"
+                        className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md transition-colors disabled:opacity-50"
                     >
                         <Close className="h-5 w-5" />
                     </button>
                 </div>
 
                 {/* Formulario */}
-                <form onSubmit={handleSubmit} className="px-6 pt-3 py-4 space-y-3">
+                <form onSubmit={handleSubmit} className="px-6 pt-3 py-4 space-y-2">
                     
                     {/* Día de la semana / Horarios*/}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                            <label className="block  font-medium text-slate-700 mb-2">
                                 <CalendarMonth className="inline h-4 w-4 mr-1" />
                                 Día de la Semana *
                             </label>
@@ -134,7 +141,7 @@ const EditarHorarioModal = ({ isOpen, onClose, onSubmit, horario, sector, loadin
                                 name="diaSemana"
                                 value={formData.diaSemana}
                                 onChange={handleInputChange}
-                                className={`w-full px-3 py-2 border rounded-lg ${errors.diaSemana ? 'border-red-300' : 'border-slate-300'
+                                className={`w-full px-3 h-8 border rounded-md ${errors.diaSemana ? 'border-red-300' : 'border-slate-300'
                                     }`}
                             >
                                 <option value="">Seleccionar día</option>
@@ -145,12 +152,12 @@ const EditarHorarioModal = ({ isOpen, onClose, onSubmit, horario, sector, loadin
                                 ))}
                             </select>
                             {errors.diaSemana && (
-                                <p className="mt-1 text-sm text-red-600">{errors.diaSemana}</p>
+                                <p className="mt-1  text-red-600">{errors.diaSemana}</p>
                             )}
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                            <label className="block  font-medium text-slate-700 mb-2">
                                 <AccessTime className="inline h-4 w-4 mr-1" />
                                 Hora de Inicio *
                             </label>
@@ -159,16 +166,16 @@ const EditarHorarioModal = ({ isOpen, onClose, onSubmit, horario, sector, loadin
                                 name="horaInicio"
                                 value={formData.horaInicio}
                                 onChange={handleInputChange}
-                                className={`w-full px-3 py-2 border rounded-lg ${errors.horaInicio ? 'border-red-300' : 'border-slate-300'
+                                className={`w-full px-3 h-8 border rounded-md ${errors.horaInicio ? 'border-red-300' : 'border-slate-300'
                                     }`}
                             />
                             {errors.horaInicio && (
-                                <p className="mt-1 text-sm text-red-600">{errors.horaInicio}</p>
+                                <p className="mt-1  text-red-600">{errors.horaInicio}</p>
                             )}
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                            <label className="block  font-medium text-slate-700 mb-2">
                                 <AccessTime className="inline h-4 w-4 mr-1" />
                                 Hora de Fin *
                             </label>
@@ -177,11 +184,11 @@ const EditarHorarioModal = ({ isOpen, onClose, onSubmit, horario, sector, loadin
                                 name="horaFin"
                                 value={formData.horaFin}
                                 onChange={handleInputChange}
-                                className={`w-full px-3 py-2 border rounded-lg ${errors.horaFin ? 'border-red-300' : 'border-slate-300'
+                                className={`w-full px-3 h-8 border rounded-md ${errors.horaFin ? 'border-red-300' : 'border-slate-300'
                                     }`}
                             />
                             {errors.horaFin && (
-                                <p className="mt-1 text-sm text-red-600">{errors.horaFin}</p>
+                                <p className="mt-1  text-red-600">{errors.horaFin}</p>
                             )}
                         </div>
                     </div>
@@ -189,14 +196,14 @@ const EditarHorarioModal = ({ isOpen, onClose, onSubmit, horario, sector, loadin
                     {/* Configuración de citas */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                            <label className="block  font-medium text-slate-700 mb-2">
                                 Intervalo entre Citas (minutos) *
                             </label>
                             <select
                                 name="intervaloCitas"
                                 value={formData.intervaloCitas}
                                 onChange={handleInputChange}
-                                className={`w-full px-3 py-2 border rounded-lg ${errors.intervaloCitas ? 'border-red-300' : 'border-slate-300'
+                                className={`w-full px-3 h-8 border rounded-md ${errors.intervaloCitas ? 'border-red-300' : 'border-slate-300'
                                     }`}
                             >
                                 {intervalosComunes.map(intervalo => (
@@ -206,13 +213,12 @@ const EditarHorarioModal = ({ isOpen, onClose, onSubmit, horario, sector, loadin
                                 ))}
                             </select>
                             {errors.intervaloCitas && (
-                                <p className="mt-1 text-sm text-red-600">{errors.intervaloCitas}</p>
+                                <p className="mt-1  text-red-600">{errors.intervaloCitas}</p>
                             )}
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">
-                                <Group className="inline h-4 w-4 mr-1" />
+                            <label className="block  font-medium text-slate-700 mb-2">
                                 Capacidad Máxima *
                             </label>
                             <input
@@ -222,18 +228,18 @@ const EditarHorarioModal = ({ isOpen, onClose, onSubmit, horario, sector, loadin
                                 max="50"
                                 value={formData.capacidadMaxima}
                                 onChange={handleInputChange}
-                                className={`w-full px-3 py-2 border rounded-lg ${errors.capacidadMaxima ? 'border-red-300' : 'border-slate-300'
+                                className={`w-full px-3 h-8 border rounded-md ${errors.capacidadMaxima ? 'border-red-300' : 'border-slate-300'
                                     }`}
                             />
                             {errors.capacidadMaxima && (
-                                <p className="mt-1 text-sm text-red-600">{errors.capacidadMaxima}</p>
+                                <p className="mt-1  text-red-600">{errors.capacidadMaxima}</p>
                             )}
                         </div>
                     </div>
 
                     {/* Observaciones */}
                     <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">
+                        <label className="block  font-medium text-slate-700 mb-2">
                             <Notes className="inline h-4 w-4 mr-1" />
                             Observaciones
                         </label>
@@ -243,33 +249,15 @@ const EditarHorarioModal = ({ isOpen, onClose, onSubmit, horario, sector, loadin
                             placeholder="Notas adicionales sobre este horario..."
                             value={formData.observaciones}
                             onChange={handleInputChange}
-                            className="w-full px-3 py-2 border border-slate-300 rounded-lg resize-none"
+                            className="w-full px-3 h-12 py-1.5 border border-slate-300 rounded-md resize-none"
                         />
                     </div>
 
-                    {/* Estado del horario */}
-                    <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-medium text-slate-700">Estado del Horario</p>
-                                <p className="text-xs text-slate-600">
-                                    Este horario está actualmente {horario.activo ? 'activo' : 'inactivo'}
-                                </p>
-                            </div>
-                            <div className={`inline-flex items-center px-2.5 py-1.5 rounded-full text-xs font-medium ${horario.activo
-                                    ? 'bg-green-100 text-green-800'
-                                    : 'bg-red-100 text-red-800'
-                                }`}>
-                                {horario.activo ? 'Activo' : 'Inactivo'}
-                            </div>
-                        </div>
-                    </div>
-
                     {/* Información adicional */}
-                    <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
+                    <div className="bg-slate-50 border border-slate-200 rounded-md p-2">
                         <div className="flex items-start">
                             <Warning className="h-5 w-5 text-amber-600 mr-3 mt-0.5 flex-shrink-0" />
-                            <div className="text-sm">
+                            <div className="">
                                 <p className="text-slate-800 font-medium">Consideraciones importantes:</p>
                                 <ul className="text-slate-700 mt-1 space-y-1">
                                     <li>• Los cambios de horario pueden afectar citas existentes</li>
@@ -281,19 +269,19 @@ const EditarHorarioModal = ({ isOpen, onClose, onSubmit, horario, sector, loadin
                     </div>
 
                     {/* Botones */}
-                    <div className="flex items-center justify-end space-x-3 pt-4 border-t border-slate-200">
+                    <div className="flex items-center justify-end space-x-3 pt-2 border-t border-slate-200">
                         <button
                             type="button"
                             onClick={onClose}
                             disabled={loading}
-                            className="px-4 py-2 text-slate-700 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors disabled:opacity-50"
+                            className="px-4 h-8 text-slate-700 bg-slate-100 rounded-md hover:bg-slate-200 transition-colors disabled:opacity-50"
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="flex items-center px-4 py-2 bg-[#224666] text-white rounded-lg hover:bg-[#1a3a52] transition-colors disabled:opacity-50"
+                            className="flex items-center px-4 h-8 bg-[#224666] text-white rounded-md hover:bg-[#1a3a52] transition-colors disabled:opacity-50"
                         >
                             {loading ? (
                                 <>
@@ -302,7 +290,7 @@ const EditarHorarioModal = ({ isOpen, onClose, onSubmit, horario, sector, loadin
                                 </>
                             ) : (
                                 <>
-                                    <Save className="mr-2 h-4 w-4" />
+                                    <Save sx={{ fontSize: '20px' }} className="mr-2" />
                                     Guardar Cambios
                                 </>
                             )}

@@ -147,11 +147,13 @@ const ConfigurarSonidoModal = ({ isOpen, onClose, onSubmit, configuracion, loadi
                 {/* Header */}
                 <div className="flex items-center justify-between p-6 border-b border-slate-200">
                     <div className="flex items-center">
-                        {formData.activo ? (
-                            <VolumeUp className="h-6 w-6 text-[#224666] mr-3" />
-                        ) : (
-                            <VolumeOff className="h-6 w-6 text-slate-400 mr-3" />
-                        )}
+                        <div className='p-2 bg-slate-200 rounded-lg mr-3'>
+                            {formData.activo ? (
+                                <VolumeUp className="h-6 w-6 text-slate-600" />
+                            ) : (
+                                <VolumeOff className="h-6 w-6 text-slate-600" />
+                            )}
+                        </div>
                         <div>
                             <h2 className="text-xl font-semibold text-slate-900">Configurar Sonido</h2>
                             <p className="text-sm text-slate-600 mt-1">{configuracion?.nombre}</p>
@@ -177,7 +179,7 @@ const ConfigurarSonidoModal = ({ isOpen, onClose, onSubmit, configuracion, loadi
                                 checked={formData.activo}
                                 onChange={handleInputChange}
                                 disabled={loading}
-                                className="w-4 h-4 text-[#224666] border-slate-300 rounded focus:ring-[#224666] disabled:opacity-50"
+                                className="w-4 h-4 text-[#224666] border-slate-300 rounded disabled:opacity-50"
                             />
                             <label className="text-sm font-medium text-slate-700">
                                 Activar sonido de notificaciones
@@ -199,7 +201,7 @@ const ConfigurarSonidoModal = ({ isOpen, onClose, onSubmit, configuracion, loadi
                                             value={formData.archivo}
                                             onChange={handleInputChange}
                                             disabled={loading}
-                                            className={`flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-transparent transition-colors duration-300 ${errors.archivo ? 'border-red-300' : 'border-slate-300'
+                                            className={`flex-1 px-3 py-2 border rounded-lg transition-colors duration-300 ${errors.archivo ? 'border-red-300' : 'border-slate-300'
                                                 } disabled:opacity-50`}
                                             placeholder="https://ejemplo.com/sonido.wav"
                                         />
@@ -270,14 +272,14 @@ const ConfigurarSonidoModal = ({ isOpen, onClose, onSubmit, configuracion, loadi
                         )}
 
                         {!formData.activo && (
-                            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
                                 <div className="flex items-center">
                                     <VolumeOff className="h-5 w-5 text-amber-600 mr-2" />
                                     <div>
-                                        <p className="text-sm font-medium text-amber-800">
+                                        <p className="text-sm font-medium text-slate-800">
                                             Sonido desactivado
                                         </p>
-                                        <p className="text-sm text-amber-700 mt-1">
+                                        <p className="text-sm text-slate-700 mt-1">
                                             Las pantallas no reproducirán sonidos de notificación
                                         </p>
                                     </div>

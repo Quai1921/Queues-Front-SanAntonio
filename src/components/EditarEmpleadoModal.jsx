@@ -158,16 +158,16 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden">
+            <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-hidden text-sm">
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-slate-200">
+                <div className="flex items-center justify-between p-4 border-b border-slate-200">
                     <div className="flex items-center">
-                        <div className="w-10 h-10 bg-slate-200 rounded-lg flex items-center justify-center mr-3">
+                        <div className="w-10 h-10 bg-slate-200 rounded-md flex items-center justify-center mr-3">
                             <EditDocumentIcon className="h-6 w-6 text-slate-600" />
                         </div>
                         <div>
                             <h2 className="text-lg font-semibold text-slate-900">Editar Empleado</h2>
-                            <p className="text-sm text-slate-600">
+                            <p className="text-slate-600">
                                 {empleado ? `Modificando: ${empleado.username}` : 'Cargando...'}
                             </p>
                         </div>
@@ -177,7 +177,7 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
                         {/* Estado del empleado */}
                         {empleado && (
                             <div className="flex flex-col justify-center items-center">
-                                <p className='text-sm font-medium text-slate-700'>Estado</p>
+                                <p className='font-medium text-slate-700'>Estado</p>
                                 
                                 <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${empleado.activo
                                     ? 'bg-green-100 text-green-800'
@@ -196,7 +196,7 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
 
                         <button
                             onClick={handleClose}
-                            className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors disabled:opacity-50"
+                            className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md transition-colors disabled:opacity-50"
                             disabled={loading}
                         >
                             <Close className="h-6 w-6" />
@@ -207,20 +207,20 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 overflow-y-auto max-h-[calc(90vh-140px)]">
-                    <form onSubmit={handleSubmit} className="p-6 space-y-4">
+                <div className="flex-1 overflow-y-auto">
+                    <form onSubmit={handleSubmit} className="p-4 space-y-4">
 
                         {/* Información Personal */}
                         <div className="space-y-1">
-                            <h3 className="text-sm font-medium text-slate-900 flex items-center pb-2">
+                            <h3 className="font-medium text-slate-900 flex items-center pb-2">
                                 <Person className="h-4 w-4 mr-2" />
                                 Información Personal
                             </h3>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                                 {/* Nombre */}
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                                    <label className="block font-medium text-slate-700 mb-1">
                                         Nombre *
                                     </label>
                                     <input
@@ -228,7 +228,7 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
                                         name="nombre"
                                         value={formData.nombre}
                                         onChange={handleInputChange}
-                                        className={`w-full px-3 py-2 border rounded-lg transition-colors ${errors.nombre
+                                        className={`w-full px-3 h-8 border rounded-md transition-colors ${errors.nombre
                                                 ? 'border-red-500 '
                                                 : 'border-slate-300'
                                             }`}
@@ -236,13 +236,13 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
                                         disabled={loading}
                                     />
                                     {errors.nombre && (
-                                        <p className="text-red-600 text-sm mt-1">{errors.nombre}</p>
+                                        <p className="text-red-600 mt-1">{errors.nombre}</p>
                                     )}
                                 </div>
 
                                 {/* Apellido */}
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                                    <label className="block font-medium text-slate-700 mb-1">
                                         Apellido *
                                     </label>
                                     <input
@@ -250,7 +250,7 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
                                         name="apellido"
                                         value={formData.apellido}
                                         onChange={handleInputChange}
-                                        className={`w-full px-3 py-2 border rounded-lg transition-colors ${errors.apellido
+                                        className={`w-full px-3 h-8 border rounded-md transition-colors ${errors.apellido
                                                 ? 'border-red-500'
                                                 : 'border-slate-300'
                                             }`}
@@ -258,17 +258,13 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
                                         disabled={loading}
                                     />
                                     {errors.apellido && (
-                                        <p className="text-red-600 text-sm mt-1">{errors.apellido}</p>
+                                        <p className="text-red-600 mt-1">{errors.apellido}</p>
                                     )}
                                 </div>
-                            </div>
-                        </div>
-
-                        {/* Información de Contacto */}
-                        {/* DNI */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                
+                                {/* DNI */}
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                                    <label className="block font-medium text-slate-700 mb-1">
                                         DNI
                                     </label>
                                     <input
@@ -276,7 +272,7 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
                                         name="dni"
                                         value={formData.dni}
                                         onChange={handleInputChange}
-                                        className={`w-full px-3 py-2 border rounded-lg transition-colors ${errors.dni
+                                        className={`w-full px-3 h-8 border rounded-md transition-colors ${errors.dni
                                                 ? 'border-red-500'
                                                 : 'border-slate-300'
                                             }`}
@@ -284,12 +280,12 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
                                         disabled={loading}
                                     />
                                     {errors.dni && (
-                                        <p className="text-red-600 text-sm mt-1">{errors.dni}</p>
+                                        <p className="text-red-600 mt-1">{errors.dni}</p>
                                     )}
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                                    <label className="block font-medium text-slate-700 mb-1">
                                         Email
                                     </label>
                                     <input
@@ -297,7 +293,7 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
                                         name="email"
                                         value={formData.email}
                                         onChange={handleInputChange}
-                                        className={`w-full px-3 py-2 border rounded-lg transition-colors ${errors.email
+                                        className={`w-full px-3 h-8 border rounded-md transition-colors ${errors.email
                                                 ? 'border-red-500'
                                                 : 'border-slate-300'
                                             }`}
@@ -305,20 +301,21 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
                                         disabled={loading}
                                     />
                                     {errors.email && (
-                                        <p className="text-red-600 text-sm mt-1">{errors.email}</p>
+                                        <p className="text-red-600  mt-1">{errors.email}</p>
                                     )}
                                 </div>
                             </div>
+                        </div>
 
                         {/* Rol del Sistema */}
                         <div className="space-y-4">
-                            <h3 className="text-sm font-medium text-slate-900 flex items-center border-b border-slate-200 pb-2">
+                            <h3 className=" font-medium text-slate-900 flex items-center border-b border-slate-200 pb-2">
                                 <AdminPanelSettings className="h-4 w-4 mr-2" />
                                 Rol del Sistema
                             </h3>
 
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-2">
+                                <label className="block  font-medium text-slate-700 mb-2">
                                     Rol Asignado *
                                 </label>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -328,7 +325,7 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
                                         { value: 'ADMIN', label: 'Administrador', desc: 'Acceso completo' }
                                     ].map((rol) => (
                                         <div key={rol.value}>
-                                            <label className="flex items-center p-3 border-2 border-slate-200 rounded-lg cursor-pointer hover:border-[#224666] transition-colors">
+                                            <label className="flex items-center p-3 border-2 border-slate-200 rounded-md cursor-pointer hover:border-[#224666] transition-colors">
                                                 <input
                                                     type="radio"
                                                     name="rol"
@@ -362,12 +359,11 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
                             </div>
 
                             {/* Advertencia sobre cambio de rol */}
-                            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                            <div className="bg-slate-50 border border-slate-200 rounded-md p-3">
                                 <div className="flex items-start">
-                                    <div className="w-5 h-5 text-amber-600 mt-0.5">⚠️</div>
-                                    <div className="ml-3 text-sm">
-                                        <p className="text-amber-800 font-medium">Cambio de Rol</p>
-                                        <p className="text-amber-700 mt-1">
+                                    <div className="ml-3 ">
+                                        <p className="text-slate-800 font-medium">Cambio de Rol</p>
+                                        <p className="text-slate-700 mt-1">
                                             Cambiar el rol modificará los permisos del empleado.
                                         </p>
                                     </div>
@@ -380,7 +376,7 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
                             <button
                                 type="button"
                                 onClick={handleClose}
-                                className="px-4 py-2 text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors disabled:opacity-50"
+                                className="px-4 h-8 text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-md transition-colors disabled:opacity-50"
                                 disabled={loading}
                             >
                                 Cancelar
@@ -390,7 +386,7 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
                                 type='submit'
                                 onClick={handleSubmit}
                                 disabled={loading}
-                                className="flex items-center px-4 py-2 bg-[#224666] text-white rounded-lg hover:bg-[#2c3e50] transition-colors disabled:opacity-50"
+                                className="flex items-center px-4 h-8 bg-[#224666] text-white rounded-md hover:bg-[#2c3e50] transition-colors disabled:opacity-50"
                             >
                                 {loading ? (
                                     <>
@@ -399,7 +395,7 @@ const EditarEmpleadoModal = ({ isOpen, onClose, onSubmit, empleado, loading = fa
                                     </>
                                 ) : (
                                     <>
-                                        <Save className="h-4 w-4 mr-2" />
+                                        <Save sx={{ fontSize: '20px' }} className="mr-2" />
                                         Guardar Cambios
                                     </>
                                 )}

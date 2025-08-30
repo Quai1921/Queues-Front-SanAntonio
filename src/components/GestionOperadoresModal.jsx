@@ -123,9 +123,9 @@ const GestionOperadoresModal = ({ isOpen, onClose, onRefresh, sector, loading = 
             const modalDiv = document.createElement('div');
             modalDiv.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4';
             modalDiv.innerHTML = `
-                <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+                <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-4 text-sm">
                     <div class="flex items-center mb-4">
-                        <div class="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center mr-3">
+                        <div class="w-10 h-10 bg-red-500 rounded-md flex items-center justify-center mr-3">
                             <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
                             </svg>
@@ -138,10 +138,10 @@ const GestionOperadoresModal = ({ isOpen, onClose, onRefresh, sector, loading = 
                         El operador quedará disponible para ser asignado a otro sector.
                     </p>
                     <div class="flex justify-end space-x-3">
-                        <button id="cancelBtn" class="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors">
+                        <button id="cancelBtn" class="px-4 h-8 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50 transition-colors">
                             Cancelar
                         </button>
-                        <button id="confirmBtn" class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors">
+                        <button id="confirmBtn" class="px-4 h-8 text-sm font-medium text-white bg-red-600 rounded-md hover:bg-red-700 transition-colors">
                             Desasignar
                         </button>
                     </div>
@@ -215,11 +215,11 @@ const GestionOperadoresModal = ({ isOpen, onClose, onRefresh, sector, loading = 
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
+            <div className="bg-white rounded-xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-hidden text-sm">
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-slate-200 bg-slate-50">
+                <div className="flex items-center justify-between p-4 border-b border-slate-200 bg-slate-50">
                     <div className="flex items-center">
-                        <div className="w-10 h-10 bg-slate-200 rounded-lg flex items-center justify-center mr-3">
+                        <div className="w-10 h-10 bg-slate-200 rounded-md flex items-center justify-center mr-3">
                             <Group className="h-6 w-6 text-slate-600" />
                         </div>
                         <div>
@@ -232,7 +232,7 @@ const GestionOperadoresModal = ({ isOpen, onClose, onRefresh, sector, loading = 
                     <button
                         onClick={handleClose}
                         disabled={loadingAction}
-                        className="p-2 hover:bg-slate-200 rounded-lg transition-colors disabled:opacity-50"
+                        className="p-2 hover:bg-slate-200 rounded-md transition-colors disabled:opacity-50"
                     >
                         <Close className="h-5 w-5 text-slate-500" />
                     </button>
@@ -242,7 +242,7 @@ const GestionOperadoresModal = ({ isOpen, onClose, onRefresh, sector, loading = 
                 <div className="flex border-b border-slate-200">
                     <button
                         onClick={() => setTab('asignados')}
-                        className={`px-6 py-3 font-medium transition-colors ${tab === 'asignados'
+                        className={`px-4 py-2 font-medium transition-colors ${tab === 'asignados'
                                 ? 'text-slate-600 border-b-2 border-slate-600 bg-slate-50'
                                 : 'text-slate-600 hover:text-slate-900'
                             }`}
@@ -251,7 +251,7 @@ const GestionOperadoresModal = ({ isOpen, onClose, onRefresh, sector, loading = 
                     </button>
                     <button
                         onClick={() => setTab('asignar')}
-                        className={`px-6 py-3 font-medium transition-colors ${tab === 'asignar'
+                        className={`px-4 py-2 font-medium transition-colors ${tab === 'asignar'
                                 ? 'text-slate-600 border-b-2 border-slate-600 bg-slate-50'
                                 : 'text-slate-600 hover:text-slate-900'
                             }`}
@@ -261,9 +261,9 @@ const GestionOperadoresModal = ({ isOpen, onClose, onRefresh, sector, loading = 
                 </div>
 
                 {/* Content */}
-                <div className="p-6 max-h-96 overflow-y-auto">
+                <div className="p-4 max-h-96 overflow-y-auto">
                     {error && (
-                        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-md">
                             <div className="flex items-start">
                                 <Warning className="h-5 w-5 text-red-600 mr-3 mt-0.5 flex-shrink-0" />
                                 <p className="text-red-800 text-sm">{error}</p>
@@ -272,7 +272,7 @@ const GestionOperadoresModal = ({ isOpen, onClose, onRefresh, sector, loading = 
                     )}
 
                     {tab === 'asignados' && (
-                        <div className="space-y-6">
+                        <div className="space-y-4">
                             {/* Responsable Actual */}
                             <div>
                                 <h3 className="text-sm font-medium text-slate-700 mb-3 flex items-center">
@@ -280,10 +280,10 @@ const GestionOperadoresModal = ({ isOpen, onClose, onRefresh, sector, loading = 
                                     Responsable del Sector
                                 </h3>
                                 {personalAsignado.responsable ? (
-                                    <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg">
+                                    <div className="p-4 bg-slate-50 border border-slate-200 rounded-md">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center">
-                                                <div className="w-10 h-10 bg-slate-200 rounded-lg flex items-center justify-center mr-3">
+                                                <div className="w-10 h-10 bg-slate-200 rounded-md flex items-center justify-center mr-3">
                                                     <Person className="h-5 w-5 text-slate-600" />
                                                 </div>
                                                 <div>
@@ -301,7 +301,7 @@ const GestionOperadoresModal = ({ isOpen, onClose, onRefresh, sector, loading = 
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                                    <div className="p-4 bg-slate-50 border border-slate-200 rounded-md text-center">
                                         <SupervisorAccount className="h-8 w-8 text-slate-400 mx-auto mb-2" />
                                         <p className="text-slate-600">Sin responsable asignado</p>
                                         <p className="text-sm text-slate-500">
@@ -327,11 +327,11 @@ const GestionOperadoresModal = ({ isOpen, onClose, onRefresh, sector, loading = 
                                         {personalAsignado.operadores.map((operador) => (
                                             <div
                                                 key={operador.id}
-                                                className="p-4 bg-slate-50 border border-slate-200 rounded-lg"
+                                                className="p-4 bg-slate-50 border border-slate-200 rounded-md"
                                             >
                                                 <div className="flex items-center justify-between">
                                                     <div className="flex items-center">
-                                                        <div className="w-10 h-10 bg-slate-200 rounded-lg flex items-center justify-center mr-3">
+                                                        <div className="w-10 h-10 bg-slate-200 rounded-md flex items-center justify-center mr-3">
                                                             <Person className="h-5 w-5 text-slate-600" />
                                                         </div>
                                                         <div>
@@ -366,7 +366,7 @@ const GestionOperadoresModal = ({ isOpen, onClose, onRefresh, sector, loading = 
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="p-8 bg-slate-50 border border-slate-200 rounded-lg text-center">
+                                    <div className="p-8 bg-slate-50 border border-slate-200 rounded-md text-center">
                                         <SupportAgent className="h-12 w-12 text-slate-400 mx-auto mb-3" />
                                         <p className="text-slate-600 font-medium">No hay operadores asignados</p>
                                         <p className="text-sm text-slate-500 mt-1">
@@ -389,7 +389,7 @@ const GestionOperadoresModal = ({ isOpen, onClose, onRefresh, sector, loading = 
                                         placeholder="Buscar operadores disponibles..."
                                         value={busqueda}
                                         onChange={(e) => setBusqueda(e.target.value)}
-                                        className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg"
+                                        className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-md"
                                     />
                                 </div>
                             </div>
@@ -404,7 +404,7 @@ const GestionOperadoresModal = ({ isOpen, onClose, onRefresh, sector, loading = 
                                     {operadoresFiltrados.map((operador) => (
                                         <div
                                             key={operador.id}
-                                            className={`p-4 border rounded-lg cursor-pointer transition-all ${operadorSeleccionado?.id === operador.id
+                                            className={`p-4 border rounded-md cursor-pointer transition-all ${operadorSeleccionado?.id === operador.id
                                                     ? 'border-slate-500 bg-slate-50 ring-2 ring-slate-500 ring-opacity-20'
                                                     : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'
                                                 }`}
@@ -413,7 +413,7 @@ const GestionOperadoresModal = ({ isOpen, onClose, onRefresh, sector, loading = 
                                             )}
                                         >
                                             <div className="flex items-center">
-                                                <div className={`w-10 h-10 rounded-lg flex items-center justify-center mr-3 ${operadorSeleccionado?.id === operador.id
+                                                <div className={`w-10 h-10 rounded-md flex items-center justify-center mr-3 ${operadorSeleccionado?.id === operador.id
                                                         ? 'bg-slate-200'
                                                         : 'bg-slate-200'
                                                     }`}>
@@ -459,7 +459,7 @@ const GestionOperadoresModal = ({ isOpen, onClose, onRefresh, sector, loading = 
                     <button
                         onClick={handleClose}
                         disabled={loadingAction}
-                        className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors disabled:opacity-50"
+                        className="px-4 h-8 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50 transition-colors disabled:opacity-50"
                     >
                         Cerrar
                     </button>
@@ -468,7 +468,7 @@ const GestionOperadoresModal = ({ isOpen, onClose, onRefresh, sector, loading = 
                         <button
                             onClick={handleAsignarOperador}
                             disabled={loadingAction || !operadorSeleccionado}
-                            className="px-4 py-2 text-sm font-medium text-white bg-[#224666] rounded-lg hover:bg-[#2c3e50] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center"
+                            className="px-4 h-8 text-sm font-medium text-white bg-[#224666] rounded-md hover:bg-[#2c3e50] disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center"
                         >
                             {loadingAction ? (
                                 <>
@@ -477,7 +477,7 @@ const GestionOperadoresModal = ({ isOpen, onClose, onRefresh, sector, loading = 
                                 </>
                             ) : (
                                 <>
-                                    <Add className="h-4 w-4 mr-2" />
+                                    <Add sx={{ fontSize: '20px' }} className="mr-2" />
                                     Asignar Operador
                                 </>
                             )}

@@ -9,6 +9,8 @@ import {
     People,
     ColorLens,
 } from '@mui/icons-material';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 
 /**
  * Modal para editar un sector existente
@@ -135,25 +137,25 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
 
     return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl mx-4 max-h-[95vh] overflow-y-auto text-sm">
 
                 {/* Header */}
-                <div className="flex items-center justify-between p-6 border-b border-slate-200">
+                <div className="flex items-center justify-between p-4 border-b border-slate-200">
                     <div className="flex items-center">
-                        <div className="w-10 h-10 bg-slate-200 rounded-lg flex items-center justify-center mr-3">
+                        <div className="w-10 h-10 bg-slate-200 rounded-md flex items-center justify-center mr-3">
                             <EditDocumentIcon className="h-6 w-6 text-slate-600" />
                         </div>
                         <div>
-                            <h2 className="text-xl font-semibold text-slate-900">Editar Sector</h2>
-                            <p className="text-sm text-slate-600">
-                                Código: <span className="text-lg font-mono font-semibold text-slate-900">{sector.sector?.codigo}</span>
+                            <h2 className="text-lg font-semibold text-slate-900">Editar Sector</h2>
+                            <p className="text-slate-600">
+                                Código: <span className="font-mono font-semibold text-slate-900">{sector.sector?.codigo}</span>
                             </p>
                         </div>
                     </div>
 
                     <div className="flex items-center justify-between gap-8">
                         <div className="text-right">
-                            <p className="text-sm font-medium text-slate-700 pr-2">Estado</p>
+                            <p className="font-medium text-slate-700 pr-2">Estado</p>
                             <span className={`w-16 inline-flex justify-center items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${sector.sector?.activo
                                 ? 'bg-green-100 text-green-800'
                                 : 'bg-red-100 text-red-800'
@@ -165,7 +167,7 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                         <button
                             onClick={handleClose}
                             disabled={loading}
-                            className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors disabled:opacity-50"
+                            className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md transition-colors disabled:opacity-50"
                         >
                             <Close className="h-5 w-5" />
                         </button>
@@ -174,61 +176,63 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                 </div>
 
                 {/* Form */}
-                <form onSubmit={handleSubmit} className="p-6">
+                <form onSubmit={handleSubmit} className="p-4">
                     <div className="space-y-3">
-                        {/* Nombre */}
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">
-                                Nombre *
-                            </label>
-                            <input
-                                type="text"
-                                name="nombre"
-                                value={formData.nombre}
-                                onChange={handleInputChange}
-                                placeholder="Ej: Rentas Municipales"
-                                className={`w-full px-3 py-2 border rounded-lg transition-colors ${errors.nombre ? 'border-red-300' : 'border-slate-300'
-                                    }`}
-                                disabled={loading}
-                                maxLength={100}
-                            />
-                            {errors.nombre && (
-                                <p className="text-red-600 text-sm mt-1">{errors.nombre}</p>
-                            )}
-                        </div>
+                        <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                            {/* Nombre */}
+                            <div>
+                                <label className="block font-medium text-slate-700 mb-1">
+                                    Nombre *
+                                </label>
+                                <input
+                                    type="text"
+                                    name="nombre"
+                                    value={formData.nombre}
+                                    onChange={handleInputChange}
+                                    placeholder="Ej: Rentas Municipales"
+                                    className={`w-full px-3 h-8 border rounded-md transition-colors ${errors.nombre ? 'border-red-300' : 'border-slate-300'
+                                        }`}
+                                    disabled={loading}
+                                    maxLength={100}
+                                />
+                                {errors.nombre && (
+                                    <p className="text-red-600 mt-1">{errors.nombre}</p>
+                                )}
+                            </div>
 
-                        {/* Descripción */}
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">
-                                Descripción
-                            </label>
-                            <textarea
-                                name="descripcion"
-                                value={formData.descripcion}
-                                onChange={handleInputChange}
-                                placeholder="Descripción del sector y servicios que ofrece..."
-                                rows={3}
-                                className={`w-full px-3 py-2 border rounded-lg transition-colors resize-none ${errors.descripcion ? 'border-red-300' : 'border-slate-300'
-                                    }`}
-                                disabled={loading}
-                                maxLength={500}
-                            />
-                            {errors.descripcion && (
-                                <p className="text-red-600 text-sm mt-1">{errors.descripcion}</p>
-                            )}
-                            <p className="text-xs text-slate-500 mt-1">
-                                {formData.descripcion.length}/500 caracteres
-                            </p>
+                            {/* Descripción */}
+                            <div>
+                                <label className="block font-medium text-slate-700 mb-1">
+                                    Descripción
+                                </label>
+                                <textarea
+                                    name="descripcion"
+                                    value={formData.descripcion}
+                                    onChange={handleInputChange}
+                                    placeholder="Descripción del sector y servicios que ofrece..."
+                                    rows={3}
+                                    className={`w-full px-3 p-1 h-8 border rounded-md transition-colors resize-none ${errors.descripcion ? 'border-red-300' : 'border-slate-300'
+                                        }`}
+                                    disabled={loading}
+                                    maxLength={500}
+                                />
+                                {errors.descripcion && (
+                                    <p className="text-red-600 mt-1">{errors.descripcion}</p>
+                                )}
+                                <p className="text-xs text-slate-500">
+                                    {formData.descripcion.length}/500 caracteres
+                                </p>
+                            </div>
                         </div>
 
                         {/* Tipo de Sector */}
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                            <label className="block font-medium text-slate-700 mb-2">
                                 Tipo de Sector *
                             </label>
                             <div className="grid grid-cols-2 gap-3">
                                 {/* OPCIÓN NORMAL - ESTA FALTABA */}
-                                <label className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-colors ${formData.tipoSector === 'NORMAL'
+                                <label className={`flex items-center p-2 border-2 rounded-md cursor-pointer transition-colors ${formData.tipoSector === 'NORMAL'
                                         ? 'border-slate-500 bg-slate-50'
                                         : 'border-slate-200 hover:border-slate-300'
                                     }`}>
@@ -242,16 +246,16 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                                         className="sr-only"
                                     />
                                     <div className="flex items-center">
-                                        <Public className="h-5 w-5 text-slate-600 mr-3" />
+                                        <AccessAlarmIcon className="h-5 w-5 text-slate-600 mr-3" />
                                         <div>
                                             <p className="font-medium text-slate-900">Normal</p>
-                                            <p className="text-sm text-slate-600">Acceso general sin turno previo</p>
+                                            <p className="text-slate-600">Acceso general sin turno previo</p>
                                         </div>
                                     </div>
                                 </label>
 
                                 {/* OPCIÓN ESPECIAL - ESTA YA ESTABA */}
-                                <label className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-colors ${formData.tipoSector === 'ESPECIAL'
+                                <label className={`flex items-center p-2 border-2 rounded-md cursor-pointer transition-colors ${formData.tipoSector === 'ESPECIAL'
                                         ? 'border-slate-500 bg-slate-50'
                                         : 'border-slate-200 hover:border-slate-300'
                                     }`}>
@@ -265,10 +269,10 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                                         className="sr-only"
                                     />
                                     <div className="flex items-center">
-                                        <Lock className="h-5 w-5 text-slate-600 mr-3" />
+                                        <CalendarMonthIcon className="h-5 w-5 text-slate-600 mr-3" />
                                         <div>
                                             <p className="font-medium text-slate-900">Especial</p>
-                                            <p className="text-sm text-slate-600">Requiere turno previo</p>
+                                            <p className="text-slate-600">Requiere turno previo</p>
                                         </div>
                                     </div>
                                 </label>
@@ -277,7 +281,7 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
 
                         {/* Cita Previa - Solo visible para sectores especiales */}
                         {formData.tipoSector === 'ESPECIAL' && (
-                            <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                            <div className="bg-orange-50 border border-orange-200 rounded-md p-4">
                                 <label className="flex items-center">
                                     <input
                                         type="checkbox"
@@ -287,7 +291,7 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                                         disabled={loading}
                                         className="w-4 h-4 text-slate-600 border-slate-300 rounded"
                                     />
-                                    <span className="ml-2 text-sm font-medium text-slate-700">
+                                    <span className="ml-2 font-medium text-slate-700">
                                         Requiere turno previo
                                     </span>
                                 </label>
@@ -297,7 +301,7 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                         {/* Configuración Operativa */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-2">
+                                <label className="block font-medium text-slate-700 mb-2">
                                     <People className="h-4 w-4 inline mr-1" />
                                     Capacidad Máxima *
                                 </label>
@@ -308,17 +312,17 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                                     onChange={handleInputChange}
                                     min="1"
                                     max="99"
-                                    className={`w-full px-3 py-2 border rounded-lg transition-colors ${errors.capacidadMaxima ? 'border-red-300' : 'border-slate-300'
+                                    className={`w-full px-3 h-8 border rounded-md transition-colors ${errors.capacidadMaxima ? 'border-red-300' : 'border-slate-300'
                                         }`}
                                     disabled={loading}
                                 />
                                 {errors.capacidadMaxima && (
-                                    <p className="text-red-600 text-sm mt-1">{errors.capacidadMaxima}</p>
+                                    <p className="text-red-600 mt-1">{errors.capacidadMaxima}</p>
                                 )}
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-2">
+                                <label className="block font-medium text-slate-700 mb-2">
                                     <Schedule className="h-4 w-4 inline mr-1" />
                                     Tiempo Estimado (min) *
                                 </label>
@@ -329,19 +333,19 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                                     onChange={handleInputChange}
                                     min="1"
                                     max="180"
-                                    className={`w-full px-3 py-2 border rounded-lg transition-colors ${errors.tiempoEstimadoAtencion ? 'border-red-300' : 'border-slate-300'
+                                    className={`w-full px-3 h-8 border rounded-md transition-colors ${errors.tiempoEstimadoAtencion ? 'border-red-300' : 'border-slate-300'
                                         }`}
                                     disabled={loading}
                                 />
                                 {errors.tiempoEstimadoAtencion && (
-                                    <p className="text-red-600 text-sm mt-1">{errors.tiempoEstimadoAtencion}</p>
+                                    <p className="text-red-600 mt-1">{errors.tiempoEstimadoAtencion}</p>
                                 )}
                             </div>
                         </div>
 
                         {/* Color */}
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-2">
+                            <label className="block font-medium text-slate-700 mb-2">
                                 <ColorLens className="h-4 w-4 inline mr-1" />
                                 Color identificativo del Sector
                             </label>
@@ -353,7 +357,7 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                                             type="button"
                                             onClick={() => setFormData(prev => ({ ...prev, color }))}
                                             disabled={loading}
-                                            className={`w-8 h-8 rounded-full border-2 transition-all ${formData.color === color
+                                            className={`size-6 rounded-full border-2 transition-all ${formData.color === color
                                                     ? 'border-slate-800 scale-110'
                                                     : 'border-slate-300 hover:border-slate-400'
                                                 }`}
@@ -369,15 +373,15 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                                     disabled={loading}
                                     className="w-8 h-8 border border-slate-300 rounded cursor-pointer disabled:opacity-50"
                                 />
-                                <span className="text-sm text-slate-600 font-mono">{formData.color}</span>
+                                <span className="text-slate-600 font-mono">{formData.color}</span>
                             </div>
                         </div>
 
                         {/* Información adicional del sector */}
                         {sector.sector?.empleadoResponsable && (
-                            <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-                                <h4 className="text-sm font-medium text-slate-800 mb-2">Responsable Asignado</h4>
-                                <p className="text-sm text-slate-700">
+                            <div className="bg-slate-50 border border-slate-200 rounded-md p-4">
+                                <h4 className="font-medium text-slate-800 mb-2">Responsable Asignado</h4>
+                                <p className="text-slate-700">
                                     {sector.sector.responsableNombre || `${sector.sector.empleadoResponsable.nombre} ${sector.sector.empleadoResponsable.apellido}`}
                                 </p>
                             </div>
@@ -385,19 +389,19 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                     </div>
 
                     {/* Actions */}
-                    <div className="flex items-center justify-end space-x-3 mt-8 pt-6 border-t border-slate-200">
+                    <div className="flex items-center justify-end space-x-3 mt-2 pt-2 border-t border-slate-200">
                         <button
                             type="button"
                             onClick={handleClose}
                             disabled={loading}
-                            className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors duration-300 disabled:opacity-50"
+                            className="px-4 h-8 font-medium text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50 transition-colors duration-300 disabled:opacity-50"
                         >
                             Cancelar
                         </button>
                         <button
                             type="submit"
                             disabled={loading}
-                            className="px-4 py-2 text-sm font-medium text-white bg-[#224666] border border-transparent rounded-lg hover:bg-[#2c3e50] transition-colors duration-300 disabled:opacity-50 flex items-center"
+                            className="px-4 h-8 font-medium text-white bg-[#224666] border border-transparent rounded-md hover:bg-[#2c3e50] transition-colors duration-300 disabled:opacity-50 flex items-center"
                         >
                             {loading ? (
                                 <>
@@ -406,7 +410,7 @@ const EditarSectorModal = ({ isOpen, onClose, onSubmit, sector, loading = false 
                                 </>
                             ) : (
                                 <>
-                                    <Save className="h-4 w-4 mr-2" />
+                                    <Save sx={{ fontSize: '20px' }} className="mr-2" />
                                     Guardar Cambios
                                 </>
                             )}

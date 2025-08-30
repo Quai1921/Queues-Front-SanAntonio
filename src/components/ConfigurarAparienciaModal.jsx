@@ -124,11 +124,13 @@ const ConfigurarAparienciaModal = ({ isOpen, onClose, onSubmit, configuracion, l
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-xl shadow-xl max-w-lg w-full">
+            <div className="bg-white rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
                 {/* Header */}
                 <div className="flex items-center justify-between p-6 border-b border-slate-200">
                     <div className="flex items-center">
-                        <Palette className="h-6 w-6 text-[#224666] mr-3" />
+                        <div className='p-2 bg-slate-200 rounded-lg mr-3'>
+                            <Palette className="h-10 w-10 text-slate-600" />
+                        </div>
                         <div>
                             <h2 className="text-xl font-semibold text-slate-900">Configurar Apariencia</h2>
                             <p className="text-sm text-slate-600 mt-1">{configuracion?.nombre}</p>
@@ -137,7 +139,7 @@ const ConfigurarAparienciaModal = ({ isOpen, onClose, onSubmit, configuracion, l
                     <button
                         onClick={handleClose}
                         disabled={loading}
-                        className="p-2 hover:bg-slate-100 rounded-lg transition-colors duration-300 disabled:opacity-50"
+                        className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors disabled:opacity-50"
                     >
                         <Close className="h-5 w-5" />
                     </button>
@@ -149,13 +151,13 @@ const ConfigurarAparienciaModal = ({ isOpen, onClose, onSubmit, configuracion, l
                         {/* Tema de Color */}
                         <div>
                             <label className="block text-sm font-medium text-slate-700 mb-3">
-                                Tema de Color
+                                Color de Tema
                             </label>
-                            <div className="grid grid-cols-2 gap-3">
+                            <div className="grid grid-cols-4 gap-3">
                                 {temasDisponibles.map((tema) => (
                                     <label
                                         key={tema.value}
-                                        className={`relative cursor-pointer rounded-lg border-2 p-4 transition-all duration-300 ${formData.tema === tema.value
+                                        className={`relative cursor-pointer rounded-lg border-2 p-1 transition-all duration-300 ${formData.tema === tema.value
                                                 ? 'border-[#224666] bg-slate-50'
                                                 : 'border-slate-200 hover:border-slate-300'
                                             } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -169,12 +171,12 @@ const ConfigurarAparienciaModal = ({ isOpen, onClose, onSubmit, configuracion, l
                                             disabled={loading}
                                             className="sr-only"
                                         />
-                                        <div className="flex items-center space-x-3">
+                                        <div className="flex items-center space-x-1">
                                             <div
                                                 className="w-8 h-8 rounded-full border-2 border-white shadow-sm"
                                                 style={{ backgroundColor: tema.color }}
                                             />
-                                            <span className="text-sm font-medium text-slate-700">
+                                            <span className="text-xs font-medium text-slate-700">
                                                 {tema.label}
                                             </span>
                                         </div>
@@ -210,14 +212,9 @@ const ConfigurarAparienciaModal = ({ isOpen, onClose, onSubmit, configuracion, l
                                     checked={formData.mostrarLogo}
                                     onChange={handleInputChange}
                                     disabled={loading}
-                                    className="w-4 h-4 text-[#224666] border-slate-300 rounded focus:ring-[#224666] disabled:opacity-50"
+                                    className="w-4 h-4 text-[#224666] border-slate-300 rounded disabled:opacity-50"
                                 />
                                 <label className="text-sm font-medium text-slate-700 flex items-center">
-                                    {formData.mostrarLogo ? (
-                                        <Visibility className="h-4 w-4 mr-1" />
-                                    ) : (
-                                        <VisibilityOff className="h-4 w-4 mr-1" />
-                                    )}
                                     Mostrar logo institucional
                                 </label>
                             </div>
@@ -235,7 +232,7 @@ const ConfigurarAparienciaModal = ({ isOpen, onClose, onSubmit, configuracion, l
                                             value={formData.rutaLogo}
                                             onChange={handleInputChange}
                                             disabled={loading}
-                                            className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-transparent transition-colors duration-300 ${errors.rutaLogo ? 'border-red-300' : 'border-slate-300'
+                                            className={`w-full px-3 py-2 border rounded-lg transition-colors duration-300 ${errors.rutaLogo ? 'border-red-300' : 'border-slate-300'
                                                 } disabled:opacity-50`}
                                             placeholder="https://ejemplo.com/logo.png"
                                         />
@@ -285,14 +282,13 @@ const ConfigurarAparienciaModal = ({ isOpen, onClose, onSubmit, configuracion, l
                             )}
 
                             {!formData.mostrarLogo && (
-                                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
                                     <div className="flex items-center">
-                                        <VisibilityOff className="h-5 w-5 text-blue-600 mr-2" />
                                         <div>
-                                            <p className="text-sm font-medium text-blue-800">
+                                            <p className="text-sm font-medium text-slate-800">
                                                 Logo oculto
                                             </p>
-                                            <p className="text-sm text-blue-700 mt-1">
+                                            <p className="text-sm text-slate-600 mt-1">
                                                 Las pantallas no mostrarán el logo institucional
                                             </p>
                                         </div>

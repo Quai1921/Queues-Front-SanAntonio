@@ -102,10 +102,6 @@ export const useConfiguraciones = (options = {}) => {
             setConfiguraciones(configuracionesFormateadas);
             setEstadisticas(calcularEstadisticasDeConfiguraciones(configuracionesFormateadas));
 
-            if (onSuccess) {
-            onSuccess(null, 'cargar');
-        }
-
             // Obtener configuración activa
             // const activa = data.find(config => config.activo);
             // setConfiguracionActiva(activa || null);

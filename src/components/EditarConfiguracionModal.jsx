@@ -128,7 +128,9 @@ const EditarConfiguracionModal = ({ isOpen, onClose, onSubmit, configuracion, lo
                 {/* Header */}
                 <div className="flex items-center justify-between p-6 border-b border-slate-200">
                     <div className="flex items-center">
-                        <Settings className="h-6 w-6 text-[#224666] mr-3" />
+                        <div className='p-2 bg-slate-200 rounded-lg mr-3'>
+                            <Settings className="h-10 w-10 text-slate-600" />
+                        </div>
                         <div>
                             <h2 className="text-xl font-semibold text-slate-900">Editar Configuración</h2>
                             <p className="text-sm text-slate-600 mt-1">{configuracion?.nombre}</p>
@@ -137,60 +139,62 @@ const EditarConfiguracionModal = ({ isOpen, onClose, onSubmit, configuracion, lo
                     <button
                         onClick={handleClose}
                         disabled={loading}
-                        className="p-2 hover:bg-slate-100 rounded-lg transition-colors duration-300 disabled:opacity-50"
+                        className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors disabled:opacity-50"
                     >
                         <Close className="h-5 w-5" />
                     </button>
                 </div>
 
                 {/* Form */}
-                <form onSubmit={handleSubmit} className="p-6">
-                    <div className="space-y-6">
+                <form onSubmit={handleSubmit} className="px-6 pt-3 pb-4">
+                    <div className="space-y-4">
                         {/* Información General */}
-                        <div className="space-y-4">
+                        <div className="space-y-2">
                             <h3 className="text-lg font-medium text-slate-900 flex items-center">
                                 <TextFields className="h-5 w-5 mr-2 text-slate-600" />
                                 Información General
                             </h3>
 
-                            {/* Nombre */}
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-2">
-                                    Nombre de la Configuración *
-                                </label>
-                                <input
-                                    type="text"
-                                    name="nombre"
-                                    value={formData.nombre}
-                                    onChange={handleInputChange}
-                                    disabled={loading}
-                                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-transparent transition-colors duration-300 ${errors.nombre ? 'border-red-300' : 'border-slate-300'
-                                        } disabled:opacity-50`}
-                                    placeholder="Ej: Configuración Principal"
-                                />
-                                {errors.nombre && (
-                                    <p className="mt-1 text-sm text-red-600">{errors.nombre}</p>
-                                )}
-                            </div>
+                            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+                                {/* Nombre */}
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                                        Nombre de la Configuración *
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="nombre"
+                                        value={formData.nombre}
+                                        onChange={handleInputChange}
+                                        disabled={loading}
+                                        className={`w-full px-3 py-2 border rounded-lg transition-colors duration-300 ${errors.nombre ? 'border-red-300' : 'border-slate-300'
+                                            } disabled:opacity-50`}
+                                        placeholder="Ej: Configuración Principal"
+                                    />
+                                    {errors.nombre && (
+                                        <p className="mt-1 text-sm text-red-600">{errors.nombre}</p>
+                                    )}
+                                </div>
 
-                            {/* Texto Encabezado */}
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-2">
-                                    Texto del Encabezado
-                                </label>
-                                <input
-                                    type="text"
-                                    name="textoEncabezado"
-                                    value={formData.textoEncabezado}
-                                    onChange={handleInputChange}
-                                    disabled={loading}
-                                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-transparent transition-colors duration-300 ${errors.textoEncabezado ? 'border-red-300' : 'border-slate-300'
-                                        } disabled:opacity-50`}
-                                    placeholder="Ej: SISTEMA DE TURNOS - MUNICIPALIDAD"
-                                />
-                                {errors.textoEncabezado && (
-                                    <p className="mt-1 text-sm text-red-600">{errors.textoEncabezado}</p>
-                                )}
+                                {/* Texto Encabezado */}
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-700 mb-2">
+                                        Texto del Encabezado
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="textoEncabezado"
+                                        value={formData.textoEncabezado}
+                                        onChange={handleInputChange}
+                                        disabled={loading}
+                                        className={`w-full px-3 py-2 border rounded-lg transition-colors duration-300 ${errors.textoEncabezado ? 'border-red-300' : 'border-slate-300'
+                                            } disabled:opacity-50`}
+                                        placeholder="Ej: Portal de Atención - Municipalidad de San Antonio de Arredondo"
+                                    />
+                                    {errors.textoEncabezado && (
+                                        <p className="mt-1 text-sm text-red-600">{errors.textoEncabezado}</p>
+                                    )}
+                                </div>
                             </div>
                         </div>
 
@@ -215,7 +219,7 @@ const EditarConfiguracionModal = ({ isOpen, onClose, onSubmit, configuracion, lo
                                         disabled={loading}
                                         min="3"
                                         max="60"
-                                        className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-transparent transition-colors duration-300 ${errors.tiempoMensaje ? 'border-red-300' : 'border-slate-300'
+                                        className={`w-full px-3 py-2 border rounded-lg transition-colors duration-300 ${errors.tiempoMensaje ? 'border-red-300' : 'border-slate-300'
                                             } disabled:opacity-50`}
                                     />
                                     {errors.tiempoMensaje && (
@@ -236,7 +240,7 @@ const EditarConfiguracionModal = ({ isOpen, onClose, onSubmit, configuracion, lo
                                         disabled={loading}
                                         min="3"
                                         max="30"
-                                        className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-transparent transition-colors duration-300 ${errors.tiempoTurno ? 'border-red-300' : 'border-slate-300'
+                                        className={`w-full px-3 py-2 border rounded-lg transition-colors duration-300 ${errors.tiempoTurno ? 'border-red-300' : 'border-slate-300'
                                             } disabled:opacity-50`}
                                     />
                                     {errors.tiempoTurno && (
@@ -273,48 +277,50 @@ const EditarConfiguracionModal = ({ isOpen, onClose, onSubmit, configuracion, lo
                             </div>
 
                             {formData.sonidoActivo && (
-                                <div className="space-y-4 ml-7">
-                                    {/* Archivo de Sonido */}
-                                    <div>
-                                        <label className="block text-sm font-medium text-slate-700 mb-2">
-                                            Archivo de Sonido (URL)
-                                        </label>
-                                        <input
-                                            type="url"
-                                            name="archivoSonido"
-                                            value={formData.archivoSonido}
-                                            onChange={handleInputChange}
-                                            disabled={loading}
-                                            className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-transparent transition-colors duration-300 ${errors.archivoSonido ? 'border-red-300' : 'border-slate-300'
-                                                } disabled:opacity-50`}
-                                            placeholder="https://ejemplo.com/sonido.wav"
-                                        />
-                                        {errors.archivoSonido && (
-                                            <p className="mt-1 text-sm text-red-600">{errors.archivoSonido}</p>
-                                        )}
-                                    </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
+                                    
+                                        {/* Archivo de Sonido */}
+                                        <div>
+                                            <label className="block text-sm font-medium text-slate-700 mb-1">
+                                                Archivo de Sonido (URL)
+                                            </label>
+                                            <input
+                                                type="url"
+                                                name="archivoSonido"
+                                                value={formData.archivoSonido}
+                                                onChange={handleInputChange}
+                                                disabled={loading}
+                                                className={`w-full px-3 py-2 border rounded-lg transition-colors duration-300 ${errors.archivoSonido ? 'border-red-300' : 'border-slate-300'
+                                                    } disabled:opacity-50`}
+                                                placeholder="https://ejemplo.com/sonido.wav"
+                                            />
+                                            {errors.archivoSonido && (
+                                                <p className="mt-1 text-sm text-red-600">{errors.archivoSonido}</p>
+                                            )}
+                                        </div>
 
-                                    {/* Volumen */}
-                                    <div>
-                                        <label className="block text-sm font-medium text-slate-700 mb-2">
-                                            Volumen ({formData.volumenSonido}%)
-                                        </label>
-                                        <input
-                                            type="range"
-                                            name="volumenSonido"
-                                            value={formData.volumenSonido}
-                                            onChange={handleInputChange}
-                                            disabled={loading}
-                                            min="0"
-                                            max="100"
-                                            step="5"
-                                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer slider disabled:opacity-50"
-                                        />
-                                        {errors.volumenSonido && (
-                                            <p className="mt-1 text-sm text-red-600">{errors.volumenSonido}</p>
-                                        )}
-                                    </div>
+                                        {/* Volumen */}
+                                        <div>
+                                            <label className="block text-sm font-medium text-slate-700 mt-[26px]">
+                                                Volumen ({formData.volumenSonido}%)
+                                            </label>
+                                            <input
+                                                type="range"
+                                                name="volumenSonido"
+                                                value={formData.volumenSonido}
+                                                onChange={handleInputChange}
+                                                disabled={loading}
+                                                min="0"
+                                                max="100"
+                                                step="5"
+                                                className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer slider disabled:opacity-50"
+                                            />
+                                            {errors.volumenSonido && (
+                                                <p className="mt-1 text-sm text-red-600">{errors.volumenSonido}</p>
+                                            )}
+                                        </div>
                                 </div>
+
                             )}
                         </div>
 
@@ -334,7 +340,7 @@ const EditarConfiguracionModal = ({ isOpen, onClose, onSubmit, configuracion, lo
                                     {temasDisponibles.map((tema) => (
                                         <label
                                             key={tema.value}
-                                            className={`relative cursor-pointer rounded-lg border-2 p-3 transition-all duration-300 ${formData.temaColor === tema.value
+                                            className={`relative cursor-pointer rounded-lg border-2 p-2 transition-all duration-300 ${formData.temaColor === tema.value
                                                     ? 'border-[#224666] bg-slate-50'
                                                     : 'border-slate-200 hover:border-slate-300'
                                                 } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -380,7 +386,7 @@ const EditarConfiguracionModal = ({ isOpen, onClose, onSubmit, configuracion, lo
                                 </div>
 
                                 {formData.mostrarLogo && (
-                                    <div className="ml-7">
+                                    <div>
                                         <label className="block text-sm font-medium text-slate-700 mb-2">
                                             URL del Logo
                                         </label>
@@ -390,7 +396,7 @@ const EditarConfiguracionModal = ({ isOpen, onClose, onSubmit, configuracion, lo
                                             value={formData.rutaLogo}
                                             onChange={handleInputChange}
                                             disabled={loading}
-                                            className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-[#224666] focus:border-transparent transition-colors duration-300 ${errors.rutaLogo ? 'border-red-300' : 'border-slate-300'
+                                            className={`w-full px-3 py-2 border rounded-lg transition-colors duration-300 ${errors.rutaLogo ? 'border-red-300' : 'border-slate-300'
                                                 } disabled:opacity-50`}
                                             placeholder="https://ejemplo.com/logo.png"
                                         />
