@@ -190,6 +190,23 @@ const ConfiguracionesSection = () => {
         }
     };
 
+
+    const handleAbrirEditar = (configuracion) => {
+        setConfiguracionSeleccionada(configuracion);
+        setModalEditarAbierto(true);
+    };
+
+    const handleAbrirSonido = (configuracion) => {
+        setConfiguracionSeleccionada(configuracion);
+        setModalSonidoAbierto(true);
+    };
+
+    const handleAbrirApariencia = (configuracion) => {
+        setConfiguracionSeleccionada(configuracion);
+        setModalAparienciaAbierto(true);
+    };
+
+
     const handleLimpiarFiltros = () => {
         setFiltros({
             busqueda: '',
