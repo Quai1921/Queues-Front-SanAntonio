@@ -28,7 +28,7 @@ import HorariosSection from '../pages/HorariosSection';
 import CiudadanosSection from '../pages/CiudadanosSection';
 import ConfiguracionesSection from '../pages/ConfiguracionesSection';
 import MensajesSection from '../pages/MensajesSection';
-import PantallaTurnos from '../pages/PantallaTurnos';
+import PantallaTurnosPublica from '../pages/PantallaTurnosPublica';
 
 /**
  * Panel de administración principal - Solo para usuarios ADMIN
@@ -228,7 +228,7 @@ const AdminPanel = () => {
                         <Route path="horarios" element={<HorariosSection />} />
                         <Route path="mensajes" element={<MensajesSection />} />
                         <Route path="configuracion" element={<ConfiguracionesSection />} />
-                        <Route path="pantalla" element={<PantallaTurnos />} />
+                        <Route path="pantalla" element={<PantallaTurnosPublica />} />
                     </Routes>
                 </main>
             </div>
