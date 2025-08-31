@@ -199,9 +199,9 @@ class ConfiguracionPantallaService {
             sonidoLabel: configuracion.sonidoActivo ? 'Activado' : 'Desactivado',
             sonidoColor: configuracion.sonidoActivo ? 'text-green-600' : 'text-red-600',
             // temaLabel: this.getTemaLabel(configuracion.temaColor),
-            temaLabel: this.getTemaLabel(configuracion.temaColor),
-            temaColor: configuracion.temaColor,
-            logoLabel: configuracion.mostrarLogo ? 'Mostrar' : 'Ocultar',
+            // temaLabel: this.getTemaLabel(configuracion.temaColor),
+            // temaColor: configuracion.temaColor,
+            // logoLabel: configuracion.mostrarLogo ? 'Mostrar' : 'Ocultar',
             fechaCreacionFormateada: configuracion.fechaCreacion
                 ? new Date(configuracion.fechaCreacion).toLocaleDateString('es-ES')
                 : '',
@@ -209,25 +209,6 @@ class ConfiguracionPantallaService {
                 ? new Date(configuracion.fechaModificacion).toLocaleDateString('es-ES')
                 : ''
         };
-    }
-
-    /**
-     * Obtener label del tema de color
-     * @param {string} tema - Tema de color
-     * @returns {string} - Label del tema
-     */
-    getTemaLabel(tema) {
-        const temas = {
-            'default': 'Por Defecto',
-            'blue': 'Azul',
-            'green': 'Verde',
-            'red': 'Rojo',
-            'purple': 'Morado',
-            'orange': 'Naranja',
-            'dark': 'Oscuro',
-            'light': 'Claro'
-        };
-        return temas[tema] || tema || 'Por Defecto';
     }
 
     /**
@@ -305,22 +286,6 @@ class ConfiguracionPantallaService {
         }
     }
 
-    /**
-     * Obtener opciones de temas disponibles
-     * @returns {Array} - Lista de temas disponibles
-     */
-    obtenerTemasDisponibles() {
-        return [
-            { value: 'default', label: 'Por Defecto', color: '#224666' },
-            { value: 'blue', label: 'Azul', color: '#2563EB' },
-            { value: 'green', label: 'Verde', color: '#059669' },
-            { value: 'red', label: 'Rojo', color: '#DC2626' },
-            { value: 'purple', label: 'Morado', color: '#7C3AED' },
-            { value: 'orange', label: 'Naranja', color: '#EA580C' },
-            { value: 'dark', label: 'Oscuro', color: '#1F2937' },
-            { value: 'light', label: 'Claro', color: '#F8FAFC' }
-        ];
-    }
 }
 
 // Exportar instancia singleton del servicio

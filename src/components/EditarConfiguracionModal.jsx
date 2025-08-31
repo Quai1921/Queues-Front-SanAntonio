@@ -10,7 +10,6 @@ import {
     TextFields,
     Image as ImageIcon
 } from '@mui/icons-material';
-import configuracionPantallaService from '../services/configuracionPantallaService';
 
 /**
  * Modal para editar una configuración de pantalla existente
@@ -24,15 +23,9 @@ const EditarConfiguracionModal = ({ isOpen, onClose, onSubmit, configuracion, lo
         sonidoActivo: true,
         archivoSonido: '',
         volumenSonido: 70,
-        temaColor: 'blue',
-        mostrarLogo: true,
-        rutaLogo: ''
     });
 
     const [errors, setErrors] = useState({});
-
-    // Obtener temas disponibles
-    const temasDisponibles = configuracionPantallaService.obtenerTemasDisponibles();
 
     // Cargar datos de la configuración cuando se abre el modal
     useEffect(() => {
@@ -45,9 +38,6 @@ const EditarConfiguracionModal = ({ isOpen, onClose, onSubmit, configuracion, lo
                 sonidoActivo: configuracion.sonidoActivo !== undefined ? configuracion.sonidoActivo : true,
                 archivoSonido: configuracion.archivoSonido || '',
                 volumenSonido: configuracion.volumenSonido || 70,
-                temaColor: configuracion.temaColor || 'blue',
-                mostrarLogo: configuracion.mostrarLogo !== undefined ? configuracion.mostrarLogo : true,
-                rutaLogo: configuracion.rutaLogo || ''
             });
             setErrors({});
         }
@@ -87,9 +77,9 @@ const EditarConfiguracionModal = ({ isOpen, onClose, onSubmit, configuracion, lo
         }
 
         // NUEVA VALIDACIÓN: Logo institucional
-        if (formData.mostrarLogo && !formData.rutaLogo.trim()) {
-            newErrors.rutaLogo = 'La URL del logo es obligatoria cuando se activa mostrar logo';
-        }
+        // if (formData.mostrarLogo && !formData.rutaLogo.trim()) {
+        //     newErrors.rutaLogo = 'La URL del logo es obligatoria cuando se activa mostrar logo';
+        // }
 
         // NUEVA VALIDACIÓN: Sonido
         if (formData.sonidoActivo && !formData.archivoSonido.trim()) {
@@ -155,11 +145,11 @@ const EditarConfiguracionModal = ({ isOpen, onClose, onSubmit, configuracion, lo
                                 Información General / Configuración de Tiempo
                             </h3>
 
-                            <div className='grid grid-cols-1 md:grid-cols-4 gap-4'>
+                            <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                                 {/* Nombre */}
                                 <div>
                                     <label className="block  font-medium text-slate-700 mb-2">
-                                        Nombre Config. *
+                                        Nombre Configiguración *
                                     </label>
                                     <input
                                         type="text"
@@ -199,7 +189,7 @@ const EditarConfiguracionModal = ({ isOpen, onClose, onSubmit, configuracion, lo
                                 {/* Tiempo Mensaje */}
                                 <div>
                                     <label className="block  font-medium text-slate-700 mb-2">
-                                        Tpo. Msje. (seg.) *
+                                        Tiempo Mensajes (segundos) *
                                     </label>
                                     <input
                                         type="number"
@@ -220,7 +210,7 @@ const EditarConfiguracionModal = ({ isOpen, onClose, onSubmit, configuracion, lo
                                 {/* Tiempo Turno */}
                                 <div>
                                     <label className="block  font-medium text-slate-700 mb-2">
-                                        Tpo. Turno (seg.) *
+                                        Tiempo Turnos (segundos) *
                                     </label>
                                     <input
                                         type="number"
@@ -241,7 +231,7 @@ const EditarConfiguracionModal = ({ isOpen, onClose, onSubmit, configuracion, lo
                         </div>
 
                         {/* Configuración de Sonido */}
-                        <div className="flex items-start gap-4 border-b border-slate-200 pb-3">
+                        <div className="flex items-start gap-4">
                             <div>
                                 {/* Sonido Activo */}
                                 <div className="flex items-center space-x-1 pt-1">
@@ -269,11 +259,12 @@ const EditarConfiguracionModal = ({ isOpen, onClose, onSubmit, configuracion, lo
                                     </>
                                 )}
                             </h3>
+                        </div>
 
-                            {formData.sonidoActivo && (
-                                <div className="ml-12 flex flex-1 items-start gap-4">
+                        {formData.sonidoActivo && (
+                                <div className="flex flex-col justify-center gap-4">
                                     {/* Archivo de Sonido */}
-                                    <div className='flex flex-1'>
+                                    <div className='flex justify-center items-center'>
                                         <label className="w-28 font-medium text-slate-700 pt-0.5">
                                             URL Sonido
                                         </label>
@@ -314,88 +305,6 @@ const EditarConfiguracionModal = ({ isOpen, onClose, onSubmit, configuracion, lo
                                     </div>
                                 </div>
                             )}
-                        </div>
-
-                        {/* Configuración de Apariencia */}
-                        <div className="space-y-1">
-                            <h3 className="font-medium text-slate-900 flex items-center">
-                                <Palette className="h-5 w-5 mr-2 text-slate-600" />
-                                Configuración de Apariencia
-                            </h3>
-
-                            {/* Tema de Color */}
-                            <div className='border-b border-slate-200 pb-3'>
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                    {temasDisponibles.map((tema) => (
-                                        <label
-                                            key={tema.value}
-                                            className={`relative cursor-pointer rounded-md border-2 p-2 transition-all duration-300 ${formData.temaColor === tema.value
-                                                    ? 'border-[#224666] bg-slate-50'
-                                                    : 'border-slate-200 hover:border-slate-300'
-                                                } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                        >
-                                            <input
-                                                type="radio"
-                                                name="temaColor"
-                                                value={tema.value}
-                                                checked={formData.temaColor === tema.value}
-                                                onChange={handleInputChange}
-                                                disabled={loading}
-                                                className="sr-only"
-                                            />
-                                            <div className="flex items-center space-x-3">
-                                                <div
-                                                    className="size-5 rounded-full border border-slate-300"
-                                                    style={{ backgroundColor: tema.color }}
-                                                />
-                                                <span className="font-medium text-slate-700">
-                                                    {tema.label}
-                                                </span>
-                                            </div>
-                                        </label>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Configuración de Logo */}
-                            <div className="space-y-1">
-                                <div className="flex items-center gap-4 pt-2">
-                                    <input
-                                        type="checkbox"
-                                        name="mostrarLogo"
-                                        checked={formData.mostrarLogo}
-                                        onChange={handleInputChange}
-                                        disabled={loading}
-                                        className="w-4 h-4 text-[#224666] border-slate-300 rounded disabled:opacity-50"
-                                    />
-                                    <label className="font-medium text-slate-700 flex items-center">
-                                        <ImageIcon className="h-4 w-4 mr-1" />
-                                        Mostrar logo institucional
-                                    </label>
-
-                                    {formData.mostrarLogo && (
-                                    <div className='flex flex-1 items-center'>
-                                        <label className="ml-12 block w-32 font-medium text-slate-700">
-                                            URL Logo
-                                        </label>
-                                        <input
-                                            type="url"
-                                            name="rutaLogo"
-                                            value={formData.rutaLogo}
-                                            onChange={handleInputChange}
-                                            disabled={loading}
-                                            className={`w-full px-3 h-8 border rounded-md transition-colors duration-300 ${errors.rutaLogo ? 'border-red-300' : 'border-slate-300'
-                                                } disabled:opacity-50`}
-                                            placeholder="https://ejemplo.com/logo.png"
-                                        />
-                                        {errors.rutaLogo && (
-                                            <p className="mt-1  text-red-600">{errors.rutaLogo}</p>
-                                        )}
-                                    </div>
-                                )}
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
                     {/* Actions */}

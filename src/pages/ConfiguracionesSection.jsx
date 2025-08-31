@@ -10,12 +10,8 @@ import {
     EditDocument as Edit,
     VolumeUp,
     VolumeOff,
-    Palette,
     CheckCircle as CheckCircleIcon,
     RadioButtonUnchecked,
-    Timer,
-    Clear,
-    PlayArrow,
     FirstPage,
     LastPage,
     KeyboardArrowLeft,
@@ -25,7 +21,6 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CrearConfiguracionModal from '../components/CrearConfiguracionModal';
 import EditarConfiguracionModal from '../components/EditarConfiguracionModal';
 import ConfigurarSonidoModal from '../components/ConfigurarSonidoModal';
-import ConfigurarAparienciaModal from '../components/ConfigurarAparienciaModal';
 import ConfirmarAccionModal from '../components/ConfirmarAccionModal';
 
 /**
@@ -189,17 +184,6 @@ const ConfiguracionesSection = () => {
         setModalEditarAbierto(true);
     };
 
-    const handleAbrirSonido = (configuracion) => {
-        setConfiguracionSeleccionada(configuracion);
-        setModalSonidoAbierto(true);
-    };
-
-    const handleAbrirApariencia = (configuracion) => {
-        setConfiguracionSeleccionada(configuracion);
-        setModalAparienciaAbierto(true);
-    };
-
-
     const handleLimpiarFiltros = () => {
         setFiltros({
             busqueda: '',
@@ -217,41 +201,6 @@ const ConfiguracionesSection = () => {
             ...prev,
             [key]: value
         }));
-    };
-
-    const getThemeClasses = (temaColor) => {
-        const themeMap = {
-            'verde': 'bg-green-100 text-green-800',
-            'green': 'bg-green-100 text-green-800',
-            'azul': 'bg-blue-100 text-blue-800',
-            'blue': 'bg-blue-100 text-blue-800',
-            'rojo': 'bg-red-100 text-red-800',
-            'red': 'bg-red-100 text-red-800',
-            'amarillo': 'bg-yellow-100 text-yellow-800',
-            'yellow': 'bg-yellow-100 text-yellow-800',
-            'morado': 'bg-purple-100 text-purple-800',
-            'purple': 'bg-purple-100 text-purple-800',
-            'naranja': 'bg-orange-100 text-orange-800',
-            'orange': 'bg-orange-200 text-orange-800',
-            'gris': 'bg-gray-100 text-gray-800',
-            'gray': 'bg-gray-100 text-gray-800',
-            'rosa': 'bg-pink-100 text-pink-800',
-            'pink': 'bg-pink-100 text-pink-800',
-            'indigo': 'bg-indigo-100 text-indigo-800',
-            'teal': 'bg-teal-100 text-teal-800',
-            'cyan': 'bg-cyan-100 text-cyan-800',
-            'lime': 'bg-lime-100 text-lime-800',
-            'emerald': 'bg-emerald-100 text-emerald-800',
-            'sky': 'bg-sky-100 text-sky-800',
-            'dark': 'bg-gray-800 text-gray-100',
-            'violet': 'bg-violet-100 text-violet-800',
-            'fuchsia': 'bg-fuchsia-100 text-fuchsia-800',
-            'default': 'bg-slate-100 text-slate-800'
-        };
-
-        // Buscar el tema, si no se encuentra usar default
-        const normalizedTheme = temaColor?.toLowerCase() || 'default';
-        return themeMap[normalizedTheme] || themeMap['default'];
     };
 
     const irAPagina = (numeroPagina) => {
@@ -417,8 +366,6 @@ const ConfiguracionesSection = () => {
                                 <th className="text-left py-3 px-4 font-medium text-slate-900 w-[250px]">Tiempos</th>
                                 <th className="text-left py-3 px-4 font-medium text-slate-900">Estado</th>
                                 <th className="text-left py-3 px-4 font-medium text-slate-900">Sonido</th>
-                                <th className="text-left py-3 px-4 font-medium text-slate-900">Tema</th>
-                                {/* <th className="text-left py-3 px-4 font-medium text-slate-900 w-[200px]">Fecha</th> */}
                                 <th className="text-center py-3 px-4 font-medium text-slate-900">Acciones</th>
                             </tr>
                         </thead>
@@ -470,22 +417,6 @@ const ConfiguracionesSection = () => {
                                         </button>
                                     </td>
 
-                                    {/* SOLUCIÓN 4: Botón de tema dinámico según el color */}
-                                    <td className="py-4 px-4">
-                                        <button
-                                            className={`inline-flex justify-center items-center px-2 py-1 rounded-full text-xs font-medium w-24 ${getThemeClasses(configuracion.temaColor)}`}
-                                        >
-                                            {configuracion.temaLabel}
-                                        </button>
-                                    </td>
-
-                                    {/* <td className="py-4 px-4 text-sm text-slate-600">
-                                        {configuracion.fechaCreacion ?
-                                            new Date(configuracion.fechaCreacion).toLocaleDateString() :
-                                            'No disponible'
-                                        }
-                                    </td> */}
-
                                     <td className="py-4 px-4">
                                         <div className="flex justify-end">
                                             {/* Botones de acción */}
@@ -509,26 +440,6 @@ const ConfiguracionesSection = () => {
                                                 title="Editar configuración"
                                             >
                                                 <Edit className="h-4 w-4" />
-                                            </button>
-
-                                            <button
-                                                onClick={() => handleAbrirSonido(configuracion)}
-                                                // disabled={isOperating}
-                                                disabled={isOperating.crear || isOperating.actualizar}
-                                                className="p-1 transition-all duration-300 text-gray-400 hover:text-neutral-800 cursor-pointer"
-                                                title="Configurar sonido"
-                                            >
-                                                {configuracion.sonidoActivo ? <VolumeUp className="h-4 w-4" /> : <VolumeOff className="h-4 w-4" />}
-                                            </button>
-
-                                            <button
-                                                onClick={() => handleAbrirApariencia(configuracion)}
-                                                // disabled={isOperating}
-                                                disabled={isOperating.crear || isOperating.actualizar}
-                                                className="p-1 transition-all duration-300 text-gray-400 hover:text-neutral-800 cursor-pointer"
-                                                title="Configurar apariencia"
-                                            >
-                                                <Palette className="h-4 w-4" />
                                             </button>
                                         </div>
                                     </td>
@@ -651,21 +562,6 @@ const ConfiguracionesSection = () => {
 
     return (
         <div className="p-6">
-            {/* Error */}
-            {error && (
-                <div className="mb-6 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
-                    <div className="flex items-center justify-between">
-                        <span className="font-medium">{error}</span>
-                        <button
-                            onClick={limpiarError}
-                            className="text-red-600 hover:text-red-800"
-                        >
-                            ✕
-                        </button>
-                    </div>
-                </div>
-            )}
-
             {/* Notificación */}
             {notificacion && (
                 <div className={`fixed top-4 left-1/2 -translate-x-1/2  z-[60] px-4 py-6 rounded-lg shadow-lg border transition-all duration-300 ${notificacion.tipo === 'success'
@@ -771,17 +667,6 @@ const ConfiguracionesSection = () => {
                 onSubmit={handleConfigurarSonido}
                 configuracion={configuracionSeleccionada}
                 loading={loadingSonido}
-            />
-
-            <ConfigurarAparienciaModal
-                isOpen={modalAparienciaAbierto}
-                onClose={() => {
-                    setModalAparienciaAbierto(false);
-                    setConfiguracionSeleccionada(null);
-                }}
-                onSubmit={handleConfigurarApariencia}
-                configuracion={configuracionSeleccionada}
-                loading={loadingApariencia}
             />
 
             <ConfirmarAccionModal
