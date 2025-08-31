@@ -78,7 +78,6 @@ const MensajesSection = () => {
         configuracionId: configuracionSeleccionada,
         autoLoad: false,
         onSuccess: (mensaje, operacion) => {
-            // console.log(`Operación ${operacion} exitosa:`, mensaje);
         },
         onError: (error, operacion) => {
             // console.error(`Error en ${operacion}:`, error);

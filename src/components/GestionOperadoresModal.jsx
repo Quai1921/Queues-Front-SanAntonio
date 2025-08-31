@@ -26,8 +26,6 @@ const GestionOperadoresModal = ({ isOpen, onClose, onRefresh, sector, loading = 
         operadores: []
     });
 
-    // console.log(personalAsignado);
-
     // Estados para asignar nuevos operadores
     const [operadoresDisponibles, setOperadoresDisponibles] = useState([]);
     const [operadorSeleccionado, setOperadorSeleccionado] = useState(null);
@@ -61,8 +59,6 @@ const GestionOperadoresModal = ({ isOpen, onClose, onRefresh, sector, loading = 
             if (!sectorId) {
                 throw new Error('ID de sector no disponible');
             }
-
-            console.log('🔍 Cargando datos para sector ID:', sectorId);
 
             // Cargar personal asignado al sector
             const [personalData, operadoresData] = await Promise.all([

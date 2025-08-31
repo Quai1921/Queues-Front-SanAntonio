@@ -114,8 +114,6 @@ class SectoresService {
             // Validar datos requeridos
             this.validarDatosSector(sectorData);
 
-            // console.log(sectorData);
-
             const response = await apiClient.post('/sectores', sectorData);
 
             if (response.data.success) {

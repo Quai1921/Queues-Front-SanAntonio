@@ -46,7 +46,6 @@ const HorariosSection = () => {
     const [horarioParaAccion, setHorarioParaAccion] = useState(null);
     const [loadingAccion, setLoadingAccion] = useState(false);
 
-    // console.log(sectores)
 
     // Estados de filtros
     const [filtros, setFiltros] = useState({

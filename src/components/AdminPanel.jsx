@@ -40,15 +40,13 @@ const AdminPanel = () => {
     const [activeSection, setActiveSection] = useState('dashboard');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    // console.log(user);
-
     const roleMap = {
         ADMIN: "Administrador",
         OPERADOR: "Operador",
         RESPONSABLE_SECTOR: "Responsable de Sector"
     };
 
-    const role = roleMap[user.rol] || "Rol desconocido";
+    const role = roleMap[user?.rol] || "Rol desconocido";
 
 
     // Verificar que es admin (doble verificación)

@@ -57,13 +57,11 @@ const PantallaTurnos = () => {
                 const configResponse = await configuracionPantallaService.obtenerConfiguracionActiva();
 
                 if (configResponse) {
-                    console.log('Configuración cargada:', configResponse);
                     setConfiguracion(configResponse);
 
                     // Cargar mensajes para esta configuración
                     try {
                         const mensajesResponse = await mensajeInstitucionalService.obtenerMensajesPorConfiguracion(configResponse.id);
-                        console.log('Mensajes cargados:', mensajesResponse);
                         setMensajes(mensajesResponse || []);
                     } catch (mensajesError) {
                         console.warn('Error cargando mensajes, usando mensajes vigentes:', mensajesError);
@@ -99,7 +97,6 @@ const PantallaTurnos = () => {
     useEffect(() => {
         intervalRefreshRef.current = setInterval(async () => {
             try {
-                console.log('Auto-refresh: actualizando configuración y mensajes');
                 const configResponse = await configuracionPantallaService.obtenerConfiguracionActiva();
 
                 if (configResponse) {

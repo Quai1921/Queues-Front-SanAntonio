@@ -45,13 +45,6 @@ const AsignarSectorModal = ({ isOpen, onClose, onSubmit, empleado, loading = fal
         e.preventDefault();
 
         const sectorData = { sectorId: null };
-        console.log('=== DEBUG DESASIGNACIÓN ===');
-        console.log('Datos que se envían para desasignar:', sectorData);
-        console.log('Empleado a desasignar:', empleado);
-        console.log('Empleado ID:', empleado?.id);
-        console.log('Empleado rol:', empleado?.rol);
-        console.log('Empleado sector actual:', empleado?.sectorCodigo);
-
         onSubmit(sectorData);
     };
 

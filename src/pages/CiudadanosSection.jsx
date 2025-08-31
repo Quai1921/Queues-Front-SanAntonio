@@ -112,7 +112,6 @@ const CiudadanosSection = () => {
      * Maneja ver historial de turnos
      */
     const handleVerHistorial = (ciudadano) => {
-        console.log('Ver historial de:', ciudadano);
         // TODO: Implementar modal de historial
     };
 

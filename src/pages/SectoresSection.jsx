@@ -46,7 +46,6 @@ const SectoresSection = () => {
         limpiarError
     } = useSectores({
         onSuccess: (sector, operacion) => {
-            // console.log(`${operacion} completado:`, sector);
             // Aquí podrías mostrar notificaciones de éxito
         },
         onError: (error, operacion) => {
@@ -214,7 +213,6 @@ const SectoresSection = () => {
     };
 
     const handleGestionPersonal = (sector) => {
-        // console.log('Abriendo gestión de personal para sector:', sector);
         setSectorSeleccionadoPersonal(sector);
         setGestionPersonalModalAbierto(true);
     };

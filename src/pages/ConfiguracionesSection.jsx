@@ -104,8 +104,6 @@ const ConfiguracionesSection = () => {
     // Aplicar filtros
     const configuracionesFiltradas = filtrarConfiguraciones(filtros);
 
-    // console.log(configuracionesFiltradas.map(c => c.id));
-
     const handleCrearConfiguracion = async (configuracionData) => {
         try {
             setLoadingCrear(true);
@@ -157,9 +155,6 @@ const ConfiguracionesSection = () => {
     const handleConfigurarSonido = async (id, configuracionSonido) => {
         try {
             setLoadingSonido(true);
-            console.log('=== DEBUG SONIDO ===');
-            console.log('ID:', id);
-            console.log('Configuración sonido:', configuracionSonido);
 
             await configurarSonido(id, configuracionSonido);
 
@@ -176,10 +171,6 @@ const ConfiguracionesSection = () => {
     const handleConfigurarApariencia = async (id, configuracionApariencia) => {
         try {
             setLoadingApariencia(true);
-            console.log('=== DEBUG APARIENCIA ===');
-            console.log('ID:', id);
-            console.log('Configuración apariencia:', configuracionApariencia);
-
             await configurarApariencia(id, configuracionApariencia);
 
             // Mostrar éxito

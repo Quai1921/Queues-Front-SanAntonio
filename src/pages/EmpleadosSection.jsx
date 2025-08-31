@@ -35,10 +35,6 @@ const EmpleadosSection = () => {
         operadores: 0
     });
 
-    // console.log(estadisticas)
-    // console.log(empleadosFiltrados);
-    // console.log(empleados)
-
     // Estados de filtros
     const [filtros, setFiltros] = useState({
         busqueda: '',
@@ -196,10 +192,6 @@ const EmpleadosSection = () => {
     };
 
     const handleDesasignarSector = async (sectorData) => {
-
-        console.log('=== DEBUG EMPLEADOS SECTION ===');
-        console.log('Datos recibidos en handleAsignarSector:', sectorData);
-        console.log('Empleado seleccionado:', empleadoSeleccionado);
         setLoadingAsignar(true);
         try {
             // CAMBIAR ESTA LÍNEA para usar el endpoint correcto:

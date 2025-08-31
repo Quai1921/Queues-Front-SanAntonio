@@ -3,6 +3,9 @@ import axios from 'axios';
 // Configuración base de Axios
 const API_BASE_URL = 'http://localhost:8080/api';
 
+// Variable para controlar el comportamiento del interceptor
+const TEST_MODE = false; // CAMBIAR A true SOLO PARA PRUEBAS
+
 // Crear instancia de Axios
 const apiClient = axios.create({
     baseURL: API_BASE_URL,
@@ -11,6 +14,10 @@ const apiClient = axios.create({
     },
     timeout: 10000, // 10 segundos
 });
+
+// Variable para evitar múltiples intentos de refresh simultáneos
+let isRefreshing = false;
+let refreshPromise = null;
 
 // Interceptor para requests - añadir token automáticamente
 apiClient.interceptors.request.use(
@@ -26,7 +33,7 @@ apiClient.interceptors.request.use(
     }
 );
 
-// Interceptor para responses - manejar errores y renovación de tokens
+// Interceptor de response con lógica inteligente
 apiClient.interceptors.response.use(
     (response) => response,
     async (error) => {
@@ -36,9 +43,43 @@ apiClient.interceptors.response.use(
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
 
-            try {
-                const refreshToken = localStorage.getItem('refreshToken');
-                if (refreshToken) {
+            // EN MODO TEST: No renovar automáticamente, ir directo al login
+            if (TEST_MODE) {
+                clearAuthData();
+                window.location.href = '/login';
+                return Promise.reject(error);
+            }
+
+            // MODO PRODUCCIÓN: Intentar renovar token inteligentemente
+            // Solo renovar si tenemos refresh token válido
+            const refreshToken = localStorage.getItem('refreshToken');
+            if (!refreshToken || isTokenExpired(refreshToken)) {
+                clearAuthData();
+                window.location.href = '/login';
+                return Promise.reject(error);
+            }
+
+            // Evitar múltiples intentos de refresh simultáneos
+            if (isRefreshing) {
+                try {
+                    await refreshPromise;
+                    const newToken = localStorage.getItem('accessToken');
+                    if (newToken && !isTokenExpired(newToken)) {
+                        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+                        return apiClient(originalRequest);
+                    } else {
+                        throw new Error('Token renovado no válido');
+                    }
+                } catch (refreshError) {
+                    clearAuthData();
+                    window.location.href = '/login';
+                    return Promise.reject(refreshError);
+                }
+            }
+
+            isRefreshing = true;
+            refreshPromise = (async () => {
+                try {
                     const newTokens = await refreshTokens(refreshToken);
 
                     // Actualizar tokens en localStorage
@@ -50,27 +91,62 @@ apiClient.interceptors.response.use(
                     // Reintentar la petición original con el nuevo token
                     originalRequest.headers.Authorization = `Bearer ${newTokens.accessToken}`;
                     return apiClient(originalRequest);
+
+                } catch (refreshError) {
+                    console.error('❌ Error renovando token:', refreshError);
+                    clearAuthData();
+                    window.location.href = '/login';
+                    throw refreshError;
+                } finally {
+                    isRefreshing = false;
+                    refreshPromise = null;
                 }
-            } catch (refreshError) {
-                // Si falla la renovación, limpiar tokens y redirigir al login
-                clearAuthData();
-                window.location.href = '/login';
-                return Promise.reject(refreshError);
-            }
+            })();
+
+            return refreshPromise;
         }
 
         return Promise.reject(error);
     }
 );
 
+// Función helper para decodificar JWT sin verificar firma (solo para leer claims)
+function decodeJWTPayload(token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+    } catch (error) {
+        console.error('Error decodificando JWT:', error);
+        return null;
+    }
+}
+
+// Función para verificar si un token está expirado
+function isTokenExpired(token) {
+    if (!token) return true;
+    
+    try {
+        const payload = decodeJWTPayload(token);
+        if (!payload || !payload.exp) return true;
+        
+        // payload.exp viene en segundos, Date.now() en milisegundos
+        const expirationTime = payload.exp * 1000;
+        const currentTime = Date.now();
+        
+        return currentTime >= expirationTime;
+    } catch (error) {
+        console.error('Error verificando expiración del token:', error);
+        return true;
+    }
+}
+
 // Funciones del servicio de autenticación
 class AuthService {
 
-    /**
-     * Iniciar sesión
-     * @param {Object} credentials - {username, password, rememberMe}
-     * @returns {Promise<Object>} - Datos de respuesta del login
-     */
     async login(credentials) {
         try {
             const response = await apiClient.post('/auth/login', {
@@ -106,13 +182,9 @@ class AuthService {
         }
     }
 
-    /**
-     * Renovar tokens usando refresh token
-     * @param {string} refreshToken 
-     * @returns {Promise<Object>} - Nuevos tokens
-     */
     async refreshTokens(refreshToken) {
         try {
+            // Usar axios directamente para evitar interceptors
             const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
                 refreshToken: refreshToken,
                 deviceInfo: this.getDeviceInfo()
@@ -128,12 +200,8 @@ class AuthService {
         }
     }
 
-    /**
-     * Cerrar sesión
-     */
     async logout() {
         try {
-            // Llamar al endpoint de logout si existe
             const refreshToken = localStorage.getItem('refreshToken');
             if (refreshToken) {
                 await apiClient.post('/auth/logout', {
@@ -143,41 +211,113 @@ class AuthService {
         } catch (error) {
             console.warn('Error en logout:', error.message);
         } finally {
-            // Limpiar datos locales independientemente del resultado
             this.clearAuthData();
         }
     }
 
     /**
-     * Verificar si el usuario está autenticado
-     * @returns {boolean}
+     * Verificar si el usuario está autenticado y el token no está expirado
+     * ESTA ES LA FUNCIÓN CLAVE PARA LA SEGURIDAD
      */
     isAuthenticated() {
         const token = localStorage.getItem('accessToken');
         const user = localStorage.getItem('user');
 
-        return !!(token && user);
+        // Verificar existencia básica
+        if (!token || !user) {
+            return false;
+        }
+
+        // Verificar si el token está expirado
+        if (isTokenExpired(token)) {
+            this.clearAuthData();
+            return false;
+        }
+
+        return true;
     }
 
-    /**
-     * Obtener datos del usuario actual
-     * @returns {Object|null}
-     */
+    shouldRefreshToken() {
+        const token = localStorage.getItem('accessToken');
+        if (!token) return false;
+        
+        try {
+            const payload = decodeJWTPayload(token);
+            if (!payload || !payload.exp) return false;
+            
+            const expirationTime = payload.exp * 1000;
+            const currentTime = Date.now();
+            const fiveMinutes = 5 * 60 * 1000; // 5 minutos en milisegundos
+            
+            return (expirationTime - currentTime) <= fiveMinutes;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    getTokenRemainingMinutes() {
+        const token = localStorage.getItem('accessToken');
+        if (!token) return 0;
+        
+        try {
+            const payload = decodeJWTPayload(token);
+            if (!payload || !payload.exp) return 0;
+            
+            const expirationTime = payload.exp * 1000;
+            const currentTime = Date.now();
+            const remainingMs = expirationTime - currentTime;
+            
+            return Math.max(0, Math.floor(remainingMs / (1000 * 60)));
+        } catch (error) {
+            return 0;
+        }
+    }
+
+    getRefreshTokenStatus() {
+        const refreshToken = localStorage.getItem('refreshToken');
+        if (!refreshToken) {
+            return { valid: false, expiresIn: 0 };
+        }
+
+        try {
+            const payload = decodeJWTPayload(refreshToken);
+            if (!payload || !payload.exp) {
+                return { valid: false, expiresIn: 0 };
+            }
+
+            const expirationTime = payload.exp * 1000;
+            const currentTime = Date.now();
+            const remainingMs = expirationTime - currentTime;
+
+            return {
+                valid: remainingMs > 0,
+                expiresIn: Math.max(0, Math.floor(remainingMs / (1000 * 60)))
+            };
+        } catch (error) {
+            return { valid: false, expiresIn: 0 };
+        }
+    }
+
     getCurrentUser() {
+        if (!this.isAuthenticated()) {
+            return null;
+        }
+
         try {
             const userStr = localStorage.getItem('user');
             return userStr ? JSON.parse(userStr) : null;
         } catch (error) {
             console.error('Error parsing user data:', error);
+            this.clearAuthData();
             return null;
         }
     }
 
-    /**
-     * Obtener datos del sector del usuario
-     * @returns {Object|null}
-     */
     getUserSector() {
+        if (!this.isAuthenticated()) {
+            return null;
+        }
+
         try {
             const sectorStr = localStorage.getItem('sector');
             return sectorStr ? JSON.parse(sectorStr) : null;
@@ -187,11 +327,11 @@ class AuthService {
         }
     }
 
-    /**
-     * Obtener permisos del usuario
-     * @returns {Array}
-     */
     getUserPermissions() {
+        if (!this.isAuthenticated()) {
+            return [];
+        }
+
         try {
             const permissionsStr = localStorage.getItem('permissions');
             return permissionsStr ? JSON.parse(permissionsStr) : [];
@@ -201,37 +341,23 @@ class AuthService {
         }
     }
 
-    /**
-     * Verificar si el usuario tiene un rol específico
-     * @param {string} role - ADMIN, RESPONSABLE_SECTOR, OPERADOR
-     * @returns {boolean}
-     */
     hasRole(role) {
         const user = this.getCurrentUser();
         return user?.rol === role;
     }
 
-    /**
-     * Verificar si el usuario tiene alguno de los roles especificados
-     * @param {Array<string>} roles - Array de roles
-     * @returns {boolean}
-     */
     hasAnyRole(roles) {
         const user = this.getCurrentUser();
-        return roles.includes(user?.rol);
+        return user && roles.includes(user.rol);
     }
 
-    /**
-     * Obtener token de acceso
-     * @returns {string|null}
-     */
     getAccessToken() {
+        if (!this.isAuthenticated()) {
+            return null;
+        }
         return localStorage.getItem('accessToken');
     }
 
-    /**
-     * Limpiar todos los datos de autenticación
-     */
     clearAuthData() {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
@@ -240,35 +366,24 @@ class AuthService {
         localStorage.removeItem('permissions');
     }
 
-    /**
-     * Obtener información del dispositivo para auditoría
-     * @returns {string}
-     */
     getDeviceInfo() {
         return `${navigator.userAgent} - ${window.screen.width}x${window.screen.height}`;
     }
 
-    /**
-     * Manejar errores de autenticación
-     * @param {Error} error 
-     */
     handleAuthError(error) {
         if (error.response) {
-            // Error de respuesta del servidor
             const { status, data } = error.response;
 
             if (status === 401) {
                 this.clearAuthData();
             }
 
-            // Extraer mensaje de error del wrapper ApiResponseWrapper
             if (data?.message) {
                 error.message = data.message;
             } else if (data?.error?.detail) {
                 error.message = data.error.detail;
             }
         } else if (error.request) {
-            // Error de conexión
             error.message = 'Error de conexión con el servidor';
         }
     }
@@ -290,5 +405,4 @@ const clearAuthData = () => {
 const authService = new AuthService();
 export default authService;
 
-// También exportar la instancia de Axios configurada para otros servicios
 export { apiClient };

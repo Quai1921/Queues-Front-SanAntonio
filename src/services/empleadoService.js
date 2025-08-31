@@ -265,10 +265,6 @@ class EmpleadosService {
      */
     async asignarSector(id, sectorData) {
         try {
-            // console.log('=== DEBUG EMPLEADO SERVICE ===');
-            // console.log('ID empleado:', id);
-            // console.log('SectorData recibido:', sectorData);
-            // console.log('JSON que se enviará:', JSON.stringify(sectorData));
             const response = await apiClient.post(`/empleados/${id}/asignar-sector`, sectorData);
 
             if (response.data.success) {
