@@ -28,6 +28,7 @@ import HorariosSection from '../pages/HorariosSection';
 import CiudadanosSection from '../pages/CiudadanosSection';
 import ConfiguracionesSection from '../pages/ConfiguracionesSection';
 import MensajesSection from '../pages/MensajesSection';
+import PantallaTurnos from '../pages/PantallaTurnos';
 
 /**
  * Panel de administración principal - Solo para usuarios ADMIN
@@ -105,6 +106,13 @@ const AdminPanel = () => {
             icon: <Settings />,
             path: '/admin/configuracion',
             description: 'Ajustes del sistema'
+        },
+        {
+            id: 'pantalla',
+            title: 'Pantalla Principal',
+            icon: <Settings />,
+            path: '/admin/pantalla',
+            description: 'Pantalla de Turnos'
         }
     ];
 
@@ -119,8 +127,9 @@ const AdminPanel = () => {
         if (path.includes('empleados')) return 'empleados';
         if (path.includes('sectores')) return 'sectores';
         if (path.includes('horarios')) return 'horarios';
-        if (path.includes('configuracion')) return 'configuracion';
         if (path.includes('mensajes')) return 'mensajes'
+        if (path.includes('configuracion')) return 'configuracion';
+        if (path.includes('pantalla')) return 'pantalla'
         return 'dashboard';
     };
 
@@ -171,8 +180,8 @@ const AdminPanel = () => {
                                     <button
                                         onClick={() => handleMenuClick(item)}
                                         className={`w-full flex items-center px-2 py-2 rounded-md text-left transition-all duration-200 ${isActive
-                                                ? 'bg-[#224666] text-white shadow-md'
-                                                : 'text-slate-700 hover:bg-slate-100 hover:text-[#224666]'
+                                            ? 'bg-[#224666] text-white shadow-md'
+                                            : 'text-slate-700 hover:bg-slate-100 hover:text-[#224666]'
                                             }`}
                                     >
                                         <div className={`mr-3 ${isActive ? 'text-white' : 'text-slate-500'}`}>
@@ -191,7 +200,7 @@ const AdminPanel = () => {
                     </ul>
                 </nav>
 
-                
+
             </div>
 
             {/* Contenido principal */}
@@ -221,6 +230,7 @@ const AdminPanel = () => {
                         <Route path="horarios" element={<HorariosSection />} />
                         <Route path="mensajes" element={<MensajesSection />} />
                         <Route path="configuracion" element={<ConfiguracionesSection />} />
+                        <Route path="pantalla" element={<PantallaTurnos />} />
                     </Routes>
                 </main>
             </div>
