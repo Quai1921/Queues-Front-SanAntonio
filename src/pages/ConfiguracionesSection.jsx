@@ -5,12 +5,13 @@ import {
     Add,
     Search,
     FilterList,
+    CheckCircle,
     Refresh,
     EditDocument as Edit,
     VolumeUp,
     VolumeOff,
     Palette,
-    CheckCircle,
+    CheckCircle as CheckCircleIcon,
     RadioButtonUnchecked,
     Timer,
     Clear,
@@ -505,7 +506,7 @@ const ConfiguracionesSection = () => {
                                                     className="p-1 transition-all duration-300 text-gray-400 hover:text-green-500 cursor-pointer"
                                                     title="Activar configuración"
                                                 >
-                                                    <PlayArrow className="h-4 w-4" />
+                                                    <CheckCircleIcon className="h-4 w-4" />
                                                 </button>
                                             )}
 

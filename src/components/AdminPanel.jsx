@@ -27,6 +27,7 @@ import EmpleadosSection from '../pages/EmpleadosSection';
 import HorariosSection from '../pages/HorariosSection';
 import CiudadanosSection from '../pages/CiudadanosSection';
 import ConfiguracionesSection from '../pages/ConfiguracionesSection';
+import MensajesSection from '../pages/MensajesSection';
 
 /**
  * Panel de administración principal - Solo para usuarios ADMIN
@@ -37,6 +38,17 @@ const AdminPanel = () => {
     const location = useLocation();
     const [activeSection, setActiveSection] = useState('dashboard');
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    // console.log(user);
+
+    const roleMap = {
+        ADMIN: "Administrador",
+        OPERADOR: "Operador",
+        RESPONSABLE_SECTOR: "Responsable de Sector"
+    };
+
+    const role = roleMap[user.rol] || "Rol desconocido";
+
 
     // Verificar que es admin (doble verificación)
     if (!hasRole('ADMIN')) {
@@ -81,6 +93,13 @@ const AdminPanel = () => {
             description: 'Gestionar horarios de sectores especiales'
         },
         {
+            id: 'mensajes',
+            title: 'Mensajes Institucionales',
+            icon: <Message />,
+            path: '/admin/mensajes',
+            description: 'Gestión de mensajes para pantallas'
+        },
+        {
             id: 'configuracion',
             title: 'Configuración',
             icon: <Settings />,
@@ -101,6 +120,7 @@ const AdminPanel = () => {
         if (path.includes('sectores')) return 'sectores';
         if (path.includes('horarios')) return 'horarios';
         if (path.includes('configuracion')) return 'configuracion';
+        if (path.includes('mensajes')) return 'mensajes'
         return 'dashboard';
     };
 
@@ -110,7 +130,7 @@ const AdminPanel = () => {
             <div className="w-72 hidden lg:flex bg-white shadow-lg border-r border-slate-200 flex-col">
 
                 {/* Header del sidebar */}
-                <div className="p-6 border-b border-slate-200">
+                <div className="p-4 border-b border-slate-200">
                     <div className="flex items-center mb-4">
                         <button
                             onClick={() => navigate('/dashboard')}
@@ -125,7 +145,21 @@ const AdminPanel = () => {
                     <h1 className="text-xl font-bold text-[#224666]">Panel de Administración</h1>
                     <p className="text-sm text-slate-600 mt-1">Gestión completa del sistema</p>
 
+                    {/* Usuario info */}
+                    <div className="pt-4">
+                        <div className="flex items-center">
+                            <div className="w-8 h-8 bg-[#5F78AD] rounded-full flex items-center justify-center">
+                                <Security className="text-white text-sm" />
+                            </div>
+                            <div className="ml-3">
+                                <p className="text-sm font-medium text-slate-900">{user?.nombre} {user?.apellido}</p>
+                                <p className="text-xs text-slate-600">{role}</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
+
 
                 {/* Navegación */}
                 <nav className="flex-1 p-4">
@@ -136,7 +170,7 @@ const AdminPanel = () => {
                                 <li key={item.id}>
                                     <button
                                         onClick={() => handleMenuClick(item)}
-                                        className={`w-full flex items-center px-4 py-3 rounded-lg text-left transition-all duration-200 ${isActive
+                                        className={`w-full flex items-center px-2 py-2 rounded-md text-left transition-all duration-200 ${isActive
                                                 ? 'bg-[#224666] text-white shadow-md'
                                                 : 'text-slate-700 hover:bg-slate-100 hover:text-[#224666]'
                                             }`}
@@ -157,18 +191,7 @@ const AdminPanel = () => {
                     </ul>
                 </nav>
 
-                {/* Usuario info */}
-                <div className="p-4 border-t border-slate-200">
-                    <div className="flex items-center">
-                        <div className="w-8 h-8 bg-[#5F78AD] rounded-full flex items-center justify-center">
-                            <Security className="text-white text-sm" />
-                        </div>
-                        <div className="ml-3">
-                            <p className="text-sm font-medium text-slate-900">{user?.nombre}</p>
-                            <p className="text-xs text-slate-600">Administrador</p>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
 
             {/* Contenido principal */}
@@ -196,6 +219,7 @@ const AdminPanel = () => {
                         <Route path="empleados" element={<EmpleadosSection />} />
                         <Route path="sectores" element={<SectoresSection />} />
                         <Route path="horarios" element={<HorariosSection />} />
+                        <Route path="mensajes" element={<MensajesSection />} />
                         <Route path="configuracion" element={<ConfiguracionesSection />} />
                     </Routes>
                 </main>
@@ -224,6 +248,13 @@ const AdminDashboard = () => {
             title: 'Sectores Activos',
             value: '--',
             icon: <Business className="text-2xl" />,
+            color: 'from-green-500 to-green-600'
+        },
+        {
+            title: 'Mensajes Institucionales',
+            description: 'Gestionar mensajes para pantallas',
+            icon: <Message className="text-2xl" />,
+            path: '/admin/mensajes',
             color: 'from-green-500 to-green-600'
         },
         {
