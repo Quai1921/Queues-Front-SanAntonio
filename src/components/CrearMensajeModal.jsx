@@ -15,6 +15,7 @@ import {
     LockClock
 } from '@mui/icons-material';
 import ListAltIcon from '@mui/icons-material/ListAlt';
+import FileUploadComponent from './FileUploadComponent';
 
 
 /**
@@ -294,7 +295,7 @@ const CrearMensajeModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                         </div>
 
                         {/* Ruta de Archivo (condicional) */}
-                        {requiereArchivo && (
+                        {/* {requiereArchivo && (
                             <div className="col-span-2">
                                 <label className="block font-medium text-slate-700 mb-1">
                                     <Link className="mr-1" />
@@ -317,6 +318,28 @@ const CrearMensajeModal = ({ isOpen, onClose, onSubmit, loading = false }) => {
                                 <p className="text-xs text-slate-500 mt-1">
                                     URL o ruta del archivo a mostrar
                                 </p>
+                            </div>
+                        )} */}
+                        {requiereArchivo && (
+                            <div>
+                                <label className="block font-medium text-slate-700 mb-1">
+                                    Archivo {['IMAGEN', 'VIDEO'].includes(formData.tipo) ? '(Requerido)' : ''}
+                                </label>
+                                <FileUploadComponent
+                                    onFileUploaded={(result) => {
+                                        setFormData(prev => ({
+                                            ...prev,
+                                            rutaArchivo: result?.url || ''
+                                        }));
+                                    }}
+                                    currentFileUrl={formData.rutaArchivo}
+                                    folder="mensajes"
+                                    acceptTypes={
+                                        formData.tipo === 'IMAGEN' ? 'image/*' :
+                                            formData.tipo === 'VIDEO' ? 'video/*' :
+                                                'image/*,video/*'
+                                    }
+                                />
                             </div>
                         )}
 
