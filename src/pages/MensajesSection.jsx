@@ -24,6 +24,7 @@ import {
 import CrearMensajeModal from '../components/CrearMensajeModal';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import ConfirmarAccionModal from '../components/ConfirmarAccionModal';
+import MediaThumb from '../components/MediaThumb';
 
 /**
  * Componente principal para la gestión de mensajes institucionales
@@ -72,7 +73,6 @@ const MensajesSection = () => {
         eliminarMensaje,
         filtrarMensajes,
         getTipoLabel,
-        getTipoColor,
         esVigente
     } = useMensajes({
         configuracionId: configuracionSeleccionada,
@@ -465,8 +465,8 @@ const MensajesSection = () => {
                                                     </div>
                                                 )}
                                                 {mensaje.rutaArchivo && (
-                                                    <div className="text-xs text-slate-500 mt-1 max-w-md truncate">
-                                                        📎 {mensaje.rutaArchivo}
+                                                    <div className="text-xs text-slate-500 mt-1 max-w-md">
+                                                        <MediaThumb src={mensaje.rutaArchivo} />
                                                     </div>
                                                 )}
                                             </div>
