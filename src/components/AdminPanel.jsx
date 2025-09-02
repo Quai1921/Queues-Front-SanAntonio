@@ -20,7 +20,8 @@ import {
     Schedule,
     Message,
     Assessment,
-    People
+    People,
+    Queue
 } from '@mui/icons-material';
 import SectoresSection from '../pages/SectoresSection';
 import EmpleadosSection from '../pages/EmpleadosSection';
@@ -29,6 +30,7 @@ import CiudadanosSection from '../pages/CiudadanosSection';
 import ConfiguracionesSection from '../pages/ConfiguracionesSection';
 import MensajesSection from '../pages/MensajesSection';
 import PantallaTurnosPublica from '../pages/PantallaTurnosPublica';
+import TurnosSection from '../pages/TurnosSection';
 
 /**
  * Panel de administración principal - Solo para usuarios ADMIN
@@ -62,6 +64,13 @@ const AdminPanel = () => {
             icon: <DashboardIcon />,
             path: '/admin',
             description: 'Vista general del sistema'
+        },
+        {
+            id: 'turnos',
+            title: 'Turnos',
+            icon: <Queue />,
+            path: '/admin/turnos',
+            description: 'Gestionar turnos'
         },
         {
             id: 'ciudadanos',
@@ -121,6 +130,7 @@ const AdminPanel = () => {
 
     const getCurrentSection = () => {
         const path = location.pathname;
+        if (path.includes('turnos')) return 'turnos';
         if (path.includes('ciudadanos')) return 'ciudadanos';
         if (path.includes('empleados')) return 'empleados';
         if (path.includes('sectores')) return 'sectores';
@@ -222,6 +232,7 @@ const AdminPanel = () => {
                 <main className="flex-1 p-6">
                     <Routes>
                         <Route index element={<AdminDashboard />} />
+                        <Route path="/admin/turnos" element={<TurnosSection />} />
                         <Route path="ciudadanos" element={<CiudadanosSection />} />
                         <Route path="empleados" element={<EmpleadosSection />} />
                         <Route path="sectores" element={<SectoresSection />} />
