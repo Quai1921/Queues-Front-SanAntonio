@@ -169,7 +169,7 @@ const ColaEsperaView = ({
         if (!proximoTurno) return null;
 
         return (
-            <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 mb-6 text-white">
+            <div className="bg-[#224666] rounded-lg shadow-lg p-6 mb-6 text-white">
                 <h3 className="text-lg font-semibold mb-4">Próximo Turno a Atender</h3>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-6">
@@ -193,7 +193,7 @@ const ColaEsperaView = ({
                         {proximoTurno.puedeSerLlamado && (
                             <button
                                 onClick={() => handleAccion('llamar', proximoTurno)}
-                                className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors flex items-center space-x-2"
+                                className="bg-white text-slate-800 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors flex items-center space-x-2"
                             >
                                 <Phone className="h-5 w-5" />
                                 <span>Llamar</span>
@@ -319,7 +319,7 @@ const ColaEsperaView = ({
                                                                 onClick={() => handleAccion('llamar', turno)}
                                                                 className="flex items-center w-full px-4 py-2 text-sm text-slate-700 hover:bg-slate-100"
                                                             >
-                                                                <Phone className="h-4 w-4 mr-3 text-blue-600" />
+                                                                <Phone className="h-4 w-4 mr-3 text-slate-600" />
                                                                 Llamar Turno
                                                             </button>
                                                         )}

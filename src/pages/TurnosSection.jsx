@@ -277,7 +277,7 @@ const TurnosSection = () => {
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-blue-600 text-sm font-medium">En Cola</p>
-                            <p className="text-2xl font-bold text-blue-900">{estadisticas.enCola}</p>
+                            <p className="text-2xl font-bold text-blue-900">{estadisticas?.colaActual || 0}</p>
                         </div>
                         <Queue className="h-8 w-8 text-blue-600" />
                     </div>
@@ -297,7 +297,7 @@ const TurnosSection = () => {
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-green-600 text-sm font-medium">Atendidos</p>
-                            <p className="text-2xl font-bold text-green-900">{estadisticas.atendidos}</p>
+                            <p className="text-2xl font-bold text-green-900">{estadisticas?.finalizados || 0}</p>
                         </div>
                         <Person className="h-8 w-8 text-green-600" />
                     </div>
@@ -331,7 +331,7 @@ const TurnosSection = () => {
         if (!proximoTurno || vistaActiva !== 'cola') return null;
 
         return (
-            <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl shadow-lg p-6 mb-6 text-white">
+            <div className="bg-[#224666] rounded-xl shadow-lg p-6 mb-6 text-white">
                 <div className="flex items-center justify-between">
                     <div>
                         <h3 className="text-lg font-semibold mb-2">Próximo Turno</h3>
@@ -345,7 +345,7 @@ const TurnosSection = () => {
                             <div className="text-sm text-blue-100">
                                 <p>DNI: {proximoTurno.ciudadano?.dni}</p>
                                 {proximoTurno.esPrioritario && (
-                                    <p className="text-yellow-200">⭐ Prioritario</p>
+                                    <p className="text-yellow-200">Prioritario</p>
                                 )}
                             </div>
                         </div>
@@ -355,7 +355,7 @@ const TurnosSection = () => {
                             <button
                                 onClick={() => handleLlamarTurno(proximoTurno.id)}
                                 disabled={isOperating}
-                                className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors disabled:opacity-50"
+                                className="bg-white text-slate-800 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors disabled:opacity-50"
                             >
                                 <Phone className="h-5 w-5 mr-2 inline" />
                                 Llamar Turno
@@ -499,8 +499,8 @@ const TurnosSection = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 p-6">
-            <div className="max-w-7xl mx-auto">
+        <div className="min-h-screen bg-slate-50">
+            <div className="w-full">
                 {/* Header */}
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-slate-900">Gestión de Turnos</h1>
