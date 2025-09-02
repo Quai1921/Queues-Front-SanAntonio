@@ -211,7 +211,7 @@ const ConfiguracionesSection = () => {
     };
 
     const renderEstadisticas = () => (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-2">
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
                 <div className="flex items-center">
                     <div className="p-2 bg-slate-100 rounded-lg">
@@ -561,7 +561,7 @@ const ConfiguracionesSection = () => {
     };
 
     return (
-        <div className="p-6">
+        <div className="">
             {/* Notificación */}
             {notificacion && (
                 <div className={`fixed top-4 left-1/2 -translate-x-1/2  z-[60] px-4 py-6 rounded-lg shadow-lg border transition-all duration-300 ${notificacion.tipo === 'success'
@@ -580,11 +580,8 @@ const ConfiguracionesSection = () => {
                 </div>
             )}
 
-            {/* Estadísticas */}
-            {renderEstadisticas()}
-
             {/* Controles */}
-            <div className='flex justify-between items-center mb-6'>
+            <div className='flex justify-between items-center mb-4'>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                     <h2 className="text-lg font-semibold text-slate-900 flex items-center">
                         <Settings className="h-6 w-6 mr-2 text-[#224666]" />
@@ -615,6 +612,9 @@ const ConfiguracionesSection = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Estadísticas */}
+            {renderEstadisticas()}
 
             {/* Controles */}
             {renderControles()}

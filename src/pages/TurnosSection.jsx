@@ -97,7 +97,6 @@ const TurnosSection = () => {
             id: 'generar',
             label: 'Generar Turno',
             icon: Add,
-            // visible: hasRole(['ADMIN', 'OPERADOR', 'RESPONSABLE_SECTOR'])
             visible: true
         },
         {
