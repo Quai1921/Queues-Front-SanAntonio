@@ -76,7 +76,7 @@ const TurnosSection = () => {
         }
     });
 
-    console.log(proximoTurno)
+    // console.log(proximoTurno)
 
     // Cargar datos cuando cambie el sector seleccionado
     useEffect(() => {
@@ -339,15 +339,13 @@ const TurnosSection = () => {
                         <div className="flex items-center space-x-6">
                             <div>
                                 <p className="text-3xl font-bold">{proximoTurno.codigo}</p>
-                                <p className="text-blue-100 text-sm">
+                                <div className="text-blue-100 text-sm">
                                     {proximoTurno.ciudadano?.nombreCompleto}
-                                </p>
-                            </div>
-                            <div className="text-sm text-blue-100">
-                                <p>DNI: {proximoTurno.ciudadano?.dni}</p>
+                                    <p>DNI: {proximoTurno.ciudadano?.dni}</p>
                                 {proximoTurno.esPrioritario && (
                                     <p className="text-yellow-200">Prioritario</p>
                                 )}
+                                </div>
                             </div>
                         </div>
                     </div>

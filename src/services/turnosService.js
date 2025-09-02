@@ -482,26 +482,36 @@ class TurnosService {
             error.message = 'Error de conexión al gestionar turnos';
         }
     }
-
+    
     construirNombreCompleto(ciudadano) {
         if (!ciudadano) return 'Sin información';
 
-        // Si viene desde el backend, usar directamente
+        // Si viene nombreCompleto desde el backend y está OK, usarlo
         if (ciudadano.nombreCompleto &&
             ciudadano.nombreCompleto !== 'undefined undefined' &&
-            ciudadano.nombreCompleto !== 'null null') {
+            ciudadano.nombreCompleto !== 'null null' &&
+            ciudadano.nombreCompleto !== 'Sin apellido, Sin nombre' &&
+            !ciudadano.nombreCompleto.includes('�')) {
             return ciudadano.nombreCompleto;
         }
 
-        // Construir desde campos individuales con validación
-        const nombre = (ciudadano.nombre && ciudadano.nombre !== 'null')
-            ? ciudadano.nombre.trim()
-            : 'Sin nombre';
-        const apellido = (ciudadano.apellido && ciudadano.apellido !== 'null')
-            ? ciudadano.apellido.trim()
-            : 'Sin apellido';
+        // Si hay campos individuales, construir desde ahí
+        if (ciudadano.nombre || ciudadano.apellido) {
+            const nombre = (ciudadano.nombre && ciudadano.nombre !== 'null')
+                ? ciudadano.nombre.trim()
+                : 'Sin nombre';
+            const apellido = (ciudadano.apellido && ciudadano.apellido !== 'null')
+                ? ciudadano.apellido.trim()
+                : 'Sin apellido';
+            return `${apellido}, ${nombre}`;
+        }
 
-        return `${apellido}, ${nombre}`;
+        // Si solo hay DNI, usar como fallback
+        if (ciudadano.dni && ciudadano.dni !== 'null') {
+            return `Ciudadano DNI: ${ciudadano.dni}`;
+        }
+
+        return 'Datos no disponibles';
     }
 
 }
