@@ -116,7 +116,8 @@ class TurnosService {
      */
     async obtenerTurnosPendientes(sectorId) {
         try {
-            const response = await apiClient.get(`/turnos/pendientes/${sectorId}`);
+            // CAMBIO: usar cola de espera que sí funciona y devuelve array
+            const response = await apiClient.get(`/turnos/cola/${sectorId}`);
 
             if (response.data.success) {
                 return response.data.data.map(turno => this.formatearParaUI(turno));

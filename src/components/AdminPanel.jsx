@@ -232,7 +232,7 @@ const AdminPanel = () => {
                 <main className="flex-1 p-6">
                     <Routes>
                         <Route index element={<AdminDashboard />} />
-                        <Route path="/admin/turnos" element={<TurnosSection />} />
+                        <Route path="turnos" element={<TurnosSection />} />
                         <Route path="ciudadanos" element={<CiudadanosSection />} />
                         <Route path="empleados" element={<EmpleadosSection />} />
                         <Route path="sectores" element={<SectoresSection />} />
