@@ -39,16 +39,87 @@ const ColaEsperaView = ({
     const [modalObservaciones, setModalObservaciones] = useState({ abierto: false, accion: '', turno: null });
     const [modalRedirigir, setModalRedirigir] = useState({ abierto: false, turno: null });
 
+    // ============================================
+    // FUNCIÓN HELPER PARA MOSTRAR NOMBRE CIUDADANO
+    // ============================================
+    const mostrarNombreCiudadano = (turno) => {
+        if (!turno?.ciudadano) return 'Sin información del ciudadano';
+
+        const ciudadano = turno.ciudadano;
+        const nombre = ciudadano.nombreCompleto;
+
+        // Verificar si el nombre está corrupto o vacío
+        if (!nombre ||
+            nombre === 'undefined undefined' ||
+            nombre.includes('null') ||
+            nombre.trim() === '' ||
+            nombre === ', ') {
+            // Fallback: usar DNI si está disponible
+            if (ciudadano.dni && ciudadano.dni !== 'null') {
+                return `Ciudadano DNI: ${ciudadano.dni}`;
+            }
+            return 'Datos no disponibles';
+        }
+
+        return nombre;
+    };
+
+    // ============================================
+    // FUNCIÓN HELPER PARA MOSTRAR DNI CIUDADANO
+    // ============================================
+    const mostrarDniCiudadano = (turno) => {
+        if (!turno?.ciudadano?.dni || turno.ciudadano.dni === 'null') {
+            return 'No disponible';
+        }
+        return turno.ciudadano.dni;
+    };
+
+    // ============================================
+    // FUNCIÓN HELPER MEJORADA PARA BÚSQUEDA
+    // ============================================
+    const coincideBusqueda = (turno, busqueda) => {
+        const busquedaLower = busqueda.toLowerCase();
+
+        // Buscar en código
+        if (turno.codigo && turno.codigo.toLowerCase().includes(busquedaLower)) {
+            return true;
+        }
+
+        // Buscar en DNI
+        const dni = mostrarDniCiudadano(turno);
+        if (dni !== 'No disponible' && dni.includes(busquedaLower)) {
+            return true;
+        }
+
+        // Buscar en nombre (usando la función helper)
+        const nombreCompleto = mostrarNombreCiudadano(turno);
+        if (nombreCompleto && nombreCompleto.toLowerCase().includes(busquedaLower)) {
+            return true;
+        }
+
+        // Buscar en campos individuales si están disponibles
+        if (turno.ciudadano) {
+            const nombre = turno.ciudadano.nombre;
+            const apellido = turno.ciudadano.apellido;
+
+            if (nombre && nombre !== 'null' && nombre.toLowerCase().includes(busquedaLower)) {
+                return true;
+            }
+            if (apellido && apellido !== 'null' && apellido.toLowerCase().includes(busquedaLower)) {
+                return true;
+            }
+        }
+
+        return false;
+    };
+
     // Filtrar turnos según criterios
     const turnosFiltrados = colaEspera.filter(turno => {
         // Filtro por búsqueda
         if (filtros.busqueda) {
-            const busqueda = filtros.busqueda.toLowerCase();
-            const coincide =
-                turno.codigo.toLowerCase().includes(busqueda) ||
-                turno.ciudadano?.nombreCompleto?.toLowerCase().includes(busqueda) ||
-                turno.ciudadano?.dni?.includes(busqueda);
-            if (!coincide) return false;
+            if (!coincideBusqueda(turno, filtros.busqueda)) {
+                return false;
+            }
         }
 
         // Filtro solo en espera
@@ -183,8 +254,12 @@ const ColaEsperaView = ({
                             )}
                         </div>
                         <div>
-                            <div className="text-lg font-medium">{proximoTurno.ciudadano?.nombreCompleto}</div>
-                            <div className="text-blue-100 text-sm">DNI: {proximoTurno.ciudadano?.dni}</div>
+                            <div className="text-lg font-medium">
+                                {mostrarNombreCiudadano(proximoTurno)}
+                            </div>
+                            <div className="text-blue-100 text-sm">
+                                DNI: {mostrarDniCiudadano(proximoTurno)}
+                            </div>
                             <div className="text-blue-100 text-sm">Espera: {getTiempoEspera(proximoTurno)}</div>
                         </div>
                     </div>
@@ -277,10 +352,10 @@ const ColaEsperaView = ({
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div>
                                             <div className="text-sm font-medium text-slate-900">
-                                                {turno.ciudadano?.nombreCompleto}
+                                                {mostrarNombreCiudadano(turno)}
                                             </div>
                                             <div className="text-sm text-slate-500">
-                                                DNI: {turno.ciudadano?.dni}
+                                                DNI: {mostrarDniCiudadano(turno)}
                                             </div>
                                         </div>
                                     </td>
@@ -392,6 +467,9 @@ const ColaEsperaView = ({
                         <h3 className="text-lg font-semibold text-slate-900">
                             {tituloAccion[accion]} - {turno?.codigo}
                         </h3>
+                        <p className="text-sm text-slate-600 mt-1">
+                            {mostrarNombreCiudadano(turno)}
+                        </p>
                     </div>
 
                     <div className="px-6 py-4">
@@ -443,6 +521,9 @@ const ColaEsperaView = ({
                         <h3 className="text-lg font-semibold text-slate-900">
                             Redirigir Turno - {turno?.codigo}
                         </h3>
+                        <p className="text-sm text-slate-600 mt-1">
+                            {mostrarNombreCiudadano(turno)}
+                        </p>
                     </div>
 
                     <div className="px-6 py-4 space-y-4">

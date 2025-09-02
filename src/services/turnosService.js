@@ -333,8 +333,7 @@ class TurnosService {
             ciudadano: turno.ciudadano ? {
                 id: turno.ciudadano.id,
                 dni: turno.ciudadano.dni,
-                nombreCompleto: turno.ciudadano.nombreCompleto ||
-                    `${turno.ciudadano.nombre} ${turno.ciudadano.apellido}`,
+                nombreCompleto: this.construirNombreCompleto(turno.ciudadano),
                 telefono: turno.ciudadano.telefono,
                 esPrioritario: turno.ciudadano.esPrioritario
             } : null,
@@ -482,6 +481,27 @@ class TurnosService {
         } else if (error.request) {
             error.message = 'Error de conexión al gestionar turnos';
         }
+    }
+
+    construirNombreCompleto(ciudadano) {
+        if (!ciudadano) return 'Sin información';
+
+        // Si viene desde el backend, usar directamente
+        if (ciudadano.nombreCompleto &&
+            ciudadano.nombreCompleto !== 'undefined undefined' &&
+            ciudadano.nombreCompleto !== 'null null') {
+            return ciudadano.nombreCompleto;
+        }
+
+        // Construir desde campos individuales con validación
+        const nombre = (ciudadano.nombre && ciudadano.nombre !== 'null')
+            ? ciudadano.nombre.trim()
+            : 'Sin nombre';
+        const apellido = (ciudadano.apellido && ciudadano.apellido !== 'null')
+            ? ciudadano.apellido.trim()
+            : 'Sin apellido';
+
+        return `${apellido}, ${nombre}`;
     }
 
 }

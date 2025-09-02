@@ -76,6 +76,7 @@ const TurnosSection = () => {
         }
     });
 
+    console.log(proximoTurno)
 
     // Cargar datos cuando cambie el sector seleccionado
     useEffect(() => {
