@@ -377,7 +377,7 @@ const ColaEsperaView = ({
                                             <span className="text-xs text-slate-400">Normal</span>
                                         )}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium overflow-y-visible">
                                         <div className="relative">
                                             <button
                                                 onClick={() => setMostrarAcciones(mostrarAcciones === turno.id ? null : turno.id)}
