@@ -39,6 +39,12 @@ const ColaEsperaView = ({
     const [modalObservaciones, setModalObservaciones] = useState({ abierto: false, accion: '', turno: null });
     const [modalRedirigir, setModalRedirigir] = useState({ abierto: false, turno: null });
 
+
+    const [observaciones, setObservaciones] = useState('');
+    const [nuevoSectorId, setNuevoSectorId] = useState('');
+    const [motivo, setMotivo] = useState('');
+    const [observacionesRedirigir, setObservacionesRedirigir] = useState('');
+
     // ============================================
     // FUNCIÓN HELPER PARA MOSTRAR NOMBRE CIUDADANO
     // ============================================
@@ -341,7 +347,7 @@ const ColaEsperaView = ({
                         </thead>
                         <tbody className="bg-white divide-y divide-slate-200">
                             {turnosFiltrados.map((turno, index) => (
-                                <tr key={turno.id} className={index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                                <tr key={`turno-${turno.id}-${index}`} className={index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="flex items-center">
                                             <div className="font-mono text-lg font-bold text-slate-900">
@@ -453,7 +459,7 @@ const ColaEsperaView = ({
         if (!modalObservaciones.abierto) return null;
 
         const { accion, turno } = modalObservaciones;
-        const [observaciones, setObservaciones] = useState('');
+        // const [observaciones, setObservaciones] = useState('');
 
         const tituloAccion = {
             'finalizar': 'Finalizar Atención',
@@ -487,13 +493,19 @@ const ColaEsperaView = ({
 
                     <div className="px-6 py-4 border-t border-slate-200 flex justify-end space-x-3">
                         <button
-                            onClick={() => setModalObservaciones({ abierto: false, accion: '', turno: null })}
+                            onClick={() => {
+                                setModalObservaciones({ abierto: false, accion: '', turno: null });
+                                setObservaciones(''); // Limpiar observaciones al cerrar
+                            }}
                             className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50"
                         >
                             Cancelar
                         </button>
                         <button
-                            onClick={() => handleAccion(accion, turno, { observaciones })}
+                            onClick={() => {
+                                handleAccion(accion, turno, { observaciones });
+                                setObservaciones(''); // Limpiar después de la acción
+                            }}
                             disabled={accion === 'ausente' && !observaciones.trim()}
                             className="px-4 py-2 text-sm font-medium text-white bg-slate-600 border border-transparent rounded-md hover:bg-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
@@ -510,9 +522,9 @@ const ColaEsperaView = ({
         if (!modalRedirigir.abierto) return null;
 
         const { turno } = modalRedirigir;
-        const [nuevoSectorId, setNuevoSectorId] = useState('');
-        const [motivo, setMotivo] = useState('');
-        const [observaciones, setObservaciones] = useState('');
+        // const [nuevoSectorId, setNuevoSectorId] = useState('');
+        // const [motivo, setMotivo] = useState('');
+        // const [observaciones, setObservaciones] = useState('');
 
         return (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -521,15 +533,12 @@ const ColaEsperaView = ({
                         <h3 className="text-lg font-semibold text-slate-900">
                             Redirigir Turno - {turno?.codigo}
                         </h3>
-                        <p className="text-sm text-slate-600 mt-1">
-                            {mostrarNombreCiudadano(turno)}
-                        </p>
                     </div>
 
                     <div className="px-6 py-4 space-y-4">
                         <div>
                             <label className="block text-sm font-medium text-slate-700 mb-2">
-                                Nuevo Sector *
+                                Nuevo Sector
                             </label>
                             <select
                                 value={nuevoSectorId}
@@ -537,50 +546,64 @@ const ColaEsperaView = ({
                                 className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500"
                             >
                                 <option value="">Seleccionar sector...</option>
-                                {sectores.filter(s => s.id !== turno?.sector?.id).map(sector => (
+                                {sectores.map((sector) => (
                                     <option key={sector.id} value={sector.id}>
                                         {sector.codigo} - {sector.nombre}
                                     </option>
                                 ))}
                             </select>
                         </div>
-
                         <div>
                             <label className="block text-sm font-medium text-slate-700 mb-2">
-                                Motivo de la redirección *
+                                Motivo (requerido)
                             </label>
                             <input
                                 type="text"
                                 value={motivo}
                                 onChange={(e) => setMotivo(e.target.value)}
                                 className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500"
-                                placeholder="Ej: Trámite corresponde a otro sector"
+                                placeholder="Motivo de la redirección..."
                             />
                         </div>
-
                         <div>
                             <label className="block text-sm font-medium text-slate-700 mb-2">
-                                Observaciones adicionales
+                                Observaciones (opcionales)
                             </label>
                             <textarea
-                                value={observaciones}
-                                onChange={(e) => setObservaciones(e.target.value)}
+                                value={observacionesRedirigir}
+                                onChange={(e) => setObservacionesRedirigir(e.target.value)}
                                 rows={3}
                                 className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500"
-                                placeholder="Información adicional..."
+                                placeholder="Observaciones adicionales..."
                             />
                         </div>
                     </div>
 
                     <div className="px-6 py-4 border-t border-slate-200 flex justify-end space-x-3">
                         <button
-                            onClick={() => setModalRedirigir({ abierto: false, turno: null })}
+                            onClick={() => {
+                                setModalRedirigir({ abierto: false, turno: null });
+                                // Limpiar campos
+                                setNuevoSectorId('');
+                                setMotivo('');
+                                setObservacionesRedirigir('');
+                            }}
                             className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50"
                         >
                             Cancelar
                         </button>
                         <button
-                            onClick={() => handleAccion('redirigir', turno, { nuevoSectorId: parseInt(nuevoSectorId), motivo, observaciones })}
+                            onClick={() => {
+                                handleAccion('redirigir', turno, { 
+                                    nuevoSectorId: parseInt(nuevoSectorId), 
+                                    motivo, 
+                                    observaciones: observacionesRedirigir 
+                                });
+                                // Limpiar campos después de la acción
+                                setNuevoSectorId('');
+                                setMotivo('');
+                                setObservacionesRedirigir('');
+                            }}
                             disabled={!nuevoSectorId || !motivo.trim()}
                             className="px-4 py-2 text-sm font-medium text-white bg-purple-600 border border-transparent rounded-md hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
                         >

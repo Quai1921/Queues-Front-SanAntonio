@@ -178,12 +178,18 @@ const TurnosSection = () => {
     };
 
     const handleLlamarTurno = async (turnoId) => {
-        try {
-            await llamarTurno(turnoId, 'Turno llamado desde cola');
-        } catch (error) {
-            console.error('Error llamando turno:', error);
+        // Validación de entrada
+        if (!turnoId || turnoId === undefined) {
+            console.error('Error: ID de turno no válido:', turnoId);
+            return;
         }
-    };
+
+    try {
+        await llamarTurno(turnoId, 'Turno llamado desde cola');
+    } catch (error) {
+        console.error('Error llamando turno:', error);
+    }
+};
 
     const handleIniciarAtencion = async (turnoId) => {
         try {
@@ -208,6 +214,15 @@ const TurnosSection = () => {
             console.error('Error marcando ausente:', error);
         }
     };
+
+    useEffect(() => {
+        console.log('Próximo Turno Debug:', {
+            exists: !!proximoTurno,
+            id: proximoTurno?.id,
+            codigo: proximoTurno?.codigo,
+            fullObject: proximoTurno
+        });
+    }, [proximoTurno]);
 
     // Renderizar selector de sector
     const renderSelectorSector = () => (
@@ -350,10 +365,10 @@ const TurnosSection = () => {
                         </div>
                     </div>
                     <div className="flex flex-col space-y-2">
-                        {proximoTurno.puedeSerLlamado && (
+                        {proximoTurno.puedeSerLlamado && proximoTurno.id && (
                             <button
                                 onClick={() => handleLlamarTurno(proximoTurno.id)}
-                                disabled={isOperating}
+                                disabled={isOperating || !proximoTurno.id}
                                 className="bg-white text-slate-800 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors disabled:opacity-50"
                             >
                                 <Phone className="h-5 w-5 mr-2 inline" />

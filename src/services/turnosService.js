@@ -96,7 +96,10 @@ class TurnosService {
             const response = await apiClient.get(`/turnos/proximo/${sectorId}`);
 
             if (response.data.success && response.data.data) {
-                return this.formatearParaUI(response.data.data);
+                console.log('🔍 Raw backend response:', response.data.data);
+                const formateado = this.formatearParaUI(response.data.data);
+                console.log('🔍 Formatted turno:', formateado);
+                return formateado;
             } else {
                 return null; // No hay turnos pendientes
             }
@@ -316,53 +319,87 @@ class TurnosService {
     formatearParaUI(turno) {
         if (!turno) return null;
 
-        return {
-            id: turno.id,
-            codigo: turno.codigo,
-            estado: turno.estado,
-            estadoTexto: this.getEstadoTexto(turno.estado),
-            estadoColor: this.getEstadoColor(turno.estado),
-            fechaHoraCreacion: turno.fechaHoraCreacion,
-            fechaHoraLlamado: turno.fechaHoraLlamado,
-            fechaHoraInicioAtencion: turno.fechaHoraInicioAtencion,
-            fechaHoraFin: turno.fechaHoraFin,
-            tipoTurno: turno.tipoTurno,
-            esPrioritario: turno.esPrioritario,
-            motivoPrioridad: turno.motivoPrioridad,
-            observaciones: turno.observaciones,
-            ciudadano: turno.ciudadano ? {
-                id: turno.ciudadano.id,
-                dni: turno.ciudadano.dni,
-                nombreCompleto: this.construirNombreCompleto(turno.ciudadano),
-                telefono: turno.ciudadano.telefono,
-                esPrioritario: turno.ciudadano.esPrioritario
-            } : null,
-            sector: turno.sector ? {
-                id: turno.sector.id,
-                codigo: turno.sector.codigo,
-                nombre: turno.sector.nombre,
-                color: turno.sector.color
-            } : null,
-            empleadoLlamada: turno.empleadoLlamada ? {
-                id: turno.empleadoLlamada.id,
-                nombreCompleto: turno.empleadoLlamada.nombreCompleto
-            } : null,
-            empleadoAtencion: turno.empleadoAtencion ? {
-                id: turno.empleadoAtencion.id,
-                nombreCompleto: turno.empleadoAtencion.nombreCompleto
-            } : null,
-            // Datos para turnos especiales
-            fechaCita: turno.fechaCita,
-            horaCita: turno.horaCita,
-            motivoCita: turno.motivoCita,
-            // Campos calculados
-            tiempoEspera: this.calcularTiempoEspera(turno),
-            tiempoAtencion: this.calcularTiempoAtencion(turno),
-            puedeSerLlamado: this.puedeSerLlamado(turno),
-            puedeIniciarAtencion: this.puedeIniciarAtencion(turno),
-            puedeSerFinalizado: this.puedeSerFinalizado(turno),
-            puedeSerRedirigido: this.puedeSerRedirigido(turno)
-        };
+        // Determinar si es un TurnoResponse completo o TurnoSummaryResponse
+        const esTurnoCompleto = turno.ciudadano && typeof turno.ciudadano === 'object';
+
+        if (esTurnoCompleto) {
+            // Caso: TurnoResponse (objeto completo con objetos anidados)
+            return {
+                id: turno.id,
+                codigo: turno.codigo,
+                estado: turno.estado,
+                estadoTexto: this.getEstadoTexto(turno.estado),
+                estadoColor: this.getEstadoColor(turno.estado),
+                fechaHoraCreacion: turno.fechaGeneracion || turno.fechaHoraCreacion,
+                fechaHoraLlamado: turno.fechaLlamado || turno.fechaHoraLlamado,
+                fechaHoraInicioAtencion: turno.fechaAtencion || turno.fechaHoraInicioAtencion,
+                fechaHoraFin: turno.fechaFinalizacion || turno.fechaHoraFin,
+                tipoTurno: turno.tipo,
+                esPrioritario: turno.prioridad > 1,
+                observaciones: turno.observaciones,
+                ciudadano: turno.ciudadano ? {
+                    id: turno.ciudadano.id,
+                    dni: turno.ciudadano.dni,
+                    nombreCompleto: turno.ciudadano.nombreCompleto,
+                    esPrioritario: turno.ciudadano.esPrioritario || false
+                } : null,
+                sector: turno.sector ? {
+                    id: turno.sector.id,
+                    codigo: turno.sector.codigo,
+                    nombre: turno.sector.nombre,
+                    tipo: turno.sector.tipo
+                } : null,
+                empleadoLlamada: turno.empleadoLlamada || null,
+                empleadoAtencion: turno.empleadoAtencion || null,
+                fechaCita: turno.fechaCita,
+                horaCita: turno.horaCita,
+                tiempoEspera: turno.tiempoEspera,
+                tiempoAtencion: turno.tiempoAtencion,
+                // Estados de operaciones (calculados)
+                puedeSerLlamado: this.puedeSerLlamado({ estado: turno.estado }),
+                puedeIniciarAtencion: this.puedeIniciarAtencion({ estado: turno.estado }),
+                puedeSerFinalizado: this.puedeSerFinalizado({ estado: turno.estado }),
+                puedeSerRedirigido: this.puedeSerRedirigido({ estado: turno.estado })
+            };
+        } else {
+            // Caso: TurnoSummaryResponse (campos planos)
+            return {
+                id: turno.id,
+                codigo: turno.codigo,
+                estado: turno.estado,
+                estadoTexto: this.getEstadoTexto(turno.estado),
+                estadoColor: this.getEstadoColor(turno.estado),
+                fechaHoraCreacion: turno.fechaGeneracion,
+                fechaHoraLlamado: null,
+                fechaHoraInicioAtencion: null,
+                fechaHoraFin: null,
+                tipoTurno: turno.tipo,
+                esPrioritario: turno.prioridad > 1,
+                observaciones: null,
+                ciudadano: {
+                    dni: turno.ciudadanoDni,
+                    nombreCompleto: turno.ciudadanoNombre || `DNI: ${turno.ciudadanoDni}`,
+                    esPrioritario: turno.prioridad > 1
+                },
+                sector: {
+                    codigo: turno.sectorCodigo,
+                    nombre: turno.sectorNombre
+                },
+                empleadoLlamada: null,
+                empleadoAtencion: turno.empleadoUsername ? {
+                    username: turno.empleadoUsername
+                } : null,
+                fechaCita: null,
+                horaCita: null,
+                tiempoEspera: turno.tiempoEspera,
+                tiempoAtencion: null,
+                // Estados de operaciones (calculados)
+                puedeSerLlamado: this.puedeSerLlamado({ estado: turno.estado }),
+                puedeIniciarAtencion: this.puedeIniciarAtencion({ estado: turno.estado }),
+                puedeSerFinalizado: this.puedeSerFinalizado({ estado: turno.estado }),
+                puedeSerRedirigido: this.puedeSerRedirigido({ estado: turno.estado })
+            };
+        }
     }
 
     /**
@@ -423,6 +460,20 @@ class TurnosService {
 
         const diff = fin - inicio;
         return Math.floor(diff / 1000 / 60); // minutos
+    }
+
+    /**
+     * Método de debug para ver la estructura de datos
+     */
+    debugTurno(turno, origen = 'unknown') {
+        console.log(`🔍 Debug Turno [${origen}]:`, {
+            raw: turno,
+            hasId: !!turno?.id,
+            hasCiudadanoObject: turno?.ciudadano && typeof turno.ciudadano === 'object',
+            hasCiudadanoNombre: !!turno?.ciudadanoNombre,
+            structure: typeof turno?.ciudadano,
+            keys: turno ? Object.keys(turno) : 'null'
+        });
     }
 
     /**
