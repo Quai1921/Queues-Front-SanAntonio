@@ -65,6 +65,32 @@ class SectoresService {
     }
 
     /**
+     * Obtener disponibilidad de horarios
+     */
+    // async obtenerDisponibilidad(id, fechaIso /* 'YYYY-MM-DD' */) {
+    //     try {
+    //         const response = await apiClient.get(`/sectores/${id}/disponibilidad`, {
+    //             params: { fecha: fechaIso }
+    //         });
+
+    //         if (response.data.success) {
+    //             return response.data.data.horasDisponibles || [];
+    //         } else {
+    //             throw new Error(response.data.message || 'Error obteniendo disponibilidad');
+    //         }
+    //     } catch (error) {
+    //         this.handleSectoresError(error);
+    //         throw error;
+    //     }
+    // }
+
+    async obtenerDisponibilidad(id, fechaIso) {
+        const response = await apiClient.get(`/sectores/${id}/disponibilidad`, { params: { fecha: fechaIso } });
+        if (response.data.success) return response.data.data.horasDisponibles || [];
+        throw new Error(response.data.message || 'Error obteniendo disponibilidad');
+    }
+
+    /**
      * Obtener sector por código
      * @param {string} codigo - Código del sector
      * @returns {Promise<Object>} - Sector encontrado

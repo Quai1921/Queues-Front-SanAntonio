@@ -402,21 +402,51 @@ export const useTurnos = (options = {}) => {
   /**
    * Refrescar datos del sector (cola, próximo, pendientes)
    */
+  // const refrescarDatosSector = useCallback(async (sectorIdArg) => {
+  //   try {
+  //     setError(null);
+
+  //     const [cola, proximo, pendientes] = await Promise.all([
+  //       turnosService.obtenerColaEspera(sectorIdArg),
+  //       turnosService.obtenerProximoTurno(sectorIdArg),
+  //       turnosService.obtenerTurnosPendientes(sectorIdArg),
+  //     ]);
+
+  //     setColaEspera(cola);
+  //     setProximoTurno(proximo);
+  //     setTurnosPendientes(pendientes);
+
+  //     return { cola, proximo, pendientes };
+  //   } catch (err) {
+  //     setError(err.message || 'Error refrescando datos');
+  //     onErrorRef.current && onErrorRef.current(err, 'refrescar');
+  //     throw err;
+  //   }
+  // }, []);
   const refrescarDatosSector = useCallback(async (sectorIdArg) => {
     try {
       setError(null);
 
-      const [cola, proximo, pendientes] = await Promise.all([
+      const hoy = new Date();
+      const fechaStr = [
+        hoy.getFullYear(),
+        String(hoy.getMonth() + 1).padStart(2, '0'),
+        String(hoy.getDate()).padStart(2, '0'),
+      ].join('-');
+
+      const [cola, proximo, pendientes, delDia] = await Promise.all([
         turnosService.obtenerColaEspera(sectorIdArg),
         turnosService.obtenerProximoTurno(sectorIdArg),
-        turnosService.obtenerTurnosPendientes(sectorIdArg),
+        turnosService.obtenerTurnosPendientes(sectorIdArg), // hoy duplica la cola, pero lo dejamos
+        turnosService.obtenerTurnosDelDia(sectorIdArg, fechaStr),
       ]);
 
       setColaEspera(cola);
       setProximoTurno(proximo);
       setTurnosPendientes(pendientes);
+      setTurnos(delDia); // 👈 clave para estadísticas del día
 
-      return { cola, proximo, pendientes };
+      return { cola, proximo, pendientes, delDia };
     } catch (err) {
       setError(err.message || 'Error refrescando datos');
       onErrorRef.current && onErrorRef.current(err, 'refrescar');
@@ -500,17 +530,41 @@ export const useTurnos = (options = {}) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshInterval, sectorId]);
 
+
+  const enEsperaCola = colaEspera.filter(
+    t => t && ['GENERADO', 'REDIRIGIDO'].includes(t.estado)
+  ).length;
+
+  const prioritariosEnCola = colaEspera.filter(t => t?.esPrioritario).length;
+
   // Estadísticas derivadas
+  // const estadisticas = {
+  //   totalTurnos: turnos.length,
+  //   enEspera: turnos.filter((t) => t.estado === 'GENERADO').length,
+  //   llamados: turnos.filter((t) => t.estado === 'LLAMADO').length,
+  //   enAtencion: turnos.filter((t) => t.estado === 'EN_ATENCION').length,
+  //   finalizados: turnos.filter((t) => t.estado === 'FINALIZADO').length,
+  //   ausentes: turnos.filter((t) => t.estado === 'AUSENTE').length,
+  //   redirigidos: turnos.filter((t) => t.estado === 'REDIRIGIDO').length,
+  //   prioritarios: turnos.filter((t) => t.esPrioritario).length,
+  //   colaActual: colaEspera.length, // ojo: en la UI usar este nombre o alinearlo
+  //   pendientesTotal: turnosPendientes.length,
+  // };
   const estadisticas = {
+    // universo del día (delDia -> setTurnos)
     totalTurnos: turnos.length,
-    enEspera: turnos.filter((t) => t.estado === 'GENERADO').length,
-    llamados: turnos.filter((t) => t.estado === 'LLAMADO').length,
-    enAtencion: turnos.filter((t) => t.estado === 'EN_ATENCION').length,
-    finalizados: turnos.filter((t) => t.estado === 'FINALIZADO').length,
-    ausentes: turnos.filter((t) => t.estado === 'AUSENTE').length,
-    redirigidos: turnos.filter((t) => t.estado === 'REDIRIGIDO').length,
-    prioritarios: turnos.filter((t) => t.esPrioritario).length,
-    colaActual: colaEspera.length, // ojo: en la UI usar este nombre o alinearlo
+    llamados: turnos.filter(t => t.estado === 'LLAMADO').length,
+    enAtencion: turnos.filter(t => t.estado === 'EN_ATENCION').length,
+    finalizados: turnos.filter(t => t.estado === 'FINALIZADO').length,
+    ausentes: turnos.filter(t => t.estado === 'AUSENTE').length,
+    redirigidos: turnos.filter(t => t.estado === 'REDIRIGIDO').length,
+
+    // universo de la cola (lo que hoy espera y ve el operador)
+    colaActual: colaEspera.length,
+    enEspera: enEsperaCola,
+    prioritarios: prioritariosEnCola,
+
+    // si quisieras mostrarlo en alguna parte
     pendientesTotal: turnosPendientes.length,
   };
 

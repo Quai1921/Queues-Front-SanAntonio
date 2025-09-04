@@ -33,6 +33,7 @@ class ImpresionService {
      * Genera el HTML para impresión térmica (58mm típicamente)
      */
     generarHTMLImpresion(datos) {
+        console.log(datos)
         return `
         <!DOCTYPE html>
         <html>
@@ -117,7 +118,7 @@ class ImpresionService {
             </div>
             <div class="info-line">
                 <span class="label">Ciudadano:</span>
-                <span style="font-size: 10px;">${datos.ciudadano}</span>
+                <span style="font-size: 10px;">${datos.nombre}</span>
             </div>
             <div class="info-line">
                 <span class="label">DNI:</span>

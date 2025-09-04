@@ -159,7 +159,7 @@ const ConsultarTurnoView = ({
                                 name="codigo"
                                 value={formData.codigo}
                                 onChange={handleInputChange}
-                                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                                className="w-full px-3 py-2 border border-slate-300 rounded-md"
                                 placeholder="Ej: INT001, REN002"
                                 style={{ textTransform: 'uppercase' }}
                             />
@@ -174,7 +174,7 @@ const ConsultarTurnoView = ({
                                 name="fecha"
                                 value={formData.fecha}
                                 onChange={handleInputChange}
-                                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                                className="w-full px-3 py-2 border border-slate-300 rounded-md"
                             />
                             <p className="mt-1 text-sm text-slate-500">
                                 Si no especifica fecha, se buscará el último turno generado con ese código
@@ -192,7 +192,7 @@ const ConsultarTurnoView = ({
                             value={formData.dni}
                             onChange={handleInputChange}
                             maxLength="8"
-                            className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                            className="w-full px-3 py-2 border border-slate-300 rounded-md"
                             placeholder="12345678"
                         />
                         <p className="mt-1 text-sm text-slate-500">

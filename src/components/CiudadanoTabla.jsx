@@ -82,7 +82,7 @@ const CiudadanoTabla = ({
                 <table className="w-full">
                     <thead className="bg-slate-50 border-b border-slate-200">
                         <tr>
-                            <th className="px-4 py-2 text-left text-sm font-semibold text-slate-900 w-[300px]">
+                            <th className="px-4 py-2 text-left text-sm font-semibold text-slate-900 w-[350px]">
                                 Ciudadano
                             </th>
                             <th className="px-4 py-2 text-left text-sm font-semibold text-slate-900 w-[110px]">
@@ -91,15 +91,15 @@ const CiudadanoTabla = ({
                             <th className="px-4 py-2 text-left text-sm font-semibold text-slate-900 w-[135px]">
                                 Contacto
                             </th>
-                            <th className="px-4 py-2 text-left text-sm font-semibold text-slate-900 w-[300px]">
+                            <th className="px-4 py-2 text-left text-sm font-semibold text-slate-900 w-[350px]">
                                 Dirección
                             </th>
-                            <th className="px-4 py-2 text-left text-sm font-semibold text-slate-900">
+                            {/* <th className="px-4 py-2 text-left text-sm font-semibold text-slate-900">
                                 Estado
-                            </th>
-                            <th className="px-4 py-2 text-left text-sm font-semibold text-slate-900">
+                            </th> */}
+                            {/* <th className="px-4 py-2 text-left text-sm font-semibold text-slate-900">
                                 Turnos
-                            </th>
+                            </th> */}
                             <th className="px-4 py-2 text-right text-sm font-semibold text-slate-900">
                                 Acciones
                             </th>
@@ -156,7 +156,7 @@ const CiudadanoTabla = ({
                                 </td>
 
                                 {/* Estado */}
-                                <td className="px-4 py-2">
+                                {/* <td className="px-4 py-2">
                                     <div className="space-y-1">
                                         {ciudadano.esPrioritario && (
                                             <span className="flex justify-center items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
@@ -174,14 +174,14 @@ const CiudadanoTabla = ({
                                             </span>
                                         )}
                                     </div>
-                                </td>
+                                </td> */}
 
                                 {/* Turnos */}
-                                <td className="px-4 py-2">
+                                {/* <td className="px-4 py-2">
                                     <span className="text-xs font-medium text-slate-900">
                                         {ciudadano.cantidadTurnos || 0}
                                     </span>
-                                </td>
+                                </td> */}
 
                                 {/* Acciones */}
                                 <td className="px-4 py-2">

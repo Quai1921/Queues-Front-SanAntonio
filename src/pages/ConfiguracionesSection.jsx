@@ -275,7 +275,7 @@ const ConfiguracionesSection = () => {
     );
 
     const renderControles = () => (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mt-4">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mt-4 mb-3">
             <div className="flex flex-col sm:flex-row gap-4">
                 <div className="flex-1">
                     {/* Búsqueda */}

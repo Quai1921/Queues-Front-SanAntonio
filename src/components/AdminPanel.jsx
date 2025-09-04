@@ -23,6 +23,7 @@ import {
     People,
     Queue
 } from '@mui/icons-material';
+import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
 import SectoresSection from '../pages/SectoresSection';
 import EmpleadosSection from '../pages/EmpleadosSection';
 import HorariosSection from '../pages/HorariosSection';
@@ -31,6 +32,7 @@ import ConfiguracionesSection from '../pages/ConfiguracionesSection';
 import MensajesSection from '../pages/MensajesSection';
 import PantallaTurnosPublica from '../pages/PantallaTurnosPublica';
 import TurnosSection from '../pages/TurnosSection';
+import EstadisticasSection from '../pages/EstadisticasSection'
 
 /**
  * Panel de administración principal - Solo para usuarios ADMIN
@@ -115,6 +117,14 @@ const AdminPanel = () => {
             description: 'Ajustes del sistema'
         },
         {
+            id: 'estadisticas',
+            title: 'Estadísticas',
+            icon: <SignalCellularAltIcon />,
+            path: '/admin/estadisticas',
+            description: 'Estadísticas del sistema'
+        },
+
+        {
             id: 'pantalla',
             title: 'Pantalla Principal',
             icon: <Settings />,
@@ -137,14 +147,17 @@ const AdminPanel = () => {
         if (path.includes('horarios')) return 'horarios';
         if (path.includes('mensajes')) return 'mensajes'
         if (path.includes('configuracion')) return 'configuracion';
-        if (path.includes('pantalla')) return 'pantalla'
+        if (path.includes('configuracion')) return 'configuracion';
+        if (path.includes('estadisticas')) return 'estadisticas'
         return 'dashboard';
     };
 
     return (
         <div className="min-h-screen bg-slate-50 flex overflow-x-hidden">
             {/* Sidebar */}
-            <div className="w-72 hidden lg:flex bg-white shadow-lg border-r border-slate-200 flex-col">
+            {/* <div className="w-72 hidden lg:flex bg-white shadow-lg border-r border-slate-200 flex-col"> */}
+            <div className="hidden lg:flex fixed inset-y-0 left-0 w-72 bg-white shadow-lg border-r border-slate-200 flex-col z-20 overflow-y-auto">
+
 
                 {/* Header del sidebar */}
                 <div className="p-4 border-b border-slate-200">
@@ -158,12 +171,12 @@ const AdminPanel = () => {
                         <div className="w-10 h-10 bg-[#224666] rounded-lg flex items-center justify-center">
                             <AdminPanelSettings className="text-white" />
                         </div>
+                        <h1 className="ml-3 text-lg font-bold text-[#224666]">Panel de Administración</h1>
                     </div>
-                    <h1 className="text-xl font-bold text-[#224666]">Panel de Administración</h1>
-                    <p className="text-sm text-slate-600 mt-1">Gestión completa del sistema</p>
+                        {/* <p className="ml-20 text-sm text-slate-600 mt-1">Gestión del sistema</p> */}
 
                     {/* Usuario info */}
-                    <div className="pt-4">
+                    <div className='px-1'>
                         <div className="flex items-center">
                             <div className="w-8 h-8 bg-[#5F78AD] rounded-full flex items-center justify-center">
                                 <Security className="text-white text-sm" />
@@ -212,10 +225,14 @@ const AdminPanel = () => {
             </div>
 
             {/* Contenido principal */}
-            <div className="flex-1 flex flex-col min-w-0">
+            {/* <div className="flex-1 flex flex-col min-w-0"> */}
+            <div className="flex-1 flex flex-col min-w-0 min-h-0 lg:ml-72">
+
 
                 {/* Header del contenido */}
-                <header className="bg-white shadow-sm border-b border-slate-200 px-6 py-4">
+                {/* <header className="bg-white shadow-sm border-b border-slate-200 px-6 py-4"> */}
+                <header className="bg-white shadow-sm border-b border-slate-200 px-6 py-4 sticky top-0 z-10">
+
                     <div className="flex items-center justify-between">
                         <div>
                             <h2 className="text-2xl font-bold text-slate-900">
@@ -229,7 +246,7 @@ const AdminPanel = () => {
                 </header>
 
                 {/* Contenido de las rutas */}
-                <main className="flex-1 p-6">
+                <main className="flex-1 p-6 overflow-y-auto">
                     <Routes>
                         <Route index element={<AdminDashboard />} />
                         <Route path="turnos" element={<TurnosSection />} />
@@ -239,6 +256,7 @@ const AdminPanel = () => {
                         <Route path="horarios" element={<HorariosSection />} />
                         <Route path="mensajes" element={<MensajesSection />} />
                         <Route path="configuracion" element={<ConfiguracionesSection />} />
+                        <Route path="estadisticas" element={<EstadisticasSection />} />
                         <Route path="pantalla" element={<PantallaTurnosPublica />} />
                     </Routes>
                 </main>

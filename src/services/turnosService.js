@@ -96,9 +96,9 @@ class TurnosService {
             const response = await apiClient.get(`/turnos/proximo/${sectorId}`);
 
             if (response.data.success && response.data.data) {
-                console.log('🔍 Raw backend response:', response.data.data);
+                // console.log('🔍 Raw backend response:', response.data.data);
                 const formateado = this.formatearParaUI(response.data.data);
-                console.log('🔍 Formatted turno:', formateado);
+                // console.log('🔍 Formatted turno:', formateado);
                 return formateado;
             } else {
                 return null; // No hay turnos pendientes
@@ -267,16 +267,28 @@ class TurnosService {
      * @param {string} observaciones - Motivo de ausencia
      * @returns {Promise<Object>} - Turno marcado como ausente
      */
-    async marcarAusente(turnoId, observaciones = '') {
+    async marcarAusente(turnoId, payloadOrObs = '') {
         try {
-            const response = await apiClient.post(`/turnos/${turnoId}/marcar-ausente`, {
-                observaciones
-            });
+            // Normalizo: acepto string u objeto y SIEMPRE envío { observaciones: string }
+            const body =
+                typeof payloadOrObs === 'string'
+                    ? { observaciones: payloadOrObs }
+                    : {
+                        observaciones: String(
+                            (payloadOrObs && payloadOrObs.observaciones) ?? ''
+                        ),
+                    };
 
-            if (response.data.success) {
+            const response = await apiClient.post(
+                `/turnos/${turnoId}/marcar-ausente`,
+                body,
+                { headers: { 'Content-Type': 'application/json' } }
+            );
+
+            if (response.data?.success) {
                 return this.formatearParaUI(response.data.data);
             } else {
-                throw new Error(response.data.message || 'Error marcando como ausente');
+                throw new Error(response.data?.message || 'Error marcando como ausente');
             }
         } catch (error) {
             this.handleTurnosError(error);

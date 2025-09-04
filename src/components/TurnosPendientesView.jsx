@@ -236,7 +236,7 @@ const TurnosPendientesView = ({
                                 placeholder="Código, nombre, DNI..."
                                 value={filtros.busqueda}
                                 onChange={(e) => setFiltros(prev => ({ ...prev, busqueda: e.target.value }))}
-                                className="pl-10 pr-4 py-2 w-full border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+                                className="pl-10 pr-4 py-2 w-full border border-slate-300 rounded-md text-sm"
                             />
                         </div>
                     </div>
@@ -247,7 +247,7 @@ const TurnosPendientesView = ({
                         <select
                             value={filtros.estado}
                             onChange={(e) => setFiltros(prev => ({ ...prev, estado: e.target.value }))}
-                            className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+                            className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm"
                         >
                             <option value="TODOS">Todos los estados</option>
                             <option value="GENERADO">En Espera</option>
@@ -262,7 +262,7 @@ const TurnosPendientesView = ({
                         <select
                             value={filtros.prioridad}
                             onChange={(e) => setFiltros(prev => ({ ...prev, prioridad: e.target.value }))}
-                            className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+                            className="w-full px-3 py-2 border border-slate-300 rounded-md text-sm"
                         >
                             <option value="TODOS">Todas las prioridades</option>
                             <option value="PRIORITARIOS">Solo prioritarios</option>
@@ -277,7 +277,7 @@ const TurnosPendientesView = ({
                             <select
                                 value={filtros.ordenarPor}
                                 onChange={(e) => setFiltros(prev => ({ ...prev, ordenarPor: e.target.value }))}
-                                className="flex-1 px-3 py-2 border border-slate-300 rounded-l-md text-sm focus:outline-none focus:ring-2 focus:ring-slate-500"
+                                className="flex-1 px-3 py-2 border border-slate-300 rounded-l-md text-sm"
                             >
                                 <option value="fecha">Fecha</option>
                                 <option value="prioridad">Prioridad</option>
@@ -470,7 +470,7 @@ const TurnosPendientesView = ({
                             value={observaciones}
                             onChange={(e) => setObservaciones(e.target.value)}
                             rows={4}
-                            className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500"
+                            className="w-full px-3 py-2 border border-slate-300 rounded-md"
                             placeholder={accion === 'ausente' ? 'Motivo de la ausencia...' : 'Observaciones adicionales...'}
                         />
                     </div>
@@ -521,7 +521,7 @@ const TurnosPendientesView = ({
                             <select
                                 value={nuevoSectorId}
                                 onChange={(e) => setNuevoSectorId(e.target.value)}
-                                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500"
+                                className="w-full px-3 py-2 border border-slate-300 rounded-md"
                             >
                                 <option value="">Seleccionar sector...</option>
                                 {sectores.filter(s => s.id !== turno?.sector?.id).map(sector => (
@@ -540,7 +540,7 @@ const TurnosPendientesView = ({
                                 type="text"
                                 value={motivo}
                                 onChange={(e) => setMotivo(e.target.value)}
-                                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500"
+                                className="w-full px-3 py-2 border border-slate-300 rounded-md"
                                 placeholder="Ej: Trámite corresponde a otro sector"
                             />
                         </div>
@@ -553,7 +553,7 @@ const TurnosPendientesView = ({
                                 value={observaciones}
                                 onChange={(e) => setObservaciones(e.target.value)}
                                 rows={3}
-                                className="w-full px-3 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500"
+                                className="w-full px-3 py-2 border border-slate-300 rounded-md"
                                 placeholder="Información adicional..."
                             />
                         </div>

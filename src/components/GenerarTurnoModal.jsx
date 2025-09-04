@@ -14,30 +14,33 @@ import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import ciudadanoService from '../services/ciudadanoService';
 import impresionService from '../services/impresionService';
 import { CheckCircle, Print } from '@mui/icons-material';
+import sectoresService from '../services/sectoresService';
 
 const TurnoGeneradoSuccess = ({ turno, onImprimir, onCerrar }) => {
     return (
         <div className="p-6 text-center">
-            {/* Icono de éxito */}
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className='flex justify-center items-center gap-4 mb-4'>
+            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
                 <CheckCircle className="h-10 w-10 text-green-600" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                ¡Turno Generado Exitosamente!
+            </h3>
+
             </div>
 
             {/* Título */}
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                ¡Turno Generado Exitosamente!
-            </h3>
 
             {/* Información del turno */}
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-6">
                 <div className="space-y-2">
                     <div className="flex justify-between items-center">
                         <span className="text-sm font-medium text-gray-600">Código:</span>
-                        <span className="text-lg font-bold text-blue-600">{turno?.codigo}</span>
+                        <span className="text-lg font-bold text-slate-600">{turno?.codigo}</span>
                     </div>
                     <div className="flex justify-between items-center">
                         <span className="text-sm font-medium text-gray-600">Ciudadano:</span>
-                        <span className="text-sm text-gray-900">{turno?.ciudadano?.nombre} {turno?.ciudadano?.apellido}</span>
+                        <span className="text-sm text-gray-900">{turno?.ciudadano?.nombreCompleto}</span>
                     </div>
                     <div className="flex justify-between items-center">
                         <span className="text-sm font-medium text-gray-600">Sector:</span>
@@ -56,14 +59,14 @@ const TurnoGeneradoSuccess = ({ turno, onImprimir, onCerrar }) => {
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <button
                     onClick={onImprimir}
-                    className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                    className="inline-flex items-center px-6 h-8 border border-transparent text-base font-medium rounded-md text-white bg-[#224666] hover:bg-[#2c3e50] transition-colors"
                 >
-                    <Print className="h-5 w-5 mr-2" />
+                    <Print sx={{ fontSize: '20px' }} className="mr-2" />
                     Imprimir Turno
                 </button>
                 <button
                     onClick={onCerrar}
-                    className="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors"
+                    className="inline-flex items-center px-6 h-8 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition-colors"
                 >
                     Cerrar
                 </button>
@@ -71,7 +74,7 @@ const TurnoGeneradoSuccess = ({ turno, onImprimir, onCerrar }) => {
 
             {/* Mensaje adicional */}
             <p className="text-sm text-gray-600 mt-4">
-                El turno ha sido agregado a la cola. Se puede imprimir el comprobante presionando "Imprimir Turno".
+                Turno agregado a la cola. Puede imprimir el comprobante presionando "Imprimir Turno".
             </p>
         </div>
     );
@@ -116,12 +119,132 @@ const GenerarTurnoModal = ({
     const [mostrarExito, setMostrarExito] = useState(false);
     const [loadingInterno, setLoadingInterno] = useState(false);
 
+    const [sectorCompleto, setSectorCompleto] = useState(null);
+    const [fechasDisponibles, setFechasDisponibles] = useState([]);     // [{value:'2025-09-02', label:'Mar 02/09'}]
+    const [horasDisponibles, setHorasDisponibles] = useState([]);       // ['17:00', '17:30']
+
+    const dayMap = {
+        MONDAY: 1, TUESDAY: 2, WEDNESDAY: 3, THURSDAY: 4, FRIDAY: 5, SATURDAY: 6, SUNDAY: 0
+    };
+
     // Limpiar formulario cuando se abre/cierra
     useEffect(() => {
         if (isOpen) {
             resetFormulario();
         }
     }, [isOpen]);
+
+    useEffect(() => {
+        const cargarAgendaSector = async () => {
+            setSectorCompleto(null);
+            setFechasDisponibles([]);
+            setHorasDisponibles([]);
+            setFormData(prev => ({ ...prev, fechaCita: '', horaCita: '' }));
+
+            const sid = parseInt(formData.sectorId);
+            if (!sid) return;
+
+            const sectorBase = sectores.find(s => s.id === sid);
+            const esEspecial = sectorBase?.tipoSector === 'ESPECIAL';
+            if (!esEspecial) return;
+
+            try {
+                const completo = await sectoresService.obtenerCompleto(sid); // trae { horarios: [...] }
+                setSectorCompleto(completo);
+
+                // días activos
+                const diasActivos = (completo?.horarios || [])
+                    .filter(h => h.activo)
+                    .map(h => h.diaSemana); // p.ej. 'TUESDAY'
+
+                const diasSet = new Set(diasActivos);
+
+                // próximas 30 fechas que caen en alguno de esos días
+                const hoy = new Date();
+                const out = [];
+                for (let i = 0; i < 30; i++) {
+                    const d = new Date(hoy);
+                    d.setDate(hoy.getDate() + i);
+                    const dow = d.getDay(); // 0..6
+                    // ¿este dow está en diasSet?
+                    const coincide = Array.from(diasSet).some(nombre => dayMap[nombre] === dow);
+                    if (coincide) {
+                        const yyyy = d.getFullYear();
+                        const mm = String(d.getMonth() + 1).padStart(2, '0');
+                        const dd = String(d.getDate()).padStart(2, '0');
+                        const value = `${yyyy}-${mm}-${dd}`;
+                        const label = d.toLocaleDateString('es-AR', { weekday: 'short', day: '2-digit', month: '2-digit' });
+                        out.push({ value, label }); // ej: "mar 02/09"
+                    }
+                }
+                setFechasDisponibles(out);
+            } catch (e) {
+                console.error('Error cargando agenda del sector:', e);
+                setErrors(prev => ({ ...prev, fechaCita: 'No se pudo cargar la agenda del sector' }));
+            }
+        };
+
+        cargarAgendaSector();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [formData.sectorId, sectores]);
+
+    useEffect(() => {
+        const cargarDisponibilidad = async () => {
+            setHorasDisponibles([]);
+            if (!formData.sectorId || !formData.fechaCita) return;
+
+            try {
+                const horas = await sectoresService.obtenerDisponibilidad(
+                    parseInt(formData.sectorId),
+                    formData.fechaCita // 'YYYY-MM-DD'
+                );
+
+                setHorasDisponibles(horas);
+
+                // si la hora elegida ya no está disponible, limpiarla
+                if (formData.horaCita && !horas.includes(formData.horaCita)) {
+                    setFormData(prev => ({ ...prev, horaCita: '' }));
+                }
+            } catch (e) {
+                console.error('No se pudo cargar la disponibilidad real:', e);
+                setErrors(prev => ({ ...prev, horaCita: 'No se pudo cargar la disponibilidad' }));
+            }
+        };
+        cargarDisponibilidad();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [formData.sectorId, formData.fechaCita]);
+
+
+    useEffect(() => {
+        if (!sectorCompleto || !formData.fechaCita) {
+            setHorasDisponibles([]);
+            return;
+        }
+        try {
+            const d = new Date(formData.fechaCita + 'T00:00:00');
+            const dow = d.getDay();
+
+            // Juntar horariosDisponibles de los horarios activos cuyo diaSemana coincide
+            const horas = (sectorCompleto.horarios || [])
+                .filter(h => h.activo && dayMap[h.diaSemana] === dow)
+                .flatMap(h => h.horariosDisponibles || []) // 'HH:mm:ss'
+                .map(t => t.slice(0, 5))                    // 'HH:mm'
+                .filter(Boolean);
+
+            // Ordenar y sin duplicados
+            const unicos = Array.from(new Set(horas)).sort((a, b) => a.localeCompare(b));
+            setHorasDisponibles(unicos);
+
+            // si la hora seleccionada ya no está, limpiarla
+            if (formData.horaCita && !unicos.includes(formData.horaCita)) {
+                setFormData(prev => ({ ...prev, horaCita: '' }));
+            }
+        } catch (e) {
+            console.error('Error calculando horas disponibles:', e);
+            setHorasDisponibles([]);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [formData.fechaCita, sectorCompleto]);
 
     const resetFormulario = () => {
         setFormData({
@@ -166,6 +289,35 @@ const GenerarTurnoModal = ({
         if (name === 'dni' || name === 'apellidoBusqueda') {
             setCiudadanoEncontrado(null);
             setCiudadanosEncontrados([]);
+        }
+    };
+
+
+    const verificarDniExistente = async (dni) => {
+        if (!dni || dni.length < 7 || tipoGeneracion !== 'nuevo') return;
+
+        try {
+            const existe = await ciudadanoService.existeCiudadano(dni);
+
+            if (existe) {
+                setErrors(prev => ({
+                    ...prev,
+                    dni: 'Ya existe un ciudadano con este DNI. Use "Ciudadano Existente" para buscarlo.'
+                }));
+            } else {
+                setErrors(prev => ({
+                    ...prev,
+                    dni: null
+                }));
+            }
+        } catch (error) {
+            console.error('Error verificando DNI:', error);
+        }
+    };
+
+    const handleDniBlur = () => {
+        if (formData.dni && tipoGeneracion === 'nuevo') {
+            verificarDniExistente(formData.dni);
         }
     };
 
@@ -249,33 +401,51 @@ const GenerarTurnoModal = ({
             newErrors.dni = 'DNI debe tener entre 7 y 8 dígitos';
         }
 
-        // Validaciones según tipo
+        // Reglas por tipo
         if (tipoGeneracion === 'nuevo') {
-            if (!formData.nombre.trim()) {
-                newErrors.nombre = 'Nombre es requerido';
-            }
-            if (!formData.apellido.trim()) {
-                newErrors.apellido = 'Apellido es requerido';
-            }
+            if (!formData.nombre.trim()) newErrors.nombre = 'Nombre es requerido';
+            if (!formData.apellido.trim()) newErrors.apellido = 'Apellido es requerido';
+        }
+        if (tipoGeneracion === 'existente' && !ciudadanoEncontrado) {
+            newErrors.dni = 'Debe buscar y encontrar al ciudadano';
         }
 
         if (tipoGeneracion === 'existente' && !ciudadanoEncontrado) {
             newErrors.dni = 'Debe buscar y encontrar al ciudadano';
         }
 
-        // Validación para sectores especiales
+        if (!formData.telefono.trim()) {
+            newErrors.telefono = 'Teléfono es requerido';
+        } else if (!/^[+]?[0-9\s\-\(\)]{8,20}$/.test(formData.telefono.trim())) {
+            newErrors.telefono = 'Formato de teléfono inválido';
+        }
+
+        if (!formData.direccion.trim()) {
+            newErrors.direccion = 'Dirección es requerida';
+        } else if (formData.direccion.trim().length > 200) {
+            newErrors.direccion = 'La dirección no puede exceder 200 caracteres';
+        }
+
+
+        // ESPECIAL: fecha, hora, motivo
         const sectorSeleccionado = sectores.find(s => s.id === parseInt(formData.sectorId));
         const esSectorEspecial = sectorSeleccionado?.tipoSector === 'ESPECIAL';
-
         if (esSectorEspecial) {
-            if (!formData.fechaCita) {
-                newErrors.fechaCita = 'Fecha de cita es requerida para sectores especiales';
-            }
-            if (!formData.horaCita) {
-                newErrors.horaCita = 'Hora de cita es requerida para sectores especiales';
-            }
+            if (!formData.fechaCita) newErrors.fechaCita = 'Fecha de cita es requerida';
+            if (!formData.horaCita) newErrors.horaCita = 'Hora de cita es requerida';
             if (!formData.motivoCita || !formData.motivoCita.trim()) {
-                newErrors.motivoCita = 'Motivo de cita es requerido para sectores especiales';
+                newErrors.motivoCita = 'Motivo de cita es requerido';
+            }
+            // Defensa extra: la fecha elegida debe estar en fechasDisponibles
+            if (formData.fechaCita && !fechasDisponibles.some(f => f.value === formData.fechaCita)) {
+                newErrors.fechaCita = 'La fecha seleccionada no tiene atención disponible';
+            }
+            // Defensa extra: la hora elegida debe estar en horasDisponibles
+            if (formData.horaCita && !horasDisponibles.includes(formData.horaCita)) {
+                newErrors.horaCita = 'La hora seleccionada no tiene atención disponible';
+            }
+            if (formData.fechaCita && horasDisponibles.length > 0 && !horasDisponibles.includes(formData.horaCita)) {
+                newErrors.horaCita = 'La hora seleccionada ya no está disponible';
             }
         }
 
@@ -289,44 +459,30 @@ const GenerarTurnoModal = ({
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (loadingInterno) return;
 
-        // VALIDACIÓN CRÍTICA - MANTENER
         if (!validateForm()) {
             return;
         }
 
         try {
-            setLoadingInterno(true)
+            setLoadingInterno(true);
             setErrors({});
 
             const sectorSeleccionado = sectores.find(s => s.id === parseInt(formData.sectorId));
             const esSectorEspecial = sectorSeleccionado?.tipoSector === 'ESPECIAL';
 
+            // CORRECCIÓN: Enviar datos en formato plano como espera el backend
             let datosGeneracion = {
                 sectorId: parseInt(formData.sectorId),
-                dni: formData.dni,
-                observaciones: formData.observaciones
+                dni: formData.dni, // DIRECTO, no anidado
+                nombre: formData.nombre, // DIRECTO
+                apellido: formData.apellido, // DIRECTO 
+                telefono: formData.telefono, // DIRECTO
+                direccion: formData.direccion, // DIRECTO
+                esPrioritario: formData.esPrioritario,
+                motivoPrioridad: formData.esPrioritario ? formData.motivoPrioridad : null,
+                observaciones: formData.observaciones || null
             };
-
-            // Agregar datos según el tipo
-            if (tipoGeneracion === 'nuevo') {
-                datosGeneracion = {
-                    ...datosGeneracion,
-                    nombre: formData.nombre,
-                    apellido: formData.apellido,
-                    esPrioritario: formData.esPrioritario,
-                    motivoPrioridad: formData.motivoPrioridad,
-                    telefono: formData.telefono,
-                    direccion: formData.direccion
-                };
-            } else if (tipoGeneracion === 'existente' && formData.esPrioritario) {
-                datosGeneracion = {
-                    ...datosGeneracion,
-                    esPrioritario: formData.esPrioritario,
-                    motivoPrioridad: formData.motivoPrioridad
-                };
-            }
 
             // Agregar datos de cita si es sector especial
             if (esSectorEspecial) {
@@ -334,29 +490,43 @@ const GenerarTurnoModal = ({
                     ...datosGeneracion,
                     fechaCita: formData.fechaCita,
                     horaCita: formData.horaCita,
-                    motivoCita: formData.motivoCita,
-                    esEspecial: true
+                    tipo: 'ESPECIAL' // Agregar tipo para sectores especiales
                 };
             }
 
             console.log('Generando turno con datos:', datosGeneracion);
+            
+            const res = await onSubmit(datosGeneracion);
+            const turnoNormalizado =
+                res?.turno ??
+                res?.data?.turno ??
+                res?.data ??
+                res;
+            console.log(turnoNormalizado)
 
-            // Llamar a la función onSubmit que viene como prop
-            const turno = await onSubmit(datosGeneracion);
-
-            // Mostrar estado de éxito
-            setTurnoGenerado(turno);
-            setMostrarExito(true);
+            if (turnoNormalizado) {
+                setTurnoGenerado(turnoNormalizado);
+                setMostrarExito(true);
+            } else {
+                // Opcional: log para diagnosticar
+                console.warn('Respuesta de onSubmit sin turno:', res);
+                setErrors({ general: 'No se pudo generar el turno (respuesta vacía).' });
+            }
 
         } catch (error) {
             console.error('Error generando turno:', error);
 
-            if (error.response?.data?.errors) {
-                setErrors(error.response.data.errors);
+            if (error.response?.data?.fieldErrors) {
+                // Manejar errores de validación específicos por campo
+                setErrors(error.response.data.fieldErrors);
+            } else if (error.response?.data?.message) {
+                if (error.response.data.message.includes('Ya existe un ciudadano con DNI')) {
+                    setErrors({ dni: error.response.data.message });
+                } else {
+                    setErrors({ general: error.response.data.message });
+                }
             } else {
-                setErrors({
-                    general: error.response?.data?.message || 'Error generando turno'
-                });
+                setErrors({ general: 'Error generando turno' });
             }
         } finally {
             setLoadingInterno(false);
@@ -408,7 +578,7 @@ const GenerarTurnoModal = ({
                     <h2 className="text-lg font-semibold text-slate-900 flex items-center">
                         <div className="w-10 h-10 bg-slate-200 rounded-md flex items-center justify-center mr-3">
                             {mostrarExito ? (
-                                <CheckCircle className="h-6 w-6 text-green-600" />
+                                <CheckCircle className="h-6 w-6 text-slate-600" />
                             ) : (
                                 <EventAvailableIcon className="h-6 w-6 text-slate-600" />
                             )}
@@ -529,7 +699,7 @@ const GenerarTurnoModal = ({
                                                 value={formData.dni}
                                                 onChange={handleInputChange}
                                                 maxLength="8"
-                                                className={`w-full px-3 h-8 border rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent ${errors.dni ? 'border-red-300' : 'border-slate-300'
+                                                className={`w-full px-3 h-8 border rounded-md ${errors.dni ? 'border-red-300' : 'border-slate-300'
                                                     }`}
                                                 placeholder="12345678"
                                             />
@@ -547,7 +717,7 @@ const GenerarTurnoModal = ({
                                                 name="apellidoBusqueda"
                                                 value={formData.apellidoBusqueda}
                                                 onChange={handleInputChange}
-                                                className={`w-full px-3 h-8 border rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent ${errors.apellidoBusqueda ? 'border-red-300' : 'border-slate-300'
+                                                className={`w-full px-3 h-8 border rounded-md ${errors.apellidoBusqueda ? 'border-red-300' : 'border-slate-300'
                                                     }`}
                                                 placeholder="García, López, etc."
                                             />
@@ -624,10 +794,11 @@ const GenerarTurnoModal = ({
                                     <input
                                         type="text"
                                         name="dni"
+                                        onBlur={handleDniBlur}
                                         value={formData.dni}
                                         onChange={handleInputChange}
                                         maxLength="8"
-                                        className={`w-full px-3 h-8 border rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent ${errors.dni ? 'border-red-300' : 'border-slate-300'
+                                        className={`w-full px-3 h-8 border rounded-md ${errors.dni ? 'border-red-300' : 'border-slate-300'
                                             }`}
                                         placeholder="12345678"
                                     />
@@ -663,7 +834,7 @@ const GenerarTurnoModal = ({
                                             name="nombre"
                                             value={formData.nombre}
                                             onChange={handleInputChange}
-                                            className={`w-full px-3 h-8 border rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent ${errors.nombre ? 'border-red-300' : 'border-slate-300'
+                                            className={`w-full px-3 h-8 border rounded-md ${errors.nombre ? 'border-red-300' : 'border-slate-300'
                                                 }`}
                                             placeholder="Nombre"
                                         />
@@ -680,7 +851,7 @@ const GenerarTurnoModal = ({
                                             name="apellido"
                                             value={formData.apellido}
                                             onChange={handleInputChange}
-                                            className={`w-full px-3 h-8 border rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent ${errors.apellido ? 'border-red-300' : 'border-slate-300'
+                                            className={`w-full px-3 h-8 border rounded-md ${errors.apellido ? 'border-red-300' : 'border-slate-300'
                                                 }`}
                                             placeholder="Apellido"
                                         />
@@ -697,9 +868,12 @@ const GenerarTurnoModal = ({
                                             name="telefono"
                                             value={formData.telefono}
                                             onChange={handleInputChange}
-                                            className="w-full px-3 h-8 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                                            className="w-full px-3 h-8 border border-slate-300 rounded-md"
                                             placeholder="0351-1234567"
                                         />
+                                            {errors.telefono && (
+                                                <p className="text-red-600 text-xs mt-1">{errors.telefono}</p>
+                                            )}
                                     </div>
                                     <div>
                                         <label className="block  font-medium text-slate-700 mb-2">
@@ -710,9 +884,12 @@ const GenerarTurnoModal = ({
                                             name="direccion"
                                             value={formData.direccion}
                                             onChange={handleInputChange}
-                                            className="w-full px-3 h-8 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                                            className="w-full px-3 h-8 border border-slate-300 rounded-md"
                                             placeholder="Dirección"
                                         />
+                                            {errors.direccion && (
+                                                <p className="text-red-600 text-xs mt-1">{errors.direccion}</p>
+                                            )}
                                     </div>
                                 </div>
                             )}
@@ -732,19 +909,30 @@ const GenerarTurnoModal = ({
                                                         <Event className="h-4 w-4 inline mr-1" />
                                                         Fecha de Cita *
                                                     </label>
-                                                    <input
+                                                    {/* <input
                                                         type="date"
                                                         name="fechaCita"
                                                         value={formData.fechaCita}
                                                         onChange={handleInputChange}
                                                         min={fechaMinima}
                                                         required
-                                                        className={`w-full px-3 h-8 border rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent ${errors.fechaCita ? 'border-red-300' : 'border-slate-300'
+                                                        className={`w-full px-3 h-8 border rounded-md ${errors.fechaCita ? 'border-red-300' : 'border-slate-300'
                                                             }`}
-                                                    />
-                                                    {errors.fechaCita && (
-                                                        <p className="mt-1  text-red-600">{errors.fechaCita}</p>
-                                                    )}
+                                                    /> */}
+                                                    <select
+                                                        name="fechaCita"
+                                                        value={formData.fechaCita}
+                                                        onChange={handleInputChange}
+                                                        className={`w-full px-3 h-8 border rounded-md ${errors.fechaCita ? 'border-red-300' : 'border-slate-300'}`}
+                                                        disabled={fechasDisponibles.length === 0}
+                                                        required
+                                                    >
+                                                        <option value="">{fechasDisponibles.length ? 'Seleccionar fecha...' : 'Sin fechas disponibles'}</option>
+                                                        {fechasDisponibles.map(f => (
+                                                            <option key={f.value} value={f.value}>{f.label}</option>
+                                                        ))}
+                                                    </select>
+                                                    {errors.fechaCita && (<p className="mt-1  text-red-600">{errors.fechaCita}</p>)}
                                                 </div>
 
                                                 {/* Hora de cita */}
@@ -753,18 +941,34 @@ const GenerarTurnoModal = ({
                                                         <AccessTime className="h-4 w-4 inline mr-1" />
                                                         Hora de Cita *
                                                     </label>
-                                                    <input
+                                                    {/* <input
                                                         type="time"
                                                         name="horaCita"
                                                         value={formData.horaCita}
                                                         onChange={handleInputChange}
                                                         required
-                                                        className={`w-full px-3 h-8 border rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent ${errors.horaCita ? 'border-red-300' : 'border-slate-300'
+                                                        className={`w-full px-3 h-8 border rounded-md ${errors.horaCita ? 'border-red-300' : 'border-slate-300'
                                                             }`}
                                                     />
-                                                    {errors.horaCita && (
-                                                        <p className="mt-1  text-red-600">{errors.horaCita}</p>
-                                                    )}
+                                                     */}
+                                                    <select
+                                                        name="horaCita"
+                                                        value={formData.horaCita}
+                                                        onChange={handleInputChange}
+                                                        required
+                                                        disabled={!formData.fechaCita || horasDisponibles.length === 0}
+                                                        className={`w-full px-3 h-8 border rounded-md ${errors.horaCita ? 'border-red-300' : 'border-slate-300'}`}
+                                                    >
+                                                        <option value="">
+                                                            {!formData.fechaCita
+                                                                ? 'Primero seleccione fecha'
+                                                                : (horasDisponibles.length ? 'Seleccionar hora...' : 'Sin horarios disponibles')}
+                                                        </option>
+                                                        {horasDisponibles.map(h => (
+                                                            <option key={h} value={h}>{h}</option>
+                                                        ))}
+                                                    </select>
+                                                    {errors.horaCita && (<p className="mt-1  text-red-600">{errors.horaCita}</p>)}
                                                 </div>
 
                                                 {/* Motivo de cita */}
@@ -778,7 +982,7 @@ const GenerarTurnoModal = ({
                                                         onChange={handleInputChange}
                                                         rows={2}
                                                         required
-                                                        className={`w-full resize-none px-3 py-1.5 h-12 border rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent ${errors.motivoCita ? 'border-red-300' : 'border-slate-300'
+                                                        className={`w-full resize-none px-3 py-1.5 h-12 border rounded-md ${errors.motivoCita ? 'border-red-300' : 'border-slate-300'
                                                             }`}
                                                         placeholder="Describa el motivo de la cita..."
                                                     />
@@ -803,7 +1007,7 @@ const GenerarTurnoModal = ({
                                             name="esPrioritario"
                                             checked={formData.esPrioritario}
                                             onChange={handleInputChange}
-                                            className="rounded border-slate-300 text-yellow-600 focus:ring-yellow-500"
+                                            className="rounded border-slate-300 text-yellow-600"
                                         />
                                         <label htmlFor="esPrioritario" className=" font-medium text-slate-700 flex items-center">
                                             Turno Prioritario
@@ -819,7 +1023,7 @@ const GenerarTurnoModal = ({
                                                 name="motivoPrioridad"
                                                 value={formData.motivoPrioridad}
                                                 onChange={handleInputChange}
-                                                className={`w-full px-3 h-8 border rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent ${errors.motivoPrioridad ? 'border-red-300' : 'border-slate-300'
+                                                className={`w-full px-3 h-8 border rounded-md ${errors.motivoPrioridad ? 'border-red-300' : 'border-slate-300'
                                                     }`}
                                             >
                                                 <option value="">Seleccionar motivo...</option>
@@ -861,7 +1065,7 @@ const GenerarTurnoModal = ({
                                     value={formData.observaciones}
                                     onChange={handleInputChange}
                                     rows={3}
-                                    className="w-full px-3 resize-none h-12 py-1.5 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-500 focus:border-transparent"
+                                    className="w-full px-3 resize-none h-12 py-1.5 border border-slate-300 rounded-md"
                                     placeholder="Información adicional sobre el turno..."
                                 />
                             </div>

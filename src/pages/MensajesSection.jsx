@@ -318,7 +318,7 @@ const MensajesSection = () => {
 
             {/* Filtros y Búsqueda */}
             {configuracionSeleccionada && (
-                <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4 mt-2">
+                <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4 mt-2 mb-3">
                     <div className="flex flex-wrap items-center gap-4">
                         {/* Búsqueda */}
                         <div className="flex-1 min-w-64">
