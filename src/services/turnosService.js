@@ -323,6 +323,242 @@ class TurnosService {
         }
     }
 
+
+
+
+
+    /**
+ * Lista turnos con paginación y filtros
+ * @param {Object} params - Parámetros de filtrado y paginación
+ * @param {number} params.limite - Número de turnos por página (default: 50)
+ * @param {number} params.offset - Posición inicial (default: 0)
+ * @param {string} params.fecha - Fecha en formato YYYY-MM-DD (opcional)
+ * @param {number} params.sectorId - ID del sector (opcional)
+ * @returns {Promise<Object>} Respuesta con turnos y metadatos de paginación
+ */
+    async listarTurnosConFiltros(params = {}) {
+        try {
+            const queryParams = new URLSearchParams();
+
+            // Parámetros obligatorios con defaults
+            queryParams.append('limite', params.limite || 50);
+            queryParams.append('offset', params.offset || 0);
+
+            // Parámetros opcionales
+            if (params.fecha) {
+                queryParams.append('fecha', params.fecha);
+            }
+            if (params.sectorId) {
+                queryParams.append('sectorId', params.sectorId);
+            }
+
+            const response = await this.apiClient.get(`/turnos/listar?${queryParams.toString()}`);
+
+            if (response.data?.success) {
+                return response.data.data;
+            } else {
+                throw new Error(response.data?.message || 'Error listando turnos');
+            }
+        } catch (error) {
+            this.handleTurnosError(error);
+            throw error;
+        }
+    }
+
+
+
+    /**
+     * Lista todos los turnos recientes sin filtros
+     * @param {number} limite - Número máximo de turnos (default: 100)
+     * @returns {Promise<Array>} Lista de turnos
+     */
+    async listarTodosTurnos(limite = 100) {
+        try {
+            const response = await this.apiClient.get(`/turnos/todos?limite=${limite}`);
+
+            if (response.data?.success) {
+                const turnos = response.data.data || [];
+                return turnos.map(turno => this.procesarTurno(turno));
+            } else {
+                throw new Error(response.data?.message || 'Error listando todos los turnos');
+            }
+        } catch (error) {
+            this.handleTurnosError(error);
+            throw error;
+        }
+    }
+
+
+    /**
+     * Obtiene métricas de paginación para el listado
+     * @param {Object} filtros - Filtros aplicados
+     * @param {string} filtros.fecha - Fecha en formato YYYY-MM-DD
+     * @param {number} filtros.sectorId - ID del sector
+     * @returns {Promise<Object>} Metadatos de paginación
+     */
+    async obtenerMetricasPaginacion(filtros = {}) {
+        try {
+            // Hacer una consulta con límite 1 solo para obtener el total
+            const response = await this.listarTurnosConFiltros({
+                limite: 1,
+                offset: 0,
+                ...filtros
+            });
+
+            return {
+                total: response.total,
+                totalPaginas: response.totalPaginas,
+                hasNext: response.hasNext,
+                hasPrevious: response.hasPrevious
+            };
+        } catch (error) {
+            console.error('Error obteniendo métricas de paginación:', error);
+            return {
+                total: 0,
+                totalPaginas: 0,
+                hasNext: false,
+                hasPrevious: false
+            };
+        }
+    }
+
+
+    /**
+     * Construye parámetros de paginación para uso en componentes
+     * @param {number} paginaActual - Página actual (base 1)
+     * @param {number} limite - Turnos por página
+     * @returns {Object} Parámetros listos para la API
+     */
+    construirParametrosPaginacion(paginaActual = 1, limite = 50) {
+        return {
+            limite,
+            offset: (paginaActual - 1) * limite
+        };
+    }
+
+
+    /**
+     * Valida parámetros de filtrado
+     * @param {Object} filtros - Filtros a validar
+     * @returns {Object} Filtros validados y normalizados
+     */
+    validarFiltros(filtros = {}) {
+        const filtrosValidados = {};
+
+        // Validar fecha
+        if (filtros.fecha) {
+            const fechaRegex = /^\d{4}-\d{2}-\d{2}$/;
+            if (fechaRegex.test(filtros.fecha)) {
+                filtrosValidados.fecha = filtros.fecha;
+            } else {
+                console.warn('Formato de fecha inválido, se ignorará:', filtros.fecha);
+            }
+        }
+
+        // Validar sectorId
+        if (filtros.sectorId && !isNaN(filtros.sectorId) && filtros.sectorId > 0) {
+            filtrosValidados.sectorId = Number(filtros.sectorId);
+        }
+
+        // Validar límite
+        if (filtros.limite) {
+            const limite = Number(filtros.limite);
+            if (limite > 0 && limite <= 200) {
+                filtrosValidados.limite = limite;
+            }
+        }
+
+        // Validar offset
+        if (filtros.offset !== undefined) {
+            const offset = Number(filtros.offset);
+            if (offset >= 0) {
+                filtrosValidados.offset = offset;
+            }
+        }
+
+        return filtrosValidados;
+    }
+
+
+    /**
+     * Formatea datos de respuesta para uso en tablas
+     * @param {Object} respuesta - Respuesta de la API
+     * @returns {Object} Datos formateados para componentes
+     */
+    formatearRespuestaListado(respuesta) {
+        if (!respuesta) {
+            return {
+                turnos: [],
+                paginacion: this.crearPaginacionVacia()
+            };
+        }
+
+        return {
+            turnos: (respuesta.turnos || []).map(turno => this.procesarTurno(turno)),
+            paginacion: {
+                total: respuesta.total || 0,
+                limite: respuesta.limite || 50,
+                offset: respuesta.offset || 0,
+                hasNext: respuesta.hasNext || false,
+                hasPrevious: respuesta.hasPrevious || false,
+                totalPaginas: respuesta.totalPaginas || 0,
+                paginaActual: respuesta.paginaActual || 1,
+                filtros: respuesta.filtros || {}
+            }
+        };
+    }
+
+
+    /**
+     * Crea objeto de paginación vacío para estados iniciales
+     * @returns {Object} Paginación vacía
+     */
+    crearPaginacionVacia() {
+        return {
+            total: 0,
+            limite: 50,
+            offset: 0,
+            hasNext: false,
+            hasPrevious: false,
+            totalPaginas: 0,
+            paginaActual: 1,
+            filtros: {}
+        };
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     /**
      * Formatear datos de turno para la UI
      * @param {Object} turno - Datos del turno desde API
@@ -413,6 +649,9 @@ class TurnosService {
             };
         }
     }
+
+
+    
 
     /**
      * Obtener texto descriptivo del estado
@@ -577,7 +816,11 @@ class TurnosService {
         return 'Datos no disponibles';
     }
 
+    
+
 }
+
+
 
 // Exportar instancia singleton del servicio
 const turnosService = new TurnosService();

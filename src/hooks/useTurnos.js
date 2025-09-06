@@ -508,6 +508,294 @@ export const useTurnos = (options = {}) => {
     });
   }, []);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /**
+   * Lista turnos con paginación y filtros
+   */
+  const listarTurnosConFiltros = useCallback(
+    async (params = {}) => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Validar y normalizar parámetros
+        const parametrosValidados = turnosService.validarFiltros(params);
+
+        const respuesta = await turnosService.listarTurnosConFiltros(parametrosValidados);
+        const datosFormateados = turnosService.formatearRespuestaListado(respuesta);
+
+        return datosFormateados;
+
+      } catch (err) {
+        setError(err.message || 'Error listando turnos con filtros');
+        onErrorRef.current && onErrorRef.current(err, 'listar-con-filtros');
+        throw err;
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
+
+  /**
+ * Lista todos los turnos recientes
+ */
+const listarTodosTurnos = useCallback(
+  async (limite = 100) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const turnos = await turnosService.listarTodosTurnos(limite);
+      
+      return turnos;
+
+    } catch (err) {
+      setError(err.message || 'Error listando todos los turnos');
+      onErrorRef.current && onErrorRef.current(err, 'listar-todos');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  },
+  []
+);
+
+/**
+ * Obtiene métricas de paginación para filtros específicos
+ */
+const obtenerMetricasPaginacion = useCallback(
+  async (filtros = {}) => {
+    try {
+      const metricas = await turnosService.obtenerMetricasPaginacion(filtros);
+      return metricas;
+    } catch (err) {
+      console.error('Error obteniendo métricas de paginación:', err);
+      return turnosService.crearPaginacionVacia();
+    }
+  },
+  []
+);
+
+/**
+ * Busca turnos con criterios específicos (wrapper más amigable)
+ */
+const buscarTurnos = useCallback(
+  async (criterios = {}) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const {
+        codigo,
+        ciudadanoDni,
+        fecha,
+        sectorId,
+        estado,
+        limite = 50,
+        pagina = 1
+      } = criterios;
+
+      // Si hay código específico, buscar directamente
+      if (codigo) {
+        const turno = await consultarTurnoPorCodigo(codigo);
+        return {
+          turnos: turno ? [turno] : [],
+          paginacion: {
+            total: turno ? 1 : 0,
+            totalPaginas: 1,
+            paginaActual: 1,
+            hasNext: false,
+            hasPrevious: false
+          }
+        };
+      }
+
+      // Si hay DNI, obtener turnos del ciudadano
+      if (ciudadanoDni) {
+        const turnos = await cargarTurnosCiudadano(ciudadanoDni);
+        return {
+          turnos,
+          paginacion: {
+            total: turnos.length,
+            totalPaginas: 1,
+            paginaActual: 1,
+            hasNext: false,
+            hasPrevious: false
+          }
+        };
+      }
+
+      // Búsqueda general con filtros
+      const params = turnosService.construirParametrosPaginacion(pagina, limite);
+      if (fecha) params.fecha = fecha;
+      if (sectorId) params.sectorId = sectorId;
+
+      const respuesta = await listarTurnosConFiltros(params);
+
+      // Filtrar por estado si se especifica (el backend no tiene este filtro aún)
+      if (estado && respuesta.turnos) {
+        respuesta.turnos = respuesta.turnos.filter(turno => 
+          turno.estado?.toLowerCase() === estado.toLowerCase()
+        );
+      }
+
+      return respuesta;
+
+    } catch (err) {
+      setError(err.message || 'Error buscando turnos');
+      onErrorRef.current && onErrorRef.current(err, 'buscar-turnos');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  },
+  [consultarTurnoPorCodigo, cargarTurnosCiudadano, listarTurnosConFiltros]
+);
+
+/**
+ * Maneja paginación de manera más sencilla
+ */
+const cambiarPagina = useCallback(
+  async (nuevaPagina, limite, filtrosActuales = {}) => {
+    try {
+      const params = turnosService.construirParametrosPaginacion(nuevaPagina, limite);
+      Object.assign(params, filtrosActuales);
+
+      const respuesta = await listarTurnosConFiltros(params);
+      return respuesta;
+
+    } catch (err) {
+      setError(err.message || 'Error cambiando página');
+      throw err;
+    }
+  },
+  [listarTurnosConFiltros]
+);
+
+/**
+ * Refresca los datos actuales manteniendo filtros y paginación
+ */
+const refrescarDatos = useCallback(
+  async (parametrosActuales = {}) => {
+    try {
+      const respuesta = await listarTurnosConFiltros(parametrosActuales);
+      return respuesta;
+    } catch (err) {
+      setError(err.message || 'Error refrescando datos');
+      throw err;
+    }
+  },
+  [listarTurnosConFiltros]
+);
+
+
+// ==========================================
+// MÉTODOS DE UTILIDAD PARA LISTADOS
+// ==========================================
+
+/**
+ * Construye opciones de filtro para componentes
+ */
+const obtenerOpcionesFiltro = useCallback(() => {
+  const estadosDisponibles = [
+    { value: '', label: 'Todos los estados' },
+    { value: 'GENERADO', label: 'Generado' },
+    { value: 'LLAMADO', label: 'Llamado' },
+    { value: 'EN_ATENCION', label: 'En Atención' },
+    { value: 'FINALIZADO', label: 'Finalizado' },
+    { value: 'AUSENTE', label: 'Ausente' },
+    { value: 'CANCELADO', label: 'Cancelado' },
+    { value: 'REDIRIGIDO', label: 'Redirigido' }
+  ];
+
+  const limitesDisponibles = [
+    { value: 25, label: '25 por página' },
+    { value: 50, label: '50 por página' },
+    { value: 100, label: '100 por página' },
+    { value: 200, label: '200 por página' }
+  ];
+
+  return {
+    estados: estadosDisponibles,
+    limites: limitesDisponibles
+  };
+}, []);
+
+/**
+ * Valida parámetros de búsqueda antes de enviar
+ */
+const validarParametrosBusqueda = useCallback((parametros) => {
+  const errores = [];
+
+  if (parametros.codigo && !/^[A-Z]{2,10}[0-9]{3}$/.test(parametros.codigo)) {
+    errores.push('El código debe tener el formato correcto (ej: CON001)');
+  }
+
+  if (parametros.ciudadanoDni && !/^[0-9]{7,8}$/.test(parametros.ciudadanoDni)) {
+    errores.push('El DNI debe tener entre 7 y 8 dígitos');
+  }
+
+  if (parametros.fecha && !/^\d{4}-\d{2}-\d{2}$/.test(parametros.fecha)) {
+    errores.push('La fecha debe tener el formato YYYY-MM-DD');
+  }
+
+  if (parametros.limite && (parametros.limite < 1 || parametros.limite > 500)) {
+    errores.push('El límite debe estar entre 1 y 500');
+  }
+
+  return {
+    valido: errores.length === 0,
+    errores
+  };
+}, []);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   // Efecto para carga automática al montar / cambiar sector
   useEffect(() => {
     if (autoLoad && sectorId) {
@@ -587,6 +875,18 @@ export const useTurnos = (options = {}) => {
     cargarTurnosPendientes,
     cargarTurnosCiudadano,
     cargarTurnosDelDia,
+
+    // NUEVOS MÉTODOS DE LISTADO
+    listarTurnosConFiltros,
+    listarTodosTurnos,
+    obtenerMetricasPaginacion,
+    buscarTurnos,
+    cambiarPagina,
+    refrescarDatos,
+
+    // MÉTODOS DE UTILIDAD PARA LISTADOS
+    obtenerOpcionesFiltro,
+    validarParametrosBusqueda,
 
     // Acciones de operación
     generarTurno,
