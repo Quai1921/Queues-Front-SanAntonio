@@ -57,9 +57,9 @@
 
 
 
-// Crear o actualizar historialService.js
 
-// src/services/historialService.js
+
+
 
 import { apiClient } from './authService';
 
@@ -69,14 +69,17 @@ class HistorialService {
     }
 
     // ==========================================
-    // MÉTODOS PRINCIPALES
+    // MÉTODOS PRINCIPALES BÁSICOS
     // ==========================================
 
     async ultimas(limite = 50) {
         try {
+            console.log('historialService.ultimas called with limite:', limite);
             const response = await this.apiClient.get(`/historial/ultimas-acciones?limite=${limite}`);
+            console.log('historialService.ultimas response:', response.data);
             return response.data?.success ? response.data.data : [];
         } catch (error) {
+            console.error('Error en historialService.ultimas:', error);
             this.handleError(error);
             throw error;
         }
@@ -84,9 +87,12 @@ class HistorialService {
 
     async hoy() {
         try {
+            console.log('historialService.hoy called');
             const response = await this.apiClient.get('/historial/acciones-hoy');
+            console.log('historialService.hoy response:', response.data);
             return response.data?.success ? response.data.data : [];
         } catch (error) {
+            console.error('Error en historialService.hoy:', error);
             this.handleError(error);
             throw error;
         }
@@ -94,13 +100,46 @@ class HistorialService {
 
     async reciente() {
         try {
+            console.log('historialService.reciente called');
             const response = await this.apiClient.get('/historial/actividad-reciente');
+            console.log('historialService.reciente response:', response.data);
             return response.data?.success ? response.data.data : [];
         } catch (error) {
+            console.error('Error en historialService.reciente:', error);
             this.handleError(error);
             throw error;
         }
     }
+
+    async porFecha(fecha, limite = 200) {
+        try {
+            console.log('historialService.porFecha called with:', { fecha, limite });
+            const response = await this.apiClient.get(`/historial/fecha/${fecha}?limite=${limite}`);
+            console.log('historialService.porFecha response:', response.data);
+            return response.data?.success ? response.data.data : [];
+        } catch (error) {
+            console.error('Error en historialService.porFecha:', error);
+            this.handleError(error);
+            throw error;
+        }
+    }
+
+    async historialCiudadano(dni, limite = 100) {
+        try {
+            console.log('historialService.historialCiudadano called with:', { dni, limite });
+            const response = await this.apiClient.get(`/historial/ciudadano/${dni}?limite=${limite}`);
+            console.log('historialService.historialCiudadano response:', response.data);
+            return response.data?.success ? response.data.data : [];
+        } catch (error) {
+            console.error('Error en historialService.historialCiudadano:', error);
+            this.handleError(error);
+            throw error;
+        }
+    }
+
+    // ==========================================
+    // MÉTODOS OPCIONALES (PUEDEN FALLAR)
+    // ==========================================
 
     async porTurnoId(turnoId) {
         try {
@@ -126,16 +165,6 @@ class HistorialService {
         try {
             const response = await this.apiClient.get(`/historial/turno/${turnoId}/legible`);
             return response.data?.success ? response.data.data : null;
-        } catch (error) {
-            this.handleError(error);
-            throw error;
-        }
-    }
-
-    async porFecha(fecha, limite = 200) {
-        try {
-            const response = await this.apiClient.get(`/historial/fecha/${fecha}?limite=${limite}`);
-            return response.data?.success ? response.data.data : [];
         } catch (error) {
             this.handleError(error);
             throw error;
@@ -196,20 +225,6 @@ class HistorialService {
         try {
             const response = await this.apiClient.get(`/historial/empleado/${empleadoId}/auditoria?fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`);
             return response.data?.success ? response.data.data : null;
-        } catch (error) {
-            this.handleError(error);
-            throw error;
-        }
-    }
-
-    // ==========================================
-    // NUEVOS MÉTODOS
-    // ==========================================
-
-    async historialCiudadano(dni, limite = 100) {
-        try {
-            const response = await this.apiClient.get(`/historial/ciudadano/${dni}?limite=${limite}`);
-            return response.data?.success ? response.data.data : [];
         } catch (error) {
             this.handleError(error);
             throw error;
@@ -328,7 +343,13 @@ class HistorialService {
         };
     }
 
+    // ==========================================
+    // MANEJO DE ERRORES
+    // ==========================================
+
     handleError(error) {
+        console.error('HistorialService Error:', error);
+        
         if (error.response) {
             const { status, data } = error.response;
             
@@ -340,13 +361,17 @@ class HistorialService {
                 error.message = 'No tienes permisos para acceder a este historial';
             } else if (status === 500) {
                 error.message = 'Error interno del servidor consultando historial';
+            } else {
+                error.message = data?.message || `Error HTTP ${status}`;
             }
         } else if (error.request) {
             error.message = 'Error de conexión al consultar historial';
+        } else {
+            error.message = error.message || 'Error desconocido en historial';
         }
-        
-        console.error('Error en historialService:', error);
     }
 }
 
-export default new HistorialService();
+// Exportar instancia única
+const historialService = new HistorialService();
+export default historialService;

@@ -340,22 +340,31 @@
 
 
 
-import React, { useState, useEffect, useMemo } from 'react';
+
+
+
+
+
+
+
+
+
+// src/pages/HistorialSection.jsx - Sin usar turnosService
+
+import React, { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
-import useHistorial from '../hooks/useHistorial';
-import useTurnos from '../hooks/useTurnos';
+import { apiClient } from '../services/authService';
 
-const TABS = [
-    { key: 'TURNOS', label: 'Lista de Turnos', icon: '📋' },
-    { key: 'ULTIMAS', label: 'Últimas Acciones', icon: '🕐' },
-    { key: 'HOY', label: 'Hoy', icon: '📅' },
-    { key: 'RECIENTE', label: 'Reciente 24h', icon: '⚡' },
-    { key: 'POR_FECHA', label: 'Por Fecha', icon: '📆' },
-    { key: 'METRICAS', label: 'Métricas', icon: '📊' },
-    { key: 'CIUDADANO', label: 'Por Ciudadano', icon: '👤' },
-];
+function TablaTurnos({ turnos, onClickTurno, turnoSeleccionado, loading }) {
+    if (loading) {
+        return (
+            <div className="py-12 text-center">
+                <div className="inline-block h-8 w-8 border-2 border-slate-300 border-b-transparent rounded-full animate-spin" />
+                <p className="text-slate-500 mt-2">Cargando turnos...</p>
+            </div>
+        );
+    }
 
-function TablaTurnos({ turnos, onClickTurno, turnoSeleccionado }) {
     if (!turnos?.length) {
         return (
             <div className="bg-white border border-slate-200 rounded-xl p-8 text-center">
@@ -376,50 +385,37 @@ function TablaTurnos({ turnos, onClickTurno, turnoSeleccionado }) {
                         <th className="px-4 py-3 text-left">Ciudadano</th>
                         <th className="px-4 py-3 text-left">Sector</th>
                         <th className="px-4 py-3 text-left">Estado</th>
-                        <th className="px-4 py-3 text-left">Acciones</th>
                     </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
                     {turnos.map((turno) => (
                         <tr 
                             key={turno.id} 
-                            className={`hover:bg-slate-50/60 cursor-pointer transition-colors ${
+                            className={`hover:bg-slate-50 cursor-pointer transition-colors ${
                                 turnoSeleccionado?.id === turno.id ? 'bg-blue-50 border-l-4 border-l-blue-500' : ''
                             }`}
                             onClick={() => onClickTurno(turno)}
                         >
-                            <td className="px-4 py-2 font-mono text-sm font-medium">
-                                {turno.codigo || '-'}
+                            <td className="px-4 py-3 font-mono text-sm font-medium">
+                                {turno.codigo}
                             </td>
-                            <td className="px-4 py-2">
-                                {turno.numero || '-'}
+                            <td className="px-4 py-3">
+                                {turno.numero}
                             </td>
-                            <td className="px-4 py-2 whitespace-nowrap">
-                                {turno.fechaHoraGeneracion ? 
-                                    dayjs(turno.fechaHoraGeneracion).format('DD/MM/YYYY HH:mm') : '-'}
+                            <td className="px-4 py-3 whitespace-nowrap">
+                                {dayjs(turno.fechaHoraGeneracion).format('DD/MM/YYYY HH:mm')}
                             </td>
-                            <td className="px-4 py-2">
-                                {turno.ciudadanoNombre || turno.ciudadano?.nombreCompleto || '-'}
+                            <td className="px-4 py-3">
+                                {turno.ciudadanoNombre || turno.ciudadano?.nombreCompleto}
                             </td>
-                            <td className="px-4 py-2">
+                            <td className="px-4 py-3">
                                 <span className="inline-flex items-center gap-1">
                                     <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                                    {turno.sector?.codigo || '-'}
+                                    {turno.sector?.codigo}
                                 </span>
                             </td>
-                            <td className="px-4 py-2">
+                            <td className="px-4 py-3">
                                 <EstadoBadge estado={turno.estado} />
-                            </td>
-                            <td className="px-4 py-2">
-                                <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onClickTurno(turno);
-                                    }}
-                                    className="text-blue-600 hover:text-blue-800 text-sm font-medium"
-                                >
-                                    Ver Historial
-                                </button>
                             </td>
                         </tr>
                     ))}
@@ -444,205 +440,163 @@ function EstadoBadge({ estado }) {
         <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
             estilos[estado] || 'bg-gray-100 text-gray-800'
         }`}>
-            {estado || 'DESCONOCIDO'}
+            {estado}
         </span>
     );
 }
 
-function HistorialSection({ turno, historialLegible, onCerrar }) {
+function HistorialLegible({ turno, historialData, onCerrar, loading }) {
     if (!turno) return null;
 
     return (
-        <div className="bg-white border border-slate-200 rounded-xl p-6">
+        <div className="bg-white border border-slate-200 rounded-xl p-6 mt-6">
             <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-slate-900">
                     Historial Detallado - {turno.codigo}
                 </h3>
                 <button
                     onClick={onCerrar}
-                    className="text-slate-400 hover:text-slate-600 p-1"
+                    className="text-slate-400 hover:text-slate-600 p-1 rounded"
                 >
                     ✕
                 </button>
             </div>
 
-            {/* Información del turno */}
+            {/* Info del turno */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 p-4 bg-slate-50 rounded-lg">
                 <div>
-                    <p className="text-xs text-slate-500">Ciudadano</p>
-                    <p className="font-medium">{turno.ciudadanoNombre || turno.ciudadano?.nombreCompleto || 'Sin información'}</p>
+                    <p className="text-xs text-slate-500 mb-1">Ciudadano</p>
+                    <p className="font-medium">{turno.ciudadanoNombre || turno.ciudadano?.nombreCompleto}</p>
                 </div>
                 <div>
-                    <p className="text-xs text-slate-500">Sector</p>
-                    <p className="font-medium">{turno.sector?.codigo || '-'}</p>
+                    <p className="text-xs text-slate-500 mb-1">Sector</p>
+                    <p className="font-medium">{turno.sector?.codigo}</p>
                 </div>
                 <div>
-                    <p className="text-xs text-slate-500">Estado Actual</p>
+                    <p className="text-xs text-slate-500 mb-1">Estado</p>
                     <EstadoBadge estado={turno.estado} />
                 </div>
                 <div>
-                    <p className="text-xs text-slate-500">Tipo</p>
-                    <p className="font-medium">{turno.tipo || 'NORMAL'}</p>
+                    <p className="text-xs text-slate-500 mb-1">Total Acciones</p>
+                    <p className="font-medium">{historialData?.totalAcciones || 0}</p>
                 </div>
             </div>
 
             {/* Historial legible */}
-            {historialLegible ? (
+            {loading ? (
+                <div className="py-8 text-center">
+                    <div className="inline-block h-6 w-6 border-2 border-slate-300 border-b-transparent rounded-full animate-spin" />
+                    <p className="text-slate-500 mt-2">Cargando historial...</p>
+                </div>
+            ) : historialData ? (
                 <div>
                     <div className="flex items-center justify-between mb-4">
                         <h4 className="font-medium text-slate-900">
-                            Línea de Tiempo ({historialLegible.totalAcciones} acciones)
+                            Línea de Tiempo
                         </h4>
                         <span className={`px-2 py-1 text-xs rounded-full ${
-                            historialLegible.completado ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                            historialData.completado ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
                         }`}>
-                            {historialLegible.completado ? 'Completado' : 'En proceso'}
+                            {historialData.completado ? 'Completado' : 'En proceso'}
                         </span>
                     </div>
 
-                    <div className="space-y-3">
-                        {(historialLegible.historialLegible || []).map((accion, index) => (
-                            <div key={index} className="flex gap-4 p-3 bg-slate-50 rounded-lg">
-                                <div className="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
-                                <div className="flex-1">
-                                    <p className="text-sm text-slate-900">{accion}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    {historialLegible.resumen && (
-                        <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-                            <p className="text-sm text-blue-900">{historialLegible.resumen}</p>
+                    {/* Resumen */}
+                    {historialData.resumen && (
+                        <div className="mb-4 p-3 bg-blue-50 rounded-lg">
+                            <p className="text-sm text-blue-900">{historialData.resumen}</p>
                         </div>
                     )}
+
+                    {/* Línea de tiempo */}
+                    <div className="space-y-3">
+                        {historialData.historialLegible?.map((accion, index) => {
+                            // Extraer datos de cada línea
+                            const timestampMatch = accion.match(/\[(.*?)\]/);
+                            const timestamp = timestampMatch ? timestampMatch[1] : '';
+                            const contenido = accion.replace(/\[.*?\]\s*/, '');
+                            
+                            return (
+                                <div key={index} className="flex gap-4 p-3 bg-slate-50 rounded-lg">
+                                    <div className="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                                    <div className="flex-1">
+                                        <div className="flex items-start justify-between">
+                                            <p className="text-sm text-slate-900">{contenido}</p>
+                                            <span className="text-xs text-slate-500 ml-2 whitespace-nowrap">
+                                                {timestamp ? dayjs(timestamp).format('DD/MM HH:mm:ss') : ''}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    {/* Fechas */}
+                    <div className="mt-4 grid grid-cols-2 gap-4 p-3 bg-slate-50 rounded-lg">
+                        <div>
+                            <p className="text-xs text-slate-500">Fecha Generación</p>
+                            <p className="text-sm font-medium">
+                                {historialData.fechaGeneracion ? 
+                                    dayjs(historialData.fechaGeneracion).format('DD/MM/YYYY HH:mm:ss') : '-'}
+                            </p>
+                        </div>
+                        <div>
+                            <p className="text-xs text-slate-500">Fecha Finalización</p>
+                            <p className="text-sm font-medium">
+                                {historialData.fechaFinalizacion ? 
+                                    dayjs(historialData.fechaFinalizacion).format('DD/MM/YYYY HH:mm:ss') : '-'}
+                            </p>
+                        </div>
+                    </div>
                 </div>
             ) : (
                 <div className="py-8 text-center text-slate-500">
-                    <p>Cargando historial detallado...</p>
+                    <p>No se pudo cargar el historial</p>
                 </div>
             )}
         </div>
     );
 }
 
-function TablaAcciones({ items }) {
-    if (!items?.length) {
-        return (
-            <div className="bg-white border border-slate-200 rounded-xl p-8 text-center">
-                <p className="text-lg font-medium text-slate-600">No hay acciones para mostrar</p>
-                <p className="text-slate-500 mt-1">Ajusta los filtros para ver resultados</p>
-            </div>
-        );
-    }
-
-    return (
-        <div className="overflow-x-auto bg-white border border-slate-200 rounded-xl">
-            <table className="min-w-full text-sm">
-                <thead className="bg-slate-50 text-slate-600">
-                    <tr>
-                        <th className="px-4 py-3 text-left">Fecha/Hora</th>
-                        <th className="px-4 py-3 text-left">Tipo</th>
-                        <th className="px-4 py-3 text-left">Detalle</th>
-                        <th className="px-4 py-3 text-left">Turno</th>
-                        <th className="px-4 py-3 text-left">Empleado</th>
-                        <th className="px-4 py-3 text-left">Sector</th>
-                    </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100">
-                    {items.map((row, i) => {
-                        const fecha = row.fechaHora || row.fecha || row.fechaAccion;
-                        const tipo = row.tipoAccion || row.tipo || row.accion;
-                        const detalle = row.detalle || row.descripcion || row.mensaje || row.evento;
-                        const turno = row.turnoCodigo || row.turno?.codigo || row.codigoTurno;
-                        const empleado = row.empleadoNombre || row.empleado?.nombreCompleto || row.usernameEmpleado;
-                        const sector = row.sectorNombre || row.sector?.nombre || row.codigoSector || '-';
-                        
-                        return (
-                            <tr key={i} className="hover:bg-slate-50/60">
-                                <td className="px-4 py-2 whitespace-nowrap">
-                                    {fecha ? dayjs(fecha).format('DD/MM/YYYY HH:mm') : '-'}
-                                </td>
-                                <td className="px-4 py-2">{tipo || '-'}</td>
-                                <td className="px-4 py-2 max-w-xl truncate" title={detalle || ''}>
-                                    {detalle || '-'}
-                                </td>
-                                <td className="px-4 py-2 font-mono text-sm">{turno || '-'}</td>
-                                <td className="px-4 py-2">{empleado || '-'}</td>
-                                <td className="px-4 py-2">{sector}</td>
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
-        </div>
-    );
-}
-
-function PanelFiltros({ tab, onFiltrarTurnos, onFiltrarAcciones }) {
+function FiltrosTurnos({ onFiltrar, loading }) {
     const [filtros, setFiltros] = useState({
-        limite: 50,
         fecha: dayjs().format('YYYY-MM-DD'),
         sectorId: '',
-        dni: '',
-        empleadoId: ''
+        limite: 50
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (tab === 'TURNOS') {
-            onFiltrarTurnos(filtros);
-        } else {
-            onFiltrarAcciones(filtros);
-        }
+        onFiltrar(filtros);
     };
 
     return (
         <form onSubmit={handleSubmit} className="bg-white border border-slate-200 rounded-xl p-4">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                {tab === 'TURNOS' && (
-                    <>
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">
-                                Fecha
-                            </label>
-                            <input
-                                type="date"
-                                value={filtros.fecha}
-                                onChange={(e) => setFiltros({...filtros, fecha: e.target.value})}
-                                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1">
-                                Sector ID
-                            </label>
-                            <input
-                                type="number"
-                                value={filtros.sectorId}
-                                onChange={(e) => setFiltros({...filtros, sectorId: e.target.value})}
-                                placeholder="Ej: 1"
-                                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
-                            />
-                        </div>
-                    </>
-                )}
-                
-                {tab === 'CIUDADANO' && (
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-1">
-                            DNI
-                        </label>
-                        <input
-                            type="text"
-                            value={filtros.dni}
-                            onChange={(e) => setFiltros({...filtros, dni: e.target.value})}
-                            placeholder="Ej: 12345678"
-                            className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
-                        />
-                    </div>
-                )}
-
+                <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                        Fecha
+                    </label>
+                    <input
+                        type="date"
+                        value={filtros.fecha}
+                        onChange={(e) => setFiltros({...filtros, fecha: e.target.value})}
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                        Sector ID (opcional)
+                    </label>
+                    <input
+                        type="number"
+                        value={filtros.sectorId}
+                        onChange={(e) => setFiltros({...filtros, sectorId: e.target.value})}
+                        placeholder="Ej: 1"
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm"
+                    />
+                </div>
                 <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">
                         Límite
@@ -658,13 +612,13 @@ function PanelFiltros({ tab, onFiltrarTurnos, onFiltrarAcciones }) {
                         <option value={200}>200</option>
                     </select>
                 </div>
-                
                 <div className="flex items-end">
                     <button
                         type="submit"
-                        className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium"
+                        disabled={loading}
+                        className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-medium disabled:opacity-50"
                     >
-                        Aplicar Filtros
+                        {loading ? 'Cargando...' : 'Buscar Turnos'}
                     </button>
                 </div>
             </div>
@@ -672,4 +626,126 @@ function PanelFiltros({ tab, onFiltrarTurnos, onFiltrarAcciones }) {
     );
 }
 
-export default HistorialSection
+export default function HistorialSection() {
+    const [turnos, setTurnos] = useState([]);
+    const [turnoSeleccionado, setTurnoSeleccionado] = useState(null);
+    const [historialLegible, setHistorialLegible] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [loadingHistorial, setLoadingHistorial] = useState(false);
+
+    // Cargar turnos al montar
+    useEffect(() => {
+        cargarTurnos({ fecha: dayjs().format('YYYY-MM-DD'), limite: 50 });
+    }, []);
+
+    const cargarTurnos = async (filtros) => {
+        try {
+            setLoading(true);
+            console.log('Cargando turnos con filtros:', filtros);
+            
+            let turnosData;
+            if (filtros.sectorId) {
+                // Si hay sector específico, usar endpoint por sector y fecha
+                console.log('Usando endpoint por sector:', filtros.sectorId);
+                const response = await apiClient.get(`/turnos/sector/${filtros.sectorId}/fecha/${filtros.fecha}`);
+                turnosData = response.data?.success ? response.data.data : [];
+            } else {
+                // Usar endpoint general de todos los turnos
+                console.log('Usando endpoint general de turnos');
+                const response = await apiClient.get(`/turnos/todos?limite=${filtros.limite}`);
+                turnosData = response.data?.success ? response.data.data : [];
+                
+                // Filtrar por fecha si se especifica
+                if (filtros.fecha) {
+                    const fechaFiltro = dayjs(filtros.fecha).format('YYYY-MM-DD');
+                    turnosData = turnosData.filter(turno => {
+                        const fechaTurno = dayjs(turno.fechaHoraGeneracion).format('YYYY-MM-DD');
+                        return fechaTurno === fechaFiltro;
+                    });
+                }
+            }
+            
+            console.log('Turnos cargados:', turnosData?.length || 0);
+            setTurnos(turnosData || []);
+            
+        } catch (error) {
+            console.error('Error cargando turnos:', error);
+            setTurnos([]);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleClickTurno = async (turno) => {
+        console.log('Click en turno:', turno.codigo, 'ID:', turno.id);
+        setTurnoSeleccionado(turno);
+        setHistorialLegible(null);
+        
+        try {
+            setLoadingHistorial(true);
+            
+            // Llamar al endpoint de historial legible
+            console.log('Cargando historial legible para turno ID:', turno.id);
+            const response = await apiClient.get(`/historial/turno/${turno.id}/legible`);
+            
+            if (response.data?.success) {
+                console.log('Historial legible cargado:', response.data.data);
+                setHistorialLegible(response.data.data);
+            } else {
+                console.error('Error en respuesta del historial:', response.data);
+            }
+            
+        } catch (error) {
+            console.error('Error cargando historial legible:', error);
+        } finally {
+            setLoadingHistorial(false);
+        }
+    };
+
+    const handleCerrarHistorial = () => {
+        setTurnoSeleccionado(null);
+        setHistorialLegible(null);
+    };
+
+    return (
+        <section className="space-y-6">
+            {/* Header */}
+            <div>
+                <h1 className="text-lg font-bold text-slate-900">Historial de Turnos</h1>
+                <p className="text-slate-600 mt-1 text-sm">
+                    Haz clic en cualquier turno para ver su historial detallado
+                </p>
+            </div>
+
+            {/* Filtros */}
+            <FiltrosTurnos onFiltrar={cargarTurnos} loading={loading} />
+
+            {/* Header de resultados */}
+            <div className="bg-white border border-slate-200 rounded-xl p-4">
+                <h2 className="text-lg font-semibold text-slate-900">Lista de Turnos</h2>
+                <p className="text-slate-500 text-sm mt-1">
+                    {turnos.length} turnos encontrados
+                    {turnoSeleccionado && ` - Mostrando historial de: ${turnoSeleccionado.codigo}`}
+                </p>
+            </div>
+
+            {/* Tabla de turnos */}
+            <TablaTurnos 
+                turnos={turnos}
+                onClickTurno={handleClickTurno}
+                turnoSeleccionado={turnoSeleccionado}
+                loading={loading}
+            />
+
+            {/* Panel de historial legible */}
+            {turnoSeleccionado && (
+                <HistorialLegible
+                    turno={turnoSeleccionado}
+                    historialData={historialLegible}
+                    onCerrar={handleCerrarHistorial}
+                    loading={loadingHistorial}
+                />
+            )}
+        </section>
+    );
+}
