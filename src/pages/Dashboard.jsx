@@ -20,7 +20,7 @@ import {
     Group,
     Assessment
 } from '@mui/icons-material';
-import { useStatistics } from '../hooks/useStatistics';
+import useDashboard from '../hooks/useDashboard';
 
 /**
  * Dashboard principal del sistema - se adapta según el rol del usuario
@@ -34,19 +34,24 @@ const Dashboard = () => {
     const [showLogoutModal, setShowLogoutModal] = useState(false);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
 
-    const {
-        statistics,
-        loading: statsLoading,
-        refreshing: refreshing,
-        error: statsError,
-        refreshStatistics,
-        formatters,
-        derived
-    } = useStatistics({
-        autoLoad: true,
-        refreshInterval: 30000, // 30 segundos
-        onError: (error) => console.error('Error en estadísticas:', error)
-    });
+    // const {
+    //     statistics,
+    //     loading: statsLoading,
+    //     refreshing: refreshing,
+    //     error: statsError,
+    //     refreshStatistics,
+    //     formatters,
+    //     derived
+    // } = useStatistics({
+    //     autoLoad: true,
+    //     refreshInterval: 30000, // 30 segundos
+    //     onError: (error) => console.error('Error en estadísticas:', error)
+    // });
+
+    const { loading, error, turnos, empleados } = useDashboard();
+
+    const formatNumber = (n) => new Intl.NumberFormat('es-AR').format(n ?? 0);
+    const formatTime = (min) => `${Math.max(0, parseInt(min ?? 0, 10))} min`;
 
     useEffect(() => {
         setGreeting(getTimeBasedGreeting());
@@ -297,38 +302,40 @@ const Dashboard = () => {
                             {[
                                 {
                                     title: 'Turnos Pendientes',
-                                    value: statsLoading ? '...' : formatters.formatNumber(statistics.turnos.turnosPendientes),
+                                    value: loading ? '...' : formatNumber(turnos.pendientes),
                                     color: 'text-slate-600',
                                     bg: 'bg-slate-50',
-                                    loading: statsLoading
+                                    loading
                                 },
                                 {
                                     title: 'Turnos Atendidos Hoy',
-                                    value: statsLoading ? '...' : formatters.formatNumber(statistics.turnos.turnosAtendidosHoy),
+                                    value: loading ? '...' : formatNumber(turnos.atendidos),
                                     color: 'text-green-600',
                                     bg: 'bg-green-50',
-                                    loading: statsLoading
+                                    loading
                                 },
                                 {
                                     title: 'Empleados Activos',
-                                    value: statsLoading ? '...' : `${statistics.empleados.activos}/${statistics.empleados.total}`,
+                                    value: loading ? '...' : `${formatNumber(empleados.activos)}/${formatNumber(empleados.total)}`,
                                     color: 'text-purple-600',
                                     bg: 'bg-purple-50',
-                                    loading: statsLoading
+                                    loading
                                 },
                                 {
                                     title: 'Tiempo Promedio',
-                                    value: statsLoading ? '...' : formatters.formatTime(statistics.turnos.tiempoPromedio),
+                                    value: loading ? '...' : formatTime(turnos.tiempoPromedio),
                                     color: 'text-orange-600',
                                     bg: 'bg-orange-50',
-                                    loading: statsLoading
+                                    loading
                                 }
                             ].map((stat, index) => (
                                 <div key={index} className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
                                     <div className={`w-12 h-12 ${stat.bg} rounded-lg flex items-center justify-center mb-4`}>
                                         <Analytics className={`h-6 w-6 ${stat.color}`} />
                                     </div>
-                                    <h3 className={`text-2xl font-bold text-slate-900 mb-1 ${stat.loading ? 'animate-pulse' : ''}`}>{stat.value}</h3>
+                                    <h3 className={`text-2xl font-bold text-slate-900 mb-1 ${stat.loading ? 'animate-pulse' : ''}`}>
+                                        {stat.value}
+                                    </h3>
                                     <p className="text-sm text-slate-600">{stat.title}</p>
                                 </div>
                             ))}
@@ -336,12 +343,13 @@ const Dashboard = () => {
                     </div>
                 )}
 
+
                 {/* Quick Actions */}
                 <div className="mb-8">
                     <h3 className="text-xl font-semibold text-slate-900 mb-6">Acciones Rápidas</h3>
 
                     {/* Header con botón de refresh para estadísticas */}
-                    {hasAnyRole(['ADMIN', 'RESPONSABLE_SECTOR']) && (
+                    {/* {hasAnyRole(['ADMIN', 'RESPONSABLE_SECTOR']) && (
                         <div className="mb-8 flex justify-between items-center">
                             <div>
                                 <h3 className="text-xl font-semibold text-slate-900">Estadísticas de Hoy</h3>
@@ -363,7 +371,7 @@ const Dashboard = () => {
                                 {refreshing ? 'Actualizando...' : statsLoading ? 'Cargando...' : 'Actualizar'}
                             </button>
                         </div>
-                    )}
+                    )} */}
 
 
 

@@ -8,11 +8,7 @@ import {
     Search,
     Refresh,
     PlayArrow,
-    PersonOff,
     Queue,
-    Notifications,
-    AccessTime,
-    Person,
     Business,
     Phone
 } from '@mui/icons-material';
@@ -328,53 +324,48 @@ const TurnosSection = () => {
         if (!sectorSeleccionado) return null;
         return (
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="p-4 bg-white rounded-xl border border-slate-200">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-blue-600 text-sm font-medium">En Cola</p>
-                            <p className="text-2xl font-bold text-blue-900">{estadisticas?.colaActual || 0}</p>
+                            <p className="text-xs text-slate-500">En Cola</p>
+                            <p className="text-2xl font-semibold">{estadisticas?.colaActual || 0}</p>
                         </div>
-                        <Queue className="h-8 w-8 text-blue-600" />
                     </div>
                 </div>
 
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                <div className="p-4 bg-white rounded-xl border border-slate-200">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-yellow-600 text-sm font-medium">En Espera</p>
-                            <p className="text-2xl font-bold text-yellow-900">{estadisticas.enEspera}</p>
+                            <p className="text-xs text-slate-500">En Espera</p>
+                            <p className="text-2xl font-semibold">{estadisticas.enEspera}</p>
                         </div>
-                        <AccessTime className="h-8 w-8 text-yellow-600" />
                     </div>
                 </div>
 
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <div className="p-4 bg-white rounded-xl border border-slate-200">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-green-600 text-sm font-medium">Atendidos</p>
-                            <p className="text-2xl font-bold text-green-900">{estadisticas?.finalizados || 0}</p>
+                            <p className="text-xs text-slate-500">Atendidos</p>
+                            <p className="text-2xl font-semibold">{estadisticas?.finalizados || 0}</p>
                         </div>
-                        <Person className="h-8 w-8 text-green-600" />
                     </div>
                 </div>
 
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <div className="p-4 bg-white rounded-xl border border-slate-200">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-red-600 text-sm font-medium">Ausentes</p>
-                            <p className="text-2xl font-bold text-red-900">{estadisticas.ausentes}</p>
+                            <p className="text-xs text-slate-500">Ausentes</p>
+                            <p className="text-2xl font-semibold">{estadisticas.ausentes}</p>
                         </div>
-                        <PersonOff className="h-8 w-8 text-red-600" />
                     </div>
                 </div>
 
-                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                <div className="p-4 bg-white rounded-xl border border-slate-200">
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-purple-600 text-sm font-medium">Prioritarios</p>
-                            <p className="text-2xl font-bold text-purple-900">{estadisticas.prioritarios}</p>
+                            <p className="text-xs text-slate-500">Prioritarios</p>
+                            <p className="text-2xl font-semibold">{estadisticas.prioritarios}</p>
                         </div>
-                        <Notifications className="h-8 w-8 text-purple-600" />
                     </div>
                 </div>
             </div>

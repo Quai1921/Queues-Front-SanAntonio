@@ -246,52 +246,47 @@ const MensajesSection = () => {
             {/* Estadísticas */}
             {configuracionSeleccionada && (
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mt-2">
-                    <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
+                    <div className="p-4 bg-white rounded-xl border border-slate-200">
                         <div className="flex items-center">
-                            <Message className="text-[#224666] mr-2" />
                             <div>
-                                <p className="text-2xl font-bold text-slate-900">{estadisticas.total}</p>
-                                <p className="text-sm text-slate-600">Total</p>
+                                <p className="text-xs text-slate-500">Total</p>
+                                <p className="text-2xl font-semibold">{estadisticas.total}</p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
+                    <div className="p-4 bg-white rounded-xl border border-slate-200">
                         <div className="flex items-center">
-                            <PlayArrow className="text-green-600 mr-2" />
                             <div>
-                                <p className="text-2xl font-bold text-slate-900">{estadisticas.activos}</p>
-                                <p className="text-sm text-slate-600">Activos</p>
+                                <p className="text-xs text-slate-500">Activos</p>
+                                <p className="text-2xl font-semibold">{estadisticas.activos}</p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
+                    <div className="p-4 bg-white rounded-xl border border-slate-200">
                         <div className="flex items-center">
-                            <Visibility className="text-blue-600 mr-2" />
                             <div>
-                                <p className="text-2xl font-bold text-slate-900">{estadisticas.vigentes}</p>
-                                <p className="text-sm text-slate-600">Vigentes</p>
+                                <p className="text-xs text-slate-500">Vigentes</p>
+                                <p className="text-2xl font-semibold">{estadisticas.vigentes}</p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
+                    <div className="p-4 bg-white rounded-xl border border-slate-200">
                         <div className="flex items-center">
-                            <TextSnippet className="text-blue-800 mr-2" />
                             <div>
-                                <p className="text-2xl font-bold text-slate-900">{estadisticas.porTipo.texto}</p>
-                                <p className="text-sm text-slate-600">Texto</p>
+                                <p className="text-xs text-slate-500">Texto</p>
+                                <p className="text-2xl font-semibold">{estadisticas.porTipo.texto}</p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
+                    <div className="p-4 bg-white rounded-xl border border-slate-200">
                         <div className="flex items-center">
-                            <ImageIcon className="text-green-800 mr-2" />
                             <div>
-                                <p className="text-2xl font-bold text-slate-900">{estadisticas.porTipo.imagen}</p>
-                                <p className="text-sm text-slate-600">Imagen</p>
+                                <p className="text-xs text-slate-500">Imagen</p>
+                                <p className="text-2xl font-semibold">{estadisticas.porTipo.imagen}</p>
                             </div>
                         </div>
                     </div>

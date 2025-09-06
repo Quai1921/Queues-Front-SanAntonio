@@ -398,77 +398,9 @@ const SectoresSection = () => {
 
     return (
         <div>
-            {/* Header con estadísticas */}
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-                <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
-                    <div className="flex items-center">
-                        <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
-                            <Business className="h-6 w-6 text-slate-600" />
-                        </div>
-                        <div className="ml-3">
-                            <p className="text-sm font-medium text-slate-600">Total</p>
-                            <p className="text-2xl font-semibold text-slate-900">{estadisticas.total}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
-                    <div className="flex items-center">
-                        <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                            <CheckCircle className="h-6 w-6 text-green-600" />
-                        </div>
-                        <div className="ml-3">
-                            <p className="text-sm font-medium text-slate-600">Activos</p>
-                            <p className="text-2xl font-semibold text-slate-900">{estadisticas.activos}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
-                    <div className="flex items-center">
-                        <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                            <CalendarMonthIcon className="h-6 w-6 text-orange-600" />
-                        </div>
-                        <div className="ml-3">
-                            <p className="text-sm font-medium text-slate-600">Especiales</p>
-                            <p className="text-2xl font-semibold text-slate-900">{estadisticas.especiales}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
-                    <div className="flex items-center">
-                        <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                            <Person className="h-6 w-6 text-purple-600" />
-                        </div>
-                        <div className="ml-3">
-                            <p className="text-sm font-medium text-slate-600">Con Responsable</p>
-                            <p className="text-2xl font-semibold text-slate-900">{estadisticas.conResponsable}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Notificación */}
-            {notificacion && (
-                <div className={`fixed top-4 left-1/2 -translate-x-1/2  z-[60] px-4 py-6 rounded-lg shadow-lg border transition-all duration-300 ${notificacion.tipo === 'success'
-                        ? 'bg-green-50 border-green-200 text-green-800'
-                        : 'bg-red-50 border-red-200 text-red-800'
-                    }`}>
-                    <div className="flex items-center">
-                        <span className="font-medium">{notificacion.mensaje}</span>
-                        <button
-                            onClick={() => setNotificacion(null)}
-                            className="ml-3 text-sm opacity-70 hover:opacity-100"
-                        >
-                            ✕
-                        </button>
-                    </div>
-                </div>
-            )}
 
             {/* Header con acciones */}
-            <div className="flex items-center justify-between mt-4">
+            <div className="flex items-center justify-between mb-3">
                 <div>
                     <h3 className="text-lg font-semibold text-slate-900">Sectores de Atención</h3>
                     <p className="text-slate-600 text-sm">Administra sectores y responsables</p>
@@ -492,8 +424,65 @@ const SectoresSection = () => {
                 </div>
             </div>
 
+            {/* Header con estadísticas */}
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+                <div className="p-4 bg-white rounded-xl border border-slate-200">
+                    <div className="flex items-center">
+                        <div className="ml-3">
+                            <p className="text-xs text-slate-500">Total</p>
+                            <p className="text-2xl font-semibold">{estadisticas.total}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="p-4 bg-white rounded-xl border border-slate-200">
+                    <div className="flex items-center">
+                        <div className="ml-3">
+                            <p className="text-xs text-slate-500">Activos</p>
+                            <p className="text-2xl font-semibold">{estadisticas.activos}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="p-4 bg-white rounded-xl border border-slate-200">
+                    <div className="flex items-center">
+                        <div className="ml-3">
+                            <p className="text-xs text-slate-500">Especiales</p>
+                            <p className="text-2xl font-semibold">{estadisticas.especiales}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="p-4 bg-white rounded-xl border border-slate-200">
+                    <div className="flex items-center">
+                        <div className="ml-3">
+                            <p className="text-xs text-slate-500">Con Responsable</p>
+                            <p className="text-2xl font-semibold">{estadisticas.conResponsable}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Notificación */}
+            {notificacion && (
+                <div className={`fixed top-4 left-1/2 -translate-x-1/2  z-[60] px-4 py-6 rounded-lg shadow-lg border transition-all duration-300 ${notificacion.tipo === 'success'
+                        ? 'bg-green-50 border-green-200 text-green-800'
+                        : 'bg-red-50 border-red-200 text-red-800'
+                    }`}>
+                    <div className="flex items-center">
+                        <span className="font-medium">{notificacion.mensaje}</span>
+                        <button
+                            onClick={() => setNotificacion(null)}
+                            className="ml-3 text-sm opacity-70 hover:opacity-100"
+                        >
+                            ✕
+                        </button>
+                    </div>
+                </div>
+            )}
+
             {/* Filtros y búsqueda */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mt-4">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mt-3">
                 <div className="flex flex-col sm:flex-row gap-4">
                     {/* Búsqueda */}
                     <div className="flex-1">
@@ -525,7 +514,7 @@ const SectoresSection = () => {
 
                 {/* Filtros expandidos */}
                 {mostrarFiltros && (
-                    <div className="mt-4 pt-4 border-t border-slate-200">
+                    <div className="mt-3 pt-4 border-t border-slate-200">
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             {/* Filtro por tipo */}
                             <div>

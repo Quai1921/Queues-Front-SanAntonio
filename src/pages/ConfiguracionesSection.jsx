@@ -212,62 +212,47 @@ const ConfiguracionesSection = () => {
 
     const renderEstadisticas = () => (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-2">
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <div className="p-4 bg-white rounded-xl border border-slate-200">
                 <div className="flex items-center">
-                    <div className="p-2 bg-slate-100 rounded-lg">
-                        <Settings className="h-5 w-5 text-slate-600" />
-                    </div>
                     <div className="ml-3">
-                        <p className="text-sm font-medium text-slate-600">Total</p>
-                        <p className="text-2xl font-semibold text-slate-900">{estadisticas.total}</p>
+                        <p className="text-xs text-slate-500">Total</p>
+                        <p className="text-2xl font-semibold">{estadisticas.total}</p>
                     </div>
                 </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <div className="p-4 bg-white rounded-xl border border-slate-200">
                 <div className="flex items-center">
-                    <div className="p-2 bg-green-100 rounded-lg">
-                        <CheckCircle className="h-5 w-5 text-green-600" />
-                    </div>
                     <div className="ml-3">
-                        <p className="text-sm font-medium text-slate-600">Activa</p>
-                        <p className="text-2xl font-semibold text-green-600">{estadisticas.activa}</p>
+                        <p className="text-xs text-slate-500">Activa</p>
+                        <p className="text-2xl font-semibold">{estadisticas.activa}</p>
                     </div>
                 </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <div className="p-4 bg-white rounded-xl border border-slate-200">
                 <div className="flex items-center">
-                    <div className="p-2 bg-slate-100 rounded-lg">
-                        <RadioButtonUnchecked className="h-5 w-5 text-slate-600" />
-                    </div>
                     <div className="ml-3">
-                        <p className="text-sm font-medium text-slate-600">Inactivas</p>
-                        <p className="text-2xl font-semibold text-slate-600">{estadisticas.inactivas}</p>
+                        <p className="text-xs text-slate-500">Inactivas</p>
+                        <p className="text-2xl font-semibold">{estadisticas.inactivas}</p>
                     </div>
                 </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <div className="p-4 bg-white rounded-xl border border-slate-200">
                 <div className="flex items-center">
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                        <VolumeUp className="h-5 w-5 text-blue-600" />
-                    </div>
                     <div className="ml-3">
-                        <p className="text-sm font-medium text-slate-600">Con Sonido</p>
-                        <p className="text-2xl font-semibold text-blue-600">{estadisticas.conSonido}</p>
+                        <p className="text-xs text-slate-500">Con Sonido</p>
+                        <p className="text-2xl font-semibold">{estadisticas.conSonido}</p>
                     </div>
                 </div>
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <div className="p-4 bg-white rounded-xl border border-slate-200">
                 <div className="flex items-center">
-                    <div className="p-2 bg-red-100 rounded-lg">
-                        <VolumeOff className="h-5 w-5 text-red-600" />
-                    </div>
                     <div className="ml-3">
-                        <p className="text-sm font-medium text-slate-600">Sin Sonido</p>
-                        <p className="text-2xl font-semibold text-red-600">{estadisticas.sinSonido}</p>
+                        <p className="text-xs text-slate-500">Sin Sonido</p>
+                        <p className="text-2xl font-semibold">{estadisticas.sinSonido}</p>
                     </div>
                 </div>
             </div>
@@ -583,10 +568,12 @@ const ConfiguracionesSection = () => {
             {/* Controles */}
             <div className='flex justify-between items-center mb-4'>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                    <h2 className="text-lg font-semibold text-slate-900 flex items-center">
-                        <Settings className="h-6 w-6 mr-2 text-[#224666]" />
-                        Configuraciones de Pantalla
-                    </h2>
+                    <div>
+                        <h2 className="text-lg font-semibold text-slate-900 flex items-center">
+                            Configuraciones de Pantalla
+                        </h2>
+                        <p className="text-slate-600 text-sm">Configura tiempos de pantalla y sonidos de llamada</p>
+                    </div>
                 </div>
 
                 <div className='flex justify-center items-center gap-4'>

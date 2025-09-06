@@ -33,6 +33,7 @@ import MensajesSection from '../pages/MensajesSection';
 import PantallaTurnosPublica from '../pages/PantallaTurnosPublica';
 import TurnosSection from '../pages/TurnosSection';
 import EstadisticasSection from '../pages/EstadisticasSection'
+import HistorialSection from '../pages/HistorialSection';
 
 /**
  * Panel de administración principal - Solo para usuarios ADMIN
@@ -123,7 +124,13 @@ const AdminPanel = () => {
             path: '/admin/estadisticas',
             description: 'Estadísticas del sistema'
         },
-
+        {
+            id: 'historial',
+            title: 'Historial',
+            icon: <SignalCellularAltIcon />,
+            path: '/admin/historial',
+            description: 'Historial de turnos'
+        },
         {
             id: 'pantalla',
             title: 'Pantalla Principal',
@@ -148,7 +155,8 @@ const AdminPanel = () => {
         if (path.includes('mensajes')) return 'mensajes'
         if (path.includes('configuracion')) return 'configuracion';
         if (path.includes('configuracion')) return 'configuracion';
-        if (path.includes('estadisticas')) return 'estadisticas'
+        if (path.includes('estadisticas')) return 'estadisticas';
+        if (path.includes('historial')) return 'historial';
         return 'dashboard';
     };
 
@@ -192,8 +200,8 @@ const AdminPanel = () => {
 
 
                 {/* Navegación */}
-                <nav className="flex-1 p-4">
-                    <ul className="space-y-2">
+                <nav className="flex-1 p-3">
+                    <ul>
                         {menuItems.map((item) => {
                             const isActive = getCurrentSection() === item.id;
                             return (
@@ -258,6 +266,7 @@ const AdminPanel = () => {
                         <Route path="configuracion" element={<ConfiguracionesSection />} />
                         <Route path="estadisticas" element={<EstadisticasSection />} />
                         <Route path="pantalla" element={<PantallaTurnosPublica />} />
+                        <Route path="historial" element={<HistorialSection />} />
                     </Routes>
                 </main>
             </div>

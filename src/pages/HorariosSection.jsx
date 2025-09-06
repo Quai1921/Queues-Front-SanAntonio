@@ -367,50 +367,38 @@ const HorariosSection = () => {
                 <>
                     {/* Estadísticas */}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-3">
-                        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                        <div className="p-4 bg-white rounded-xl border border-slate-200">
                             <div className="flex items-center">
-                                <div className="p-2 bg-slate-100 rounded-lg">
-                                    <Schedule className="h-6 w-6 text-slate-600" />
-                                </div>
                                 <div className="ml-4">
-                                    <p className="text-2xl font-bold text-slate-900">{estadisticas.totalHorarios}</p>
-                                    <p className="text-slate-600 text-sm">Total Horarios</p>
+                                    <p className="text-xs text-slate-500">Total Horarios</p>
+                                    <p className="text-2xl font-semibold">{estadisticas.totalHorarios}</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                        <div className="p-4 bg-white rounded-xl border border-slate-200">
                             <div className="flex items-center">
-                                <div className="p-2 bg-green-100 rounded-lg">
-                                    <CheckCircle className="h-6 w-6 text-green-600" />
-                                </div>
                                 <div className="ml-4">
-                                    <p className="text-2xl font-bold text-slate-900">{estadisticas.horariosActivos}</p>
-                                    <p className="text-slate-600 text-sm">Activos</p>
+                                    <p className="text-xs text-slate-500">Activos</p>
+                                    <p className="text-2xl font-semibold">{estadisticas.horariosActivos}</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                        <div className="p-4 bg-white rounded-xl border border-slate-200">
                             <div className="flex items-center">
-                                <div className="p-2 bg-red-100 rounded-lg">
-                                    <Cancel className="h-6 w-6 text-red-600" />
-                                </div>
                                 <div className="ml-4">
-                                    <p className="text-2xl font-bold text-slate-900">{estadisticas.horariosInactivos}</p>
-                                    <p className="text-slate-600 text-sm">Inactivos</p>
+                                    <p className="text-xs text-slate-500">Inactivos</p>
+                                    <p className="text-2xl font-semibold">{estadisticas.horariosInactivos}</p>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                        <div className="p-4 bg-white rounded-xl border border-slate-200">
                             <div className="flex items-center">
-                                <div className="p-2 bg-purple-100 rounded-lg">
-                                    <CalendarMonth className="h-6 w-6 text-purple-600" />
-                                </div>
                                 <div className="ml-4">
-                                    <p className="text-2xl font-bold text-slate-900">{estadisticas.diasCubiertos}</p>
-                                    <p className="text-slate-600 text-sm">Días Cubiertos</p>
+                                    <p className="text-xs text-slate-500">Días Cubiertos</p>
+                                    <p className="text-2xl font-semibold">{estadisticas.diasCubiertos}</p>
                                 </div>
                             </div>
                         </div>

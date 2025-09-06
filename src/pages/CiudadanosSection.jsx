@@ -179,50 +179,38 @@ const CiudadanosSection = () => {
 
             {/* Estadísticas */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-2">
-                <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div className="p-4 bg-white rounded-xl border border-slate-200">
                     <div className="flex items-center">
-                        <div className="p-2 bg-slate-100 rounded-lg">
-                            <Groups className="h-6 w-6 text-slate-600" />
-                        </div>
                         <div className="ml-3">
-                            <p className="text-sm text-slate-600">Total</p>
-                            <p className="text-2xl font-bold text-slate-900">{estadisticas.total}</p>
+                            <p className="text-xs text-slate-500">Total</p>
+                            <p className="text-2xl font-semibold">{estadisticas.total}</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div className="p-4 bg-white rounded-xl border border-slate-200">
                     <div className="flex items-center">
-                        <div className="p-2 bg-red-100 rounded-lg">
-                            <PriorityHigh className="h-6 w-6 text-red-600" />
-                        </div>
                         <div className="ml-3">
-                            <p className="text-sm text-slate-600">Prioritarios</p>
-                            <p className="text-2xl font-bold text-slate-900">{estadisticas.prioritarios}</p>
+                            <p className="text-xs text-slate-500">Prioritarios</p>
+                            <p className="text-2xl font-semibold">{estadisticas.prioritarios}</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div className="p-4 bg-white rounded-xl border border-slate-200">
                     <div className="flex items-center">
-                        <div className="p-2 bg-yellow-100 rounded-lg">
-                            <Warning className="h-6 w-6 text-yellow-600" />
-                        </div>
                         <div className="ml-3">
-                            <p className="text-sm text-slate-600">Con Turnos</p>
-                            <p className="text-2xl font-bold text-slate-900">{estadisticas.conTurnos}</p>
+                            <p className="text-xs text-slate-500">Con Turnos</p>
+                            <p className="text-2xl font-semibold">{estadisticas.conTurnos}</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+                <div className="p-4 bg-white rounded-xl border border-slate-200">
                     <div className="flex items-center">
-                        <div className="p-2 bg-blue-100 rounded-lg">
-                            <Schedule className="h-6 w-6 text-blue-600" />
-                        </div>
                         <div className="ml-3">
-                            <p className="text-sm text-slate-600">Atendidos Hoy</p>
-                            <p className="text-2xl font-bold text-slate-900">{estadisticas.atendidosHoy || 0}</p>
+                            <p className="text-xs text-slate-500">Atendidos Hoy</p>
+                            <p className="text-2xl font-semibold">{estadisticas.atendidosHoy || 0}</p>
                         </div>
                     </div>
                 </div>

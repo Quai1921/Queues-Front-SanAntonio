@@ -286,71 +286,8 @@ const EmpleadosSection = () => {
 
     return (
         <div>
-            {/* Header con estadísticas */}
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
-                <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
-                    <div className="flex items-center">
-                        <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
-                            <Group className="h-6 w-6 text-slate-600" />
-                        </div>
-                        <div className="ml-3">
-                            <p className="text-sm font-medium text-slate-600">Total</p>
-                            <p className="text-2xl font-semibold text-slate-900">{estadisticas.totalEmpleados}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
-                    <div className="flex items-center">
-                        <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                            <CheckCircle className="h-6 w-6 text-green-600" />
-                        </div>
-                        <div className="ml-3">
-                            <p className="text-sm font-medium text-slate-600">Activos</p>
-                            <p className="text-2xl font-semibold text-slate-900">{estadisticas.empleadosActivos}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
-                    <div className="flex items-center">
-                        <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                            <AdminPanelSettings className="h-6 w-6 text-purple-600" />
-                        </div>
-                        <div className="ml-3">
-                            <p className="text-sm font-medium text-slate-600">Admins</p>
-                            <p className="text-2xl font-semibold text-slate-900">{estadisticas.administradores}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
-                    <div className="flex items-center">
-                        <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center">
-                            <Business className="h-6 w-6 text-slate-600" />
-                        </div>
-                        <div className="ml-3">
-                            <p className="text-sm font-medium text-slate-600">Responsables</p>
-                            <p className="text-2xl font-semibold text-slate-900">{estadisticas.responsables}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
-                    <div className="flex items-center">
-                        <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                            <SupportAgent className="h-6 w-6 text-green-600" />
-                        </div>
-                        <div className="ml-3">
-                            <p className="text-sm font-medium text-slate-600">Operadores</p>
-                            <p className="text-2xl font-semibold text-slate-900">{estadisticas.empleadosComunes}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             {/* Header con acciones */}
-            <div className="flex items-center justify-between mt-4">
+            <div className="flex items-center justify-between mb-3">
                 <div>
                     <h3 className="text-lg font-semibold text-slate-900">Empleados del Sistema</h3>
                     <p className="text-slate-600 text-sm">Administra usuarios y sus permisos</p>
@@ -374,8 +311,56 @@ const EmpleadosSection = () => {
                 </div>
             </div>
 
+            {/* Header con estadísticas */}
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+                <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
+                    <div className="flex items-center">
+                        <div className="ml-3">
+                            <p className="text-xs text-slate-500">Total</p>
+                            <p className="text-2xl font-semibold">{estadisticas.totalEmpleados}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
+                    <div className="flex items-center">
+                        <div className="ml-3">
+                            <p className="text-xs text-slate-500">Activos</p>
+                            <p className="text-2xl font-semibold">{estadisticas.empleadosActivos}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
+                    <div className="flex items-center">
+                        <div className="ml-3">
+                            <p className="text-xs text-slate-500">Admins</p>
+                            <p className="text-2xl font-semibold">{estadisticas.administradores}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
+                    <div className="flex items-center">
+                        <div className="ml-3">
+                            <p className="text-xs text-slate-500">Responsables</p>
+                            <p className="text-2xl font-semibold">{estadisticas.responsables}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
+                    <div className="flex items-center">
+                        <div className="ml-3">
+                            <p className="text-xs text-slate-500">Operadores</p>
+                            <p className="text-2xl font-semibold">{estadisticas.empleadosComunes}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {/* Filtros y búsqueda */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mt-4">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mt-3">
                 <div className="flex flex-col sm:flex-row gap-4">
                     {/* Búsqueda */}
                     <div className="flex-1">
@@ -417,7 +402,7 @@ const EmpleadosSection = () => {
             </div>
 
             {/* Tabla de empleados */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden mt-4">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden mt-3">
                 {loading ? (
                     <div className="flex items-center justify-center py-12">
                         <div className="flex items-center space-x-2 text-slate-500">
